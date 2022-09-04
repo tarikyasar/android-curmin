@@ -1,4 +1,4 @@
-package com.tarikyasar.curmin.ui.theme
+package com.tarikyasar.curmin.presentation.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes
