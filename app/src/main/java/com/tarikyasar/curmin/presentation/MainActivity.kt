@@ -8,8 +8,13 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import com.tarikyasar.curmin.presentation.convert_currency.ConvertCurrency
+import com.tarikyasar.curmin.presentation.currency_symbol_list.CurrencySymbolList
 import com.tarikyasar.curmin.presentation.ui.theme.CurminTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,9 +22,9 @@ class MainActivity : ComponentActivity() {
             CurminTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.primary
+                    color = Color.Black
                 ) {
-                    Text("Curmin")
+                    ConvertCurrency()
                 }
             }
         }
