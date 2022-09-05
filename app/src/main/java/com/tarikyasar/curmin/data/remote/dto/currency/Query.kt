@@ -1,4 +1,4 @@
-package com.tarikyasar.curmin.data.remote.dto
+package com.tarikyasar.curmin.data.remote.dto.currency
 
 data class Query(
     val amount: Int,
