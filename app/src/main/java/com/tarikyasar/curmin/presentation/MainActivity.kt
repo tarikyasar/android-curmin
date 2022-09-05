@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = Color.Black
                 ) {
-                    ConvertCurrency()
+                    CurrencySymbolList()
                 }
             }
         }

@@ -2,9 +2,7 @@ package com.tarikyasar.curmin.domain.usecase
 
 import com.tarikyasar.curmin.common.Resource
 import com.tarikyasar.curmin.data.repository.mapper.toConvertedCurrency
-import com.tarikyasar.curmin.data.repository.mapper.toCurrencySymbol
 import com.tarikyasar.curmin.domain.model.ConvertedCurrency
-import com.tarikyasar.curmin.domain.model.Symbol
 import com.tarikyasar.curmin.domain.repository.CurrencyRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -29,7 +27,11 @@ class ConvertCurrencyUseCase @Inject constructor(
             ).toConvertedCurrency()
             emit(Resource.Success<ConvertedCurrency>(convertedCurrency))
         } catch (e: HttpException) {
-            emit(Resource.Error<ConvertedCurrency>(e.localizedMessage ?: "An unexpected error occurred."))
+            emit(
+                Resource.Error<ConvertedCurrency>(
+                    e.localizedMessage ?: "An unexpected error occurred."
+                )
+            )
         } catch (e: IOException) {
             emit(Resource.Error<ConvertedCurrency>("Couldn't reach server. Check your internet connection."))
         }
