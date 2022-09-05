@@ -12,14 +12,14 @@ fun CurrencySymbolsDto.toCurrencySymbol(): List<Symbol> {
         .dropLast(2)
         .split(",")
         .forEach { symbol ->
-            val splittedSymbol = symbol
+            val parsedSymbol = symbol
                 .trim()
                 .split("=")
 
             symbolList.add(
                 Symbol(
-                    code = splittedSymbol[0].trim(),
-                    name = splittedSymbol[1].trim()
+                    code = parsedSymbol[0].trim(),
+                    name = parsedSymbol[1].trim()
                 )
             )
         }

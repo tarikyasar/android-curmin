@@ -13,7 +13,6 @@ fun LatestDataDto.toCurrency(): LatestData {
         .dropLast(1)
         .split(",")
         .forEach { currency ->
-
             val parsedCurrency = currency
                 .split("=")
 
