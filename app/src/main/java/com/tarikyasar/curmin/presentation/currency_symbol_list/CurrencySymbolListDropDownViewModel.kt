@@ -12,12 +12,12 @@ import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
-class CurrencySymbolListViewModel @Inject constructor(
+class CurrencySymbolListDropDownViewModel @Inject constructor(
     private val getCurrencySymbolsUseCase: GetCurrencySymbolsUseCase
 ) : ViewModel() {
 
-    private val _state = mutableStateOf(CurrencySymbolListState())
-    val state: State<CurrencySymbolListState> = _state
+    private val _state = mutableStateOf(CurrencySymbolListDropDownState())
+    val state: State<CurrencySymbolListDropDownState> = _state
 
     init {
         getSymbols()
@@ -26,9 +26,13 @@ class CurrencySymbolListViewModel @Inject constructor(
     private fun getSymbols() {
         getCurrencySymbolsUseCase().onEach { result ->
             when (result) {
-                is Resource.Success -> _state.value = CurrencySymbolListState(currencySymbols = result.data ?: emptyList())
-                is Resource.Error -> _state.value = CurrencySymbolListState(error = result.message ?:  "An unexpected error occurred.")
-                is Resource.Loading -> _state.value = CurrencySymbolListState(isLoading = true)
+                is Resource.Success -> _state.value =
+                    CurrencySymbolListDropDownState(currencySymbols = result.data ?: emptyList())
+                is Resource.Error -> _state.value = CurrencySymbolListDropDownState(
+                    error = result.message ?: "An unexpected error occurred."
+                )
+                is Resource.Loading -> _state.value =
+                    CurrencySymbolListDropDownState(isLoading = true)
             }
         }.launchIn(viewModelScope)
     }
