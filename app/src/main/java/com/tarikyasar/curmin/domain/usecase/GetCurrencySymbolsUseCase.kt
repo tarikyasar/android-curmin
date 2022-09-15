@@ -1,7 +1,7 @@
 package com.tarikyasar.curmin.domain.usecase
 
 import com.tarikyasar.curmin.common.Resource
-import com.tarikyasar.curmin.data.repository.mapper.toCurrencySymbol
+import com.tarikyasar.curmin.data.repository.currency.mapper.toCurrencySymbol
 import com.tarikyasar.curmin.domain.model.Symbol
 import com.tarikyasar.curmin.domain.repository.CurrencyRepository
 import kotlinx.coroutines.flow.Flow

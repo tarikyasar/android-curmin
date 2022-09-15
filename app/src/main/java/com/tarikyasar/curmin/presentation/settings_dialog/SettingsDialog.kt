@@ -11,19 +11,26 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.tarikyasar.curmin.R
+import com.tarikyasar.curmin.domain.model.Themes
 import com.tarikyasar.curmin.presentation.composable.CurminDialog
 import com.tarikyasar.curmin.presentation.composable.CurminDropdown
-import com.tarikyasar.curmin.presentation.settings_dialog.model.Themes
 
 @Composable
 fun SettingsDialog(
+    viewModel: SettingsDialogViewModel = hiltViewModel(),
     openSettingsDialog: Boolean,
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
 ) {
+    val state = viewModel.state.value
+
     if (openSettingsDialog) {
         CurminDialog(
-            onDismissRequest = onDismissRequest,
+            onDismissRequest = {
+                viewModel.getTheme()
+                onDismissRequest()
+            }
         ) {
             Surface(
                 modifier = Modifier
@@ -54,13 +61,18 @@ fun SettingsDialog(
                                     .size(30.dp)
                                     .clickable {
                                         onDismissRequest()
+                                        viewModel.getTheme()
                                     }
                             )
                         }
                     }
                 ) {
                     Column {
-                        ThemeSetting()
+                        ThemeSetting(
+                            themes = state.themes,
+                            onSelectTheme = { themes ->
+                                viewModel.setTheme(themes)
+                            })
                         Divider()
                     }
                 }
@@ -70,9 +82,12 @@ fun SettingsDialog(
 }
 
 @Composable
-fun ThemeSetting() {
+fun ThemeSetting(
+    themes: Themes?,
+    onSelectTheme: (Themes) -> Unit
+) {
     var expanded by remember { mutableStateOf(false) }
-    var themeState by remember { mutableStateOf(Themes.LIGHT) }
+    var themeState by remember { mutableStateOf(themes) }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -86,12 +101,13 @@ fun ThemeSetting() {
         CurminDropdown(
             expanded = expanded,
             onExpandedChangeRequest = { expanded = it },
-            selectedItemText = themeState.getThemeName()
+            selectedItemText = themeState?.getThemeName() ?: Themes.SYSTEM_THEME.getThemeName()
         ) {
             Themes.values().forEach { theme ->
                 DropdownMenuItem(onClick = {
                     themeState = theme
                     expanded = false
+                    onSelectTheme(theme)
                 }) {
                     Text(text = theme.getThemeName())
                 }

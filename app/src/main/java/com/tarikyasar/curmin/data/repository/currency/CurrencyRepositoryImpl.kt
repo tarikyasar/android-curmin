@@ -1,4 +1,4 @@
-package com.tarikyasar.curmin.data.repository
+package com.tarikyasar.curmin.data.repository.currency
 
 import com.tarikyasar.curmin.data.remote.CurrencyApi
 import com.tarikyasar.curmin.data.remote.dto.currency.CurrencyConversionDto

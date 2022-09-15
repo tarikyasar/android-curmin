@@ -1,4 +1,4 @@
-package com.tarikyasar.curmin.presentation.settings_dialog.model
+package com.tarikyasar.curmin.domain.model
 
 enum class Themes {
     LIGHT,

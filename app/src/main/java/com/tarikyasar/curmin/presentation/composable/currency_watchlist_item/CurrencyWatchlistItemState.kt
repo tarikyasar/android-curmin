@@ -1,4 +1,4 @@
-package com.tarikyasar.curmin.presentation.currency_watchlist_item
+package com.tarikyasar.curmin.presentation.composable.currency_watchlist_item
 
 import com.tarikyasar.curmin.domain.model.LatestData
 

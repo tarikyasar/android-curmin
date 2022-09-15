@@ -2,7 +2,7 @@ package com.tarikyasar.curmin.di
 
 import com.tarikyasar.curmin.common.Constants
 import com.tarikyasar.curmin.data.remote.CurrencyApi
-import com.tarikyasar.curmin.data.repository.CurrencyRepositoryImpl
+import com.tarikyasar.curmin.data.repository.currency.CurrencyRepositoryImpl
 import com.tarikyasar.curmin.domain.repository.CurrencyRepository
 import dagger.Module
 import dagger.Provides
@@ -10,11 +10,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import javax.inject.Singleton
 
 @Module

@@ -1,4 +1,4 @@
-package com.tarikyasar.curmin.data.repository.mapper
+package com.tarikyasar.curmin.data.repository.currency.mapper
 
 import com.tarikyasar.curmin.data.remote.dto.currency.CurrencyConversionDto
 import com.tarikyasar.curmin.domain.model.ConvertedCurrency
