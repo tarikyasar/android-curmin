@@ -2,6 +2,8 @@ package com.tarikyasar.curmin.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+val BackgroundColorDark = Color(0xFF303030)
+val BackgroundColorLight = Color(0xFFCFCFCF)
 val PrimaryColor = Color(0xFF029485)
 val PrimaryColorVariant = Color(0xFF0BE2CC)
 val SecondaryColor = Color(0xFFF35321)
