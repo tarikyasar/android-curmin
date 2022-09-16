@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
-import com.google.gson.reflect.TypeToken
+import com.tarikyasar.curmin.domain.model.Symbol
 import com.tarikyasar.curmin.domain.model.Themes
 import com.tarikyasar.curmin.utils.GsonHolder
 import com.tarikyasar.curmin.utils.fromJson
@@ -30,6 +30,18 @@ class LocalStorage @Inject constructor(
             }
         }
 
+    var baseCurrency: Symbol?
+        get() {
+            val json = preferences.getString(PreferenceKey.BASE_CURRENCY.key, "")
+            return GsonHolder.gson.fromJson(json)
+        }
+        set(value) {
+            val json = GsonHolder.gson.toJson(value)
+            preferences.edit {
+                putString(PreferenceKey.BASE_CURRENCY.key, json)
+            }
+        }
+
     companion object {
         fun getSharedPreferences(context: Context): SharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(context)
@@ -39,7 +51,8 @@ class LocalStorage @Inject constructor(
 enum class PreferenceKey(
     val key: String,
 ) {
-    SYSTEM_THEME("SYSTEM_THEME");
+    SYSTEM_THEME("SYSTEM_THEME"),
+    BASE_CURRENCY("BASE_CURRENCY");
 
     override fun toString(): String = key
 }

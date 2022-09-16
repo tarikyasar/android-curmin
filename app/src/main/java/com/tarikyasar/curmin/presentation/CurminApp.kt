@@ -14,15 +14,17 @@ import com.tarikyasar.curmin.domain.model.Themes
 import com.tarikyasar.curmin.presentation.composable.currency_watchlist_item.CurrencyWatchlistItem
 import com.tarikyasar.curmin.presentation.settings_dialog.SettingsDialog
 import com.tarikyasar.curmin.presentation.ui.theme.CurminTheme
+import com.tarikyasar.curmin.utils.BaseCurrencyManager
 import com.tarikyasar.curmin.utils.ThemeManager
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
 @Composable
 fun CurminApp(
-    themeManager: ThemeManager
+    themeManager: ThemeManager,
+    baseCurrencyManager: BaseCurrencyManager
 ) {
-    val appState = rememberCurminAppState(themeManager = themeManager)
+    val appState = rememberCurminAppState(themeManager = themeManager, baseCurrencyManager = baseCurrencyManager)
 
     when (themeManager.getTheme()) {
         Themes.LIGHT -> setDefaultNightMode(MODE_NIGHT_NO)

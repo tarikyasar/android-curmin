@@ -1,6 +1,7 @@
 package com.tarikyasar.curmin.data.repository.settings.datasource
 
 import com.tarikyasar.curmin.data.cache.LocalStorage
+import com.tarikyasar.curmin.domain.model.Symbol
 import com.tarikyasar.curmin.domain.model.Themes
 import javax.inject.Inject
 
@@ -14,5 +15,13 @@ class SettingsCacheDataSource @Inject constructor(
 
     override fun getThemeParameters(): Themes? {
         return localStorage.themes
+    }
+
+    override fun setBaseCurrency(currency: Symbol?) {
+        localStorage.baseCurrency = currency
+    }
+
+    override fun getBaseCurrency(): Symbol? {
+        return localStorage.baseCurrency
     }
 }
