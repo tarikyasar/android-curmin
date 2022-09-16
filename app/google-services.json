@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "418723462568",
+    "project_id": "android-curmin",
+    "storage_bucket": "android-curmin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:418723462568:android:823e0c59442b19064ab19d",
+        "android_client_info": {
+          "package_name": "com.tarikyasar.curmin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "418723462568-ig2hjsoueas1b118mkgcbbjb94lbh52j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tarikyasar.curmin",
+            "certificate_hash": "3be61303f8d841fb2511a80fb7ceb8c6db1bcdbe"
+          }
+        },
+        {
+          "client_id": "418723462568-8erdpat9dhgck718no88f6nve22s63am.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_BRqMm9ef0uK_g0jOyoF6LEbzQdxrciE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "418723462568-8erdpat9dhgck718no88f6nve22s63am.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
