@@ -17,3 +17,12 @@ val CurrencyUpColor = Color(0xFFA3F0A3)
 val CurrencyDownColor = Color(0xFFCC7272)
 val CurrencyArrowUpColor = Color(0xFF347C34)
 val CurrencyArrowDownColor = Color(0xFF883838)
+val SwipeDeleteButtonBackgroundColor = CurrencyDownColor
+val SwipeDeleteButtonLabelColor = CurrencyArrowDownColor
+val PositiveButtonBackgroundColor = CurrencyUpColor
+val PositiveButtonTextColor = CurrencyArrowUpColor
+val NegativeButtonBackgroundColor = CurrencyDownColor
+val NegativeButtonTextColor = CurrencyArrowDownColor
+
+val DialogWarningBorderColor = Color(0xFFF38B3A)
+val DialogErrorBorderColor = Color(0xFFEB5050)

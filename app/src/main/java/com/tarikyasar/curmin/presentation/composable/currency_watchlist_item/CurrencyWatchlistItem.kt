@@ -75,8 +75,6 @@ fun CurrencyWatchlistItem(
                         modifier = Modifier.padding(4.dp)
                     )
                 }
-
-
             }
 
             Text(
