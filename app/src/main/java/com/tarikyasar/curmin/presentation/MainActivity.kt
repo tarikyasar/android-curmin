@@ -3,8 +3,8 @@ package com.tarikyasar.curmin.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.tarikyasar.curmin.utils.BaseCurrencyManager
-import com.tarikyasar.curmin.utils.ThemeManager
+import com.tarikyasar.curmin.utils.manager.BaseCurrencyManager
+import com.tarikyasar.curmin.utils.manager.ThemeManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

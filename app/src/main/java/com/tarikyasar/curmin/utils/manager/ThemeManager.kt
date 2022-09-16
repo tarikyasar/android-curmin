@@ -1,4 +1,4 @@
-package com.tarikyasar.curmin.utils
+package com.tarikyasar.curmin.utils.manager
 
 import com.tarikyasar.curmin.domain.model.Themes
 import com.tarikyasar.curmin.domain.usecase.GetThemeParameters

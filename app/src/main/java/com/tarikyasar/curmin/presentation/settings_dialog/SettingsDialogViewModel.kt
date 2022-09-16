@@ -8,8 +8,8 @@ import com.tarikyasar.curmin.common.Resource
 import com.tarikyasar.curmin.domain.model.Symbol
 import com.tarikyasar.curmin.domain.model.Themes
 import com.tarikyasar.curmin.domain.usecase.GetCurrencySymbolsUseCase
-import com.tarikyasar.curmin.utils.BaseCurrencyManager
-import com.tarikyasar.curmin.utils.ThemeManager
+import com.tarikyasar.curmin.utils.manager.BaseCurrencyManager
+import com.tarikyasar.curmin.utils.manager.ThemeManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

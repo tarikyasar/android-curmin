@@ -14,8 +14,8 @@ import com.tarikyasar.curmin.domain.model.Themes
 import com.tarikyasar.curmin.presentation.composable.currency_watchlist_item.CurrencyWatchlistItem
 import com.tarikyasar.curmin.presentation.settings_dialog.SettingsDialog
 import com.tarikyasar.curmin.presentation.ui.theme.CurminTheme
-import com.tarikyasar.curmin.utils.BaseCurrencyManager
-import com.tarikyasar.curmin.utils.ThemeManager
+import com.tarikyasar.curmin.utils.manager.BaseCurrencyManager
+import com.tarikyasar.curmin.utils.manager.ThemeManager
 import kotlin.math.roundToInt
 import kotlin.random.Random
 

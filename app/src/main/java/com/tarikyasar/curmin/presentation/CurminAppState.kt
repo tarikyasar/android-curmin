@@ -4,8 +4,8 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.*
 import com.tarikyasar.curmin.domain.model.Symbol
 import com.tarikyasar.curmin.domain.model.Themes
-import com.tarikyasar.curmin.utils.BaseCurrencyManager
-import com.tarikyasar.curmin.utils.ThemeManager
+import com.tarikyasar.curmin.utils.manager.BaseCurrencyManager
+import com.tarikyasar.curmin.utils.manager.ThemeManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
