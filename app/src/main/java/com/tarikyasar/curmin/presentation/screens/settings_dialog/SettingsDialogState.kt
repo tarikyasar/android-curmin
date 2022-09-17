@@ -1,4 +1,4 @@
-package com.tarikyasar.curmin.presentation.settings_dialog
+package com.tarikyasar.curmin.presentation.screens.settings_dialog
 
 import com.tarikyasar.curmin.domain.model.Symbol
 import com.tarikyasar.curmin.domain.model.Themes

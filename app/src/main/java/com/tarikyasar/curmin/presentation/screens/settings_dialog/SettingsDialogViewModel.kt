@@ -1,4 +1,4 @@
-package com.tarikyasar.curmin.presentation.settings_dialog
+package com.tarikyasar.curmin.presentation.screens.settings_dialog
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
