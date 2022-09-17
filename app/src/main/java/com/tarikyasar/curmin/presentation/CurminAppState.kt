@@ -2,6 +2,9 @@ package com.tarikyasar.curmin.presentation
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
+import androidx.room.Room
+import com.tarikyasar.curmin.data.database.AppDatabase
 import com.tarikyasar.curmin.domain.model.Symbol
 import com.tarikyasar.curmin.domain.model.Themes
 import com.tarikyasar.curmin.utils.manager.BaseCurrencyManager

@@ -1,12 +1,19 @@
 package com.tarikyasar.curmin.di
 
+import android.app.Application
+import android.content.Context
+import androidx.room.Room
+import com.tarikyasar.curmin.Curmin
 import com.tarikyasar.curmin.common.Constants
+import com.tarikyasar.curmin.data.database.AppDatabase
 import com.tarikyasar.curmin.data.remote.CurrencyApi
 import com.tarikyasar.curmin.data.repository.currency.CurrencyRepositoryImpl
 import com.tarikyasar.curmin.domain.repository.CurrencyRepository
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -51,5 +58,15 @@ object AppModule {
     @Singleton
     fun provideCurrencyRepository(api: CurrencyApi): CurrencyRepository {
         return CurrencyRepositoryImpl(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDatabase(@ApplicationContext context: Context): AppDatabase {
+        return Room.databaseBuilder(
+            context,
+            AppDatabase::class.java, "currency_watchlist_database"
+        )
+            .build()
     }
 }

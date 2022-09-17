@@ -1,8 +1,8 @@
 package com.tarikyasar.curmin.utils.manager
 
 import com.tarikyasar.curmin.domain.model.Symbol
-import com.tarikyasar.curmin.domain.usecase.GetBaseCurrency
-import com.tarikyasar.curmin.domain.usecase.SetBaseCurrency
+import com.tarikyasar.curmin.domain.usecase.cache.GetBaseCurrency
+import com.tarikyasar.curmin.domain.usecase.cache.SetBaseCurrency
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject

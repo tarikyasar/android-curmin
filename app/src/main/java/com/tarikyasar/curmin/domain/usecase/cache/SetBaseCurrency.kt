@@ -1,4 +1,4 @@
-package com.tarikyasar.curmin.domain.usecase
+package com.tarikyasar.curmin.domain.usecase.cache
 
 import com.tarikyasar.curmin.domain.model.Symbol
 import com.tarikyasar.curmin.domain.repository.SettingsRepository

@@ -1,4 +1,4 @@
-package com.tarikyasar.curmin.domain.usecase
+package com.tarikyasar.curmin.domain.usecase.api
 
 import com.tarikyasar.curmin.common.Resource
 import com.tarikyasar.curmin.data.repository.currency.mapper.toCurrencySymbol

@@ -93,4 +93,10 @@ dependencies {
 
     // Firebase
     implementation platform('com.google.firebase:firebase-bom:30.4.1')
+
+    // Room
+    implementation "androidx.room:room-runtime:2.4.0"
+    kapt "androidx.room:room-compiler:2.4.0"
+    implementation "androidx.room:room-ktx:2.4.0"
+    androidTestImplementation "androidx.room:room-testing:2.4.0"
 }

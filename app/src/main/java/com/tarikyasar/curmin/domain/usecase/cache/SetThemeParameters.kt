@@ -1,11 +1,11 @@
-package com.tarikyasar.curmin.domain.usecase
+package com.tarikyasar.curmin.domain.usecase.cache
 
 import com.tarikyasar.curmin.domain.model.Themes
 import com.tarikyasar.curmin.domain.repository.SettingsRepository
 import javax.inject.Inject
 
-class GetThemeParameters @Inject constructor(
+class SetThemeParameters @Inject constructor(
     private val settingsRepository: SettingsRepository
 ) {
-    operator fun invoke() = settingsRepository.getThemeParameters() ?: Themes.SYSTEM_THEME
+    operator fun invoke(params: Themes?) = settingsRepository.setThemeParameters(params)
 }
