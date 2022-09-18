@@ -32,12 +32,15 @@ class CurrencyWatchlistViewModel @Inject constructor(
         getCurrencyWatchlistItems().onEach { result ->
             when (result) {
                 is Resource.Success -> _state.value =
-                    CurrencyWatchlistState(currencies = result.data ?: emptyList())
-                is Resource.Error -> _state.value = CurrencyWatchlistState(
-                    error = result.message ?: "An unexpected error occurred."
+                    _state.value.copy(
+                        currencies = (result.data as MutableList<CurrencyWatchlistItem>),
+                        isLoading = false
+                    )
+                is Resource.Error -> _state.value = _state.value.copy(
+                    error = result.message ?: "An unexpected error occurred.",
+                    isLoading = false
                 )
-                is Resource.Loading -> _state.value =
-                    CurrencyWatchlistState(isLoading = true)
+                is Resource.Loading -> _state.value = _state.value.copy(isLoading = true)
             }
         }.launchIn(viewModelScope)
     }
@@ -46,13 +49,16 @@ class CurrencyWatchlistViewModel @Inject constructor(
         insertCurrencyWatchlistItemUseCase(currencyWatchlistItem).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    getCurrencies()
+                    _state.value = _state.value.copy(
+                        currencies = (_state.value.currencies + currencyWatchlistItem) as MutableList<CurrencyWatchlistItem>,
+                        isLoading = false
+                    )
                 }
-                is Resource.Error -> _state.value = CurrencyWatchlistState(
-                    error = result.message ?: "An unexpected error occurred."
+                is Resource.Error -> _state.value = _state.value.copy(
+                    error = result.message ?: "An unexpected error occurred.",
+                    isLoading = false
                 )
-                is Resource.Loading -> _state.value =
-                    CurrencyWatchlistState(isLoading = true)
+                is Resource.Loading -> _state.value = _state.value.copy(isLoading = true)
             }
         }.launchIn(viewModelScope)
     }
@@ -61,13 +67,18 @@ class CurrencyWatchlistViewModel @Inject constructor(
         deleteCurrencyWatchlistItemUseCase(currencyWatchlistItemUid).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    getCurrencies()
+                    _state.value = _state.value.copy(
+                        currencies = _state.value.currencies.filter { currencyWatchlistItem ->
+                            currencyWatchlistItem.uid != currencyWatchlistItemUid
+                        } as MutableList<CurrencyWatchlistItem>,
+                        isLoading = false
+                    )
                 }
-                is Resource.Error -> _state.value = CurrencyWatchlistState(
-                    error = result.message ?: "An unexpected error occurred."
+                is Resource.Error -> _state.value = _state.value.copy(
+                    error = result.message ?: "An unexpected error occurred.",
+                    isLoading = false
                 )
-                is Resource.Loading -> _state.value =
-                    CurrencyWatchlistState(isLoading = true)
+                is Resource.Loading -> _state.value = _state.value.copy(isLoading = true)
             }
         }.launchIn(viewModelScope)
     }

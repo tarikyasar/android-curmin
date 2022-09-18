@@ -21,8 +21,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshState
-import com.tarikyasar.curmin.presentation.composable.CurminWarningDialog
+import com.tarikyasar.curmin.domain.model.Symbol
 import com.tarikyasar.curmin.presentation.composable.currency_watchlist_item.CurrencyWatchlistItem
+import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.CreateWatchlistItemDialog
+import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.DeleteWatchlistItemDialog
 import com.tarikyasar.curmin.presentation.ui.theme.SwipeDeleteButtonBackgroundColor
 import com.tarikyasar.curmin.presentation.ui.theme.SwipeDeleteButtonLabelColor
 import kotlin.math.roundToInt
@@ -37,6 +39,7 @@ fun CurrencyWatchlist(
     val state = viewModel.state.value
     var changeValue1 by remember { mutableStateOf(Random.nextDouble(-0.25, 0.25)) }
     var showDeleteWatchlistItemDialog by remember { mutableStateOf(false) }
+    var showAddWatchlistItemDialog by remember { mutableStateOf(false) }
     var listItemUidToDelete by remember { mutableStateOf(0) }
     val swipeRefreshState by remember { mutableStateOf(SwipeRefreshState(false)) }
 
@@ -102,8 +105,8 @@ fun CurrencyWatchlist(
                                     },
                                     dismissContent = {
                                         CurrencyWatchlistItem(
-                                            base = "XXX",
-                                            target = currency.baseCurrencyCode ?: "",
+                                            base = currency.baseCurrencyCode ?: "",
+                                            target = currency.targetCurrencyCode ?: "",
                                             value = ((currency.rate
                                                 ?: 0.0) * 100.0).roundToInt() / 100.0,
                                             change = (changeValue1 * 100.0).roundToInt() / 100.0,
@@ -134,17 +137,7 @@ fun CurrencyWatchlist(
 
             Button(
                 onClick = {
-                    viewModel.insertCurrency(
-                        com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItem(
-                            uid = 0,
-                            baseCurrencyCode = "USD",
-                            targetCurrencyCode = "TRY",
-                            rate = 10.0,
-                            previousChangeRate = 0.04,
-                            currentChangeRate = 0.2,
-                            date = "17.09.2022"
-                        )
-                    )
+                    showAddWatchlistItemDialog = true
                 },
                 shape = CircleShape,
                 colors = ButtonDefaults
@@ -152,6 +145,7 @@ fun CurrencyWatchlist(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(10.dp)
+                    .size(70.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
@@ -162,6 +156,34 @@ fun CurrencyWatchlist(
                         .height(50.dp)
                 )
             }
+
+            CreateWatchlistItemDialog(
+                showCreateWatchlistItemDialog = showAddWatchlistItemDialog,
+                onDismissRequest = { showAddWatchlistItemDialog = false },
+                onPositiveButtonClick = { baseCurrency, targetCurrency ->
+                    viewModel.insertCurrency(
+                        com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItem(
+                            uid = 0,
+                            baseCurrencyCode = baseCurrency,
+                            targetCurrencyCode = targetCurrency,
+                            rate = Random.nextDouble(0.0, 20.0),
+                            previousChangeRate = Random.nextDouble(0.0, 0.5),
+                            currentChangeRate = Random.nextDouble(0.0, 0.5),
+                            date = "18.09.2022",
+                        )
+                    )
+                },
+                currencyList = listOf(
+                    Symbol("ABC", ""),
+                    Symbol("DEF", ""),
+                    Symbol("GHI", ""),
+                    Symbol("JKL", ""),
+                    Symbol("MNO", ""),
+                    Symbol("PRS", ""),
+                    Symbol("TUV", ""),
+                    Symbol("WYZ", ""),
+                )
+            )
 
             DeleteWatchlistItemDialog(
                 showDeleteWatchlistItemDialog = showDeleteWatchlistItemDialog,
@@ -179,20 +201,3 @@ fun CurrencyWatchlist(
     }
 }
 
-@Composable
-fun DeleteWatchlistItemDialog(
-    showDeleteWatchlistItemDialog: Boolean,
-    onDismissRequest: () -> Unit,
-    onPositiveButtonClick: () -> Unit,
-    onNegativeButtonClick: () -> Unit,
-    baseCurrency: String,
-    targetCurrency: String,
-) {
-    CurminWarningDialog(
-        showWarningDialog = showDeleteWatchlistItemDialog,
-        onDismissRequest = onDismissRequest,
-        onPositiveButtonClick = onPositiveButtonClick,
-        onNegativeButtonClick = onNegativeButtonClick,
-        warningMessage = "Watchlist item containing $baseCurrency-$targetCurrency currencies will be deleted.\nAre you sure?"
-    )
-}

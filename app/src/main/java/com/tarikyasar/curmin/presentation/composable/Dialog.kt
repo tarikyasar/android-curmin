@@ -124,7 +124,7 @@ fun CurminWarningDialog(
                                     onDismissRequest()
                                 },
                                 shape = RoundedCornerShape(10.dp),
-                                colors = ButtonDefaults.buttonColors(backgroundColor = CurrencyUpColor),
+                                colors = ButtonDefaults.buttonColors(backgroundColor = PositiveButtonBackgroundColor),
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .weight(1f)
@@ -133,7 +133,7 @@ fun CurminWarningDialog(
                                 Text(
                                     text = "Yes",
                                     fontSize = 24.sp,
-                                    color = CurrencyArrowUpColor
+                                    color = PositiveButtonTextColor
                                 )
                             }
 
@@ -143,7 +143,7 @@ fun CurminWarningDialog(
                                     onDismissRequest()
                                 },
                                 shape = RoundedCornerShape(10.dp),
-                                colors = ButtonDefaults.buttonColors(backgroundColor = CurrencyDownColor),
+                                colors = ButtonDefaults.buttonColors(backgroundColor = NegativeButtonBackgroundColor),
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .weight(1f)
@@ -152,7 +152,7 @@ fun CurminWarningDialog(
                                 Text(
                                     text = "No",
                                     fontSize = 24.sp,
-                                    color = CurrencyArrowDownColor
+                                    color = NegativeButtonTextColor
                                 )
                             }
                         }
@@ -162,3 +162,4 @@ fun CurminWarningDialog(
         }
     }
 }
+
