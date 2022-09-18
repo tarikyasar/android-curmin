@@ -21,12 +21,15 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshState
+import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
 import com.tarikyasar.curmin.domain.model.Symbol
-import com.tarikyasar.curmin.presentation.composable.currency_watchlist_item.CurrencyWatchlistItem
+import com.tarikyasar.curmin.presentation.composable.CurminErrorDialog
+import com.tarikyasar.curmin.presentation.composable.CurrencyWatchlistItem
 import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.CreateWatchlistItemDialog
 import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.DeleteWatchlistItemDialog
 import com.tarikyasar.curmin.presentation.ui.theme.SwipeDeleteButtonBackgroundColor
 import com.tarikyasar.curmin.presentation.ui.theme.SwipeDeleteButtonLabelColor
+import java.util.*
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
@@ -40,8 +43,9 @@ fun CurrencyWatchlist(
     var changeValue1 by remember { mutableStateOf(Random.nextDouble(-0.25, 0.25)) }
     var showDeleteWatchlistItemDialog by remember { mutableStateOf(false) }
     var showAddWatchlistItemDialog by remember { mutableStateOf(false) }
-    var listItemUidToDelete by remember { mutableStateOf(0) }
+    var showErrorDialog by remember { mutableStateOf(state.error.isEmpty().not()) }
     val swipeRefreshState by remember { mutableStateOf(SwipeRefreshState(false)) }
+    var deleteItemUid by remember { mutableStateOf("") }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -69,54 +73,57 @@ fun CurrencyWatchlist(
                                 .fillMaxHeight()
                         ) {
                             items(state.currencies) { currency ->
-                                val dismissState = rememberDismissState(
-                                    confirmStateChange = {
-                                        if (it == DismissValue.DismissedToStart) {
-                                            listItemUidToDelete = currency.uid
-                                            showDeleteWatchlistItemDialog = true
-                                            false
-                                        } else {
-                                            true
+                                key(currency.uid) {
+                                    val dismissState = rememberDismissState(
+                                        confirmStateChange = {
+                                            if (it == DismissValue.DismissedToStart) {
+                                                deleteItemUid = currency.uid
+                                                showDeleteWatchlistItemDialog = true
+                                                false
+                                            } else {
+                                                true
+                                            }
                                         }
-                                    }
-                                )
+                                    )
 
-                                SwipeToDismiss(
-                                    state = dismissState,
-                                    background = {
-                                        val color = when (dismissState.dismissDirection) {
-                                            DismissDirection.EndToStart -> SwipeDeleteButtonBackgroundColor
-                                            else -> Color.Transparent
-                                        }
+                                    SwipeToDismiss(
+                                        state = dismissState,
+                                        background = {
+                                            val color = when (dismissState.dismissDirection) {
+                                                DismissDirection.EndToStart -> SwipeDeleteButtonBackgroundColor
+                                                else -> Color.Transparent
+                                            }
 
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .background(color, RoundedCornerShape(10.dp))
-                                                .padding(10.dp)
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.Default.Delete,
-                                                contentDescription = null,
-                                                tint = SwipeDeleteButtonLabelColor,
-                                                modifier = Modifier.align(Alignment.CenterEnd)
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxSize()
+                                                    .background(color, RoundedCornerShape(10.dp))
+                                                    .padding(10.dp)
+                                            ) {
+                                                Icon(
+                                                    imageVector = Icons.Default.Delete,
+                                                    contentDescription = null,
+                                                    tint = SwipeDeleteButtonLabelColor,
+                                                    modifier = Modifier.align(Alignment.CenterEnd)
+                                                )
+                                            }
+                                        },
+                                        dismissContent = {
+                                            CurrencyWatchlistItem(
+                                                base = currency.baseCurrencyCode ?: "",
+                                                target = currency.targetCurrencyCode ?: "",
+                                                value = ((currency.rate
+                                                    ?: 0.0) * 100.0).roundToInt() / 100.0,
+                                                change = (changeValue1 * 100.0).roundToInt() / 100.0,
+                                                date = "14.09.2022"
                                             )
-                                        }
-                                    },
-                                    dismissContent = {
-                                        CurrencyWatchlistItem(
-                                            base = currency.baseCurrencyCode ?: "",
-                                            target = currency.targetCurrencyCode ?: "",
-                                            value = ((currency.rate
-                                                ?: 0.0) * 100.0).roundToInt() / 100.0,
-                                            change = (changeValue1 * 100.0).roundToInt() / 100.0,
-                                            date = "14.09.2022"
-                                        )
-                                    },
-                                    directions = setOf(DismissDirection.EndToStart)
-                                )
+                                        },
+                                        directions = setOf(DismissDirection.EndToStart)
+                                    )
 
-                                Spacer(modifier = Modifier.height(10.dp))
+                                    Spacer(modifier = Modifier.height(10.dp))
+                                }
+
                             }
                         }
                     }
@@ -144,7 +151,7 @@ fun CurrencyWatchlist(
                     .buttonColors(backgroundColor = MaterialTheme.colors.primary),
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(10.dp)
+                    .padding(20.dp)
                     .size(70.dp)
             ) {
                 Icon(
@@ -162,8 +169,8 @@ fun CurrencyWatchlist(
                 onDismissRequest = { showAddWatchlistItemDialog = false },
                 onPositiveButtonClick = { baseCurrency, targetCurrency ->
                     viewModel.insertCurrency(
-                        com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItem(
-                            uid = 0,
+                        CurrencyWatchlistItemData(
+                            uid = UUID.randomUUID().toString(),
                             baseCurrencyCode = baseCurrency,
                             targetCurrencyCode = targetCurrency,
                             rate = Random.nextDouble(0.0, 20.0),
@@ -191,13 +198,23 @@ fun CurrencyWatchlist(
                     showDeleteWatchlistItemDialog = false
                 },
                 onPositiveButtonClick = {
-                    viewModel.deleteCurrency(listItemUidToDelete)
+                    viewModel.deleteCurrency(deleteItemUid)
                 },
                 onNegativeButtonClick = { showDeleteWatchlistItemDialog = false },
                 baseCurrency = "XXX",
                 targetCurrency = "TRY"
             )
+
+            CurminErrorDialog(
+                showErrorDialog = showErrorDialog,
+                onDismissRequest = {
+                    showErrorDialog = false
+                },
+                onPositiveButtonClick = {
+                    showErrorDialog = false
+                },
+                warningMessage = state.error
+            )
         }
     }
 }
-

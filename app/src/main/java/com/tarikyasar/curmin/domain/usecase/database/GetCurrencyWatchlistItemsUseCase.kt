@@ -2,7 +2,7 @@ package com.tarikyasar.curmin.domain.usecase.database
 
 import com.tarikyasar.curmin.common.Resource
 import com.tarikyasar.curmin.data.database.AppDatabase
-import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItem
+import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
@@ -12,19 +12,19 @@ import javax.inject.Inject
 class GetCurrencyWatchlistItemsUseCase @Inject constructor(
     private val database: AppDatabase
 ) {
-    operator fun invoke(): Flow<Resource<List<CurrencyWatchlistItem>>> = flow {
+    operator fun invoke(): Flow<Resource<List<CurrencyWatchlistItemData>>> = flow {
         try {
-            emit(Resource.Loading<List<CurrencyWatchlistItem>>())
+            emit(Resource.Loading<List<CurrencyWatchlistItemData>>())
             val currencyWatchlistItems = database.currencyDao().getAll()
-            emit(Resource.Success<List<CurrencyWatchlistItem>>(currencyWatchlistItems))
+            emit(Resource.Success<List<CurrencyWatchlistItemData>>(currencyWatchlistItems))
         } catch (e: HttpException) {
             emit(
-                Resource.Error<List<CurrencyWatchlistItem>>(
+                Resource.Error<List<CurrencyWatchlistItemData>>(
                     e.localizedMessage ?: "An unexpected error occurred."
                 )
             )
         } catch (e: IOException) {
-            emit(Resource.Error<List<CurrencyWatchlistItem>>("Couldn't reach database."))
+            emit(Resource.Error<List<CurrencyWatchlistItemData>>("Couldn't reach database."))
         }
     }
 }

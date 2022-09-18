@@ -1,4 +1,4 @@
-package com.tarikyasar.curmin.presentation.composable.currency_watchlist_item
+package com.tarikyasar.curmin.presentation.composable
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background

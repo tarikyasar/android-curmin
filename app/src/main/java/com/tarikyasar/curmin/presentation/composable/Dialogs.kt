@@ -163,3 +163,89 @@ fun CurminWarningDialog(
     }
 }
 
+@Composable
+fun CurminErrorDialog(
+    showErrorDialog: Boolean,
+    onDismissRequest: () -> Unit,
+    onPositiveButtonClick: () -> Unit,
+    warningMessage: String,
+    properties: DialogProperties = DialogProperties()
+) {
+    if (showErrorDialog) {
+        CurminDialog(
+            onDismissRequest = onDismissRequest,
+            properties = properties
+        ) {
+            Surface(
+                border = BorderStroke(1.dp, DialogErrorBorderColor),
+                modifier = Modifier
+                    .padding(vertical = 10.dp)
+                    .height(260.dp),
+                shape = RoundedCornerShape(10.dp)
+            ) {
+                Scaffold(
+                    topBar = {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "Warning",
+                                color = MaterialTheme.colors.onSurface,
+                                fontSize = 24.sp,
+                                modifier = Modifier.padding(10.dp),
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    },
+                    modifier = Modifier.background(
+                        MaterialTheme.colors.surface,
+                        RoundedCornerShape(10.dp)
+                    )
+                ) {
+                    Column(
+                        verticalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .padding(20.dp)
+                    ) {
+                        Text(
+                            text = warningMessage,
+                            fontSize = 18.sp,
+                            color = MaterialTheme.colors.onSurface,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(bottom = 20.dp)
+                        )
+
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Button(
+                                onClick = {
+                                    onPositiveButtonClick()
+                                    onDismissRequest()
+                                },
+                                shape = RoundedCornerShape(10.dp),
+                                colors = ButtonDefaults.buttonColors(backgroundColor = PositiveButtonBackgroundColor),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(1f)
+                                    .padding(10.dp)
+                            ) {
+                                Text(
+                                    text = "Yes",
+                                    fontSize = 24.sp,
+                                    color = PositiveButtonTextColor
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -2,7 +2,6 @@ package com.tarikyasar.curmin.domain.usecase.database
 
 import com.tarikyasar.curmin.common.Resource
 import com.tarikyasar.curmin.data.database.AppDatabase
-import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
@@ -12,19 +11,19 @@ import javax.inject.Inject
 class DeleteCurrencyWatchlistItemUseCase @Inject constructor(
     private val database: AppDatabase
 ) {
-    operator fun invoke(currencyWatchlistItemUid: Int): Flow<Resource<Int>> = flow {
+    operator fun invoke(currencyWatchlistItemUid: String): Flow<Resource<String>> = flow {
         try {
-            emit(Resource.Loading<Int>())
+            emit(Resource.Loading<String>())
             database.currencyDao().delete(currencyWatchlistItemUid)
-            emit(Resource.Success<Int>(currencyWatchlistItemUid))
+            emit(Resource.Success<String>(currencyWatchlistItemUid))
         } catch (e: HttpException) {
             emit(
-                Resource.Error<Int>(
+                Resource.Error<String>(
                     e.localizedMessage ?: "An unexpected error occurred."
                 )
             )
         } catch (e: IOException) {
-            emit(Resource.Error<Int>("Couldn't reach database."))
+            emit(Resource.Error<String>("Couldn't reach database."))
         }
     }
 }

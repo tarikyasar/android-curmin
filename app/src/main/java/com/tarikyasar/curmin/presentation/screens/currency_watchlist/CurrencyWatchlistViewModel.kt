@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tarikyasar.curmin.common.Resource
-import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItem
+import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
 import com.tarikyasar.curmin.domain.usecase.database.DeleteCurrencyWatchlistItemUseCase
 import com.tarikyasar.curmin.domain.usecase.database.GetCurrencyWatchlistItemsUseCase
 import com.tarikyasar.curmin.domain.usecase.database.InsertCurrencyWatchlistItemUseCase
@@ -31,11 +31,13 @@ class CurrencyWatchlistViewModel @Inject constructor(
     fun getCurrencies() {
         getCurrencyWatchlistItems().onEach { result ->
             when (result) {
-                is Resource.Success -> _state.value =
-                    _state.value.copy(
-                        currencies = (result.data as MutableList<CurrencyWatchlistItem>),
-                        isLoading = false
-                    )
+                is Resource.Success -> {
+                    _state.value =
+                        _state.value.copy(
+                            currencies = (result.data as MutableList<CurrencyWatchlistItemData>),
+                            isLoading = false
+                        )
+                }
                 is Resource.Error -> _state.value = _state.value.copy(
                     error = result.message ?: "An unexpected error occurred.",
                     isLoading = false
@@ -45,12 +47,12 @@ class CurrencyWatchlistViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun insertCurrency(currencyWatchlistItem: CurrencyWatchlistItem) {
+    fun insertCurrency(currencyWatchlistItem: CurrencyWatchlistItemData) {
         insertCurrencyWatchlistItemUseCase(currencyWatchlistItem).onEach { result ->
             when (result) {
                 is Resource.Success -> {
                     _state.value = _state.value.copy(
-                        currencies = (_state.value.currencies + currencyWatchlistItem) as MutableList<CurrencyWatchlistItem>,
+                        currencies = (_state.value.currencies + currencyWatchlistItem) as MutableList<CurrencyWatchlistItemData>,
                         isLoading = false
                     )
                 }
@@ -63,22 +65,28 @@ class CurrencyWatchlistViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun deleteCurrency(currencyWatchlistItemUid: Int) {
+    fun deleteCurrency(currencyWatchlistItemUid: String) {
         deleteCurrencyWatchlistItemUseCase(currencyWatchlistItemUid).onEach { result ->
             when (result) {
                 is Resource.Success -> {
+                    _state.value.currencies.remove(_state.value.currencies.find {
+                        it.uid == currencyWatchlistItemUid
+                    })
+
                     _state.value = _state.value.copy(
-                        currencies = _state.value.currencies.filter { currencyWatchlistItem ->
-                            currencyWatchlistItem.uid != currencyWatchlistItemUid
-                        } as MutableList<CurrencyWatchlistItem>,
+                        currencies = _state.value.currencies,
                         isLoading = false
                     )
                 }
-                is Resource.Error -> _state.value = _state.value.copy(
-                    error = result.message ?: "An unexpected error occurred.",
-                    isLoading = false
-                )
-                is Resource.Loading -> _state.value = _state.value.copy(isLoading = true)
+                is Resource.Error -> {
+                    _state.value = _state.value.copy(
+                        error = result.message ?: "An unexpected error occurred.",
+                        isLoading = false
+                    )
+                }
+                is Resource.Loading -> {
+                    _state.value = _state.value.copy(isLoading = true)
+                }
             }
         }.launchIn(viewModelScope)
     }
