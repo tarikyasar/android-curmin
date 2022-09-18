@@ -8,8 +8,4 @@ interface SettingsRepository {
     fun setThemeParameters(themes: Themes?)
 
     fun getThemeParameters(): Themes?
-
-    fun setBaseCurrency(currency: Symbol?)
-
-    fun getBaseCurrency(): Symbol?
 }

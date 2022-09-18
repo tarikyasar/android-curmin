@@ -17,7 +17,6 @@ import com.tarikyasar.curmin.domain.model.Themes
 import com.tarikyasar.curmin.presentation.screens.currency_watchlist.CurrencyWatchlist
 import com.tarikyasar.curmin.presentation.screens.settings_dialog.SettingsDialog
 import com.tarikyasar.curmin.presentation.ui.theme.CurminTheme
-import com.tarikyasar.curmin.utils.manager.BaseCurrencyManager
 import com.tarikyasar.curmin.utils.manager.ThemeManager
 
 
@@ -26,11 +25,9 @@ import com.tarikyasar.curmin.utils.manager.ThemeManager
 @Composable
 fun CurminApp(
     themeManager: ThemeManager,
-    baseCurrencyManager: BaseCurrencyManager,
 ) {
     val appState = rememberCurminAppState(
         themeManager = themeManager,
-        baseCurrencyManager = baseCurrencyManager,
     )
 
     when (themeManager.getTheme()) {

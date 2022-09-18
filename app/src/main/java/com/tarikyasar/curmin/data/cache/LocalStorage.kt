@@ -30,18 +30,6 @@ class LocalStorage @Inject constructor(
             }
         }
 
-    var baseCurrency: Symbol?
-        get() {
-            val json = preferences.getString(PreferenceKey.BASE_CURRENCY.key, "")
-            return GsonHolder.gson.fromJson(json)
-        }
-        set(value) {
-            val json = GsonHolder.gson.toJson(value)
-            preferences.edit {
-                putString(PreferenceKey.BASE_CURRENCY.key, json)
-            }
-        }
-
     companion object {
         fun getSharedPreferences(context: Context): SharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(context)
@@ -51,8 +39,7 @@ class LocalStorage @Inject constructor(
 enum class PreferenceKey(
     val key: String,
 ) {
-    SYSTEM_THEME("SYSTEM_THEME"),
-    BASE_CURRENCY("BASE_CURRENCY");
+    SYSTEM_THEME("SYSTEM_THEME");
 
     override fun toString(): String = key
 }
