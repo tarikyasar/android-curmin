@@ -28,7 +28,7 @@ class CurrencyWatchlistViewModel @Inject constructor(
         getCurrencies()
     }
 
-    private fun getCurrencies() {
+    fun getCurrencies() {
         getCurrencyWatchlistItems().onEach { result ->
             when (result) {
                 is Resource.Success -> _state.value =

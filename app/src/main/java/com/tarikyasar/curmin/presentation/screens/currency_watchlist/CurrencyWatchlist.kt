@@ -19,6 +19,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.tarikyasar.curmin.presentation.composable.CurminWarningDialog
 import com.tarikyasar.curmin.presentation.composable.currency_watchlist_item.CurrencyWatchlistItem
 import com.tarikyasar.curmin.presentation.ui.theme.SwipeDeleteButtonBackgroundColor
@@ -33,9 +35,10 @@ fun CurrencyWatchlist(
     viewModel: CurrencyWatchlistViewModel = hiltViewModel(),
 ) {
     val state = viewModel.state.value
-    val changeValue1 by remember { mutableStateOf(Random.nextDouble(-0.25, 0.25)) }
+    var changeValue1 by remember { mutableStateOf(Random.nextDouble(-0.25, 0.25)) }
     var showDeleteWatchlistItemDialog by remember { mutableStateOf(false) }
     var listItemUidToDelete by remember { mutableStateOf(0) }
+    val swipeRefreshState by remember { mutableStateOf(SwipeRefreshState(false)) }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -46,64 +49,75 @@ fun CurrencyWatchlist(
                 verticalArrangement = if (state.currencies.isNotEmpty()) Arrangement.Top else Arrangement.Center,
                 modifier = Modifier.fillMaxHeight()
             ) {
+
                 if (state.currencies.isNotEmpty()) {
-                    LazyColumn(
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(10.dp)
+                    SwipeRefresh(
+                        state = swipeRefreshState,
+                        onRefresh = {
+                            viewModel.getCurrencies()
+                            changeValue1 = Random.nextDouble(-0.5, 0.5)
+                        }
                     ) {
-                        items(state.currencies) { currency ->
-                            val dismissState = rememberDismissState(
-                                confirmStateChange = {
-                                    if (it == DismissValue.DismissedToStart) {
-                                        listItemUidToDelete = currency.uid
-                                        showDeleteWatchlistItemDialog = true
-                                        false
-                                    } else {
-                                        true
+                        LazyColumn(
+                            verticalArrangement = Arrangement.Top,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .padding(10.dp)
+                                .fillMaxHeight()
+                        ) {
+                            items(state.currencies) { currency ->
+                                val dismissState = rememberDismissState(
+                                    confirmStateChange = {
+                                        if (it == DismissValue.DismissedToStart) {
+                                            listItemUidToDelete = currency.uid
+                                            showDeleteWatchlistItemDialog = true
+                                            false
+                                        } else {
+                                            true
+                                        }
                                     }
-                                }
-                            )
+                                )
 
-                            SwipeToDismiss(
-                                state = dismissState,
-                                background = {
-                                    val color = when (dismissState.dismissDirection) {
-                                        DismissDirection.EndToStart -> SwipeDeleteButtonBackgroundColor
-                                        else -> Color.Transparent
-                                    }
+                                SwipeToDismiss(
+                                    state = dismissState,
+                                    background = {
+                                        val color = when (dismissState.dismissDirection) {
+                                            DismissDirection.EndToStart -> SwipeDeleteButtonBackgroundColor
+                                            else -> Color.Transparent
+                                        }
 
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .background(color, RoundedCornerShape(10.dp))
-                                            .padding(10.dp)
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Default.Delete,
-                                            contentDescription = null,
-                                            tint = SwipeDeleteButtonLabelColor,
-                                            modifier = Modifier.align(Alignment.CenterEnd)
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .background(color, RoundedCornerShape(10.dp))
+                                                .padding(10.dp)
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.Delete,
+                                                contentDescription = null,
+                                                tint = SwipeDeleteButtonLabelColor,
+                                                modifier = Modifier.align(Alignment.CenterEnd)
+                                            )
+                                        }
+                                    },
+                                    dismissContent = {
+                                        CurrencyWatchlistItem(
+                                            base = "XXX",
+                                            target = currency.baseCurrencyCode ?: "",
+                                            value = ((currency.rate
+                                                ?: 0.0) * 100.0).roundToInt() / 100.0,
+                                            change = (changeValue1 * 100.0).roundToInt() / 100.0,
+                                            date = "14.09.2022"
                                         )
-                                    }
-                                },
-                                dismissContent = {
-                                    CurrencyWatchlistItem(
-                                        base = "XXX",
-                                        target = currency.baseCurrencyCode ?: "",
-                                        value = ((currency.rate
-                                            ?: 0.0) * 100.0).roundToInt() / 100.0,
-                                        change = (changeValue1 * 100.0).roundToInt() / 100.0,
-                                        date = "14.09.2022"
-                                    )
-                                },
-                                directions = setOf(DismissDirection.EndToStart)
-                            )
+                                    },
+                                    directions = setOf(DismissDirection.EndToStart)
+                                )
 
-                            Spacer(modifier = Modifier.height(10.dp))
+                                Spacer(modifier = Modifier.height(10.dp))
+                            }
                         }
                     }
-                } else {
+                } else if (state.isLoading.not()) {
                     Text(
                         text = "There is no currency on the list. You can add them with the button down below.",
                         fontSize = 20.sp,
@@ -112,6 +126,10 @@ fun CurrencyWatchlist(
                         modifier = Modifier.padding(10.dp)
                     )
                 }
+            }
+
+            if (state.isLoading || swipeRefreshState.isRefreshing) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
 
             Button(
