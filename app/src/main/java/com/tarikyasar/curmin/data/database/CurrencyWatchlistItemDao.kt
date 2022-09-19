@@ -10,6 +10,9 @@ interface CurrencyWatchlistItemDao {
     @Query("SELECT * FROM currencywatchlistitemdata")
     suspend fun getAll(): List<CurrencyWatchlistItemData>
 
+    @Query("SELECT * FROM currencywatchlistitemdata WHERE uid = :currencyWatchlistItemUid")
+    suspend fun getCurrencyWatchlistItem(currencyWatchlistItemUid: String): CurrencyWatchlistItemData
+
     @Insert
     suspend fun insert(vararg currencies: CurrencyWatchlistItemData)
 

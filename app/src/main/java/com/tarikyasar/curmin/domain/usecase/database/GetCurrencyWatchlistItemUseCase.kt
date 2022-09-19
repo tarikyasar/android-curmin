@@ -8,14 +8,15 @@ import kotlinx.coroutines.flow.flow
 import java.io.IOException
 import javax.inject.Inject
 
-class InsertCurrencyWatchlistItemUseCase @Inject constructor(
+class GetCurrencyWatchlistItemUseCase @Inject constructor(
     private val database: AppDatabase
 ) {
-    operator fun invoke(currencyWatchlistItem: CurrencyWatchlistItemData): Flow<Resource<CurrencyWatchlistItemData>> =
+    operator fun invoke(currencyWatchlistItemUid: String): Flow<Resource<CurrencyWatchlistItemData>> =
         flow {
             try {
                 emit(Resource.Loading<CurrencyWatchlistItemData>())
-                database.currencyDao().insert(currencyWatchlistItem)
+                val currencyWatchlistItem =
+                    database.currencyDao().getCurrencyWatchlistItem(currencyWatchlistItemUid)
                 emit(Resource.Success<CurrencyWatchlistItemData>(currencyWatchlistItem))
             } catch (e: IOException) {
                 emit(Resource.Error<CurrencyWatchlistItemData>("Couldn't reach database."))

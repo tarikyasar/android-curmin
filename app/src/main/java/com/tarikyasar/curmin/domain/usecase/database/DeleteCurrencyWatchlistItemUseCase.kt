@@ -4,7 +4,6 @@ import com.tarikyasar.curmin.common.Resource
 import com.tarikyasar.curmin.data.database.AppDatabase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
@@ -16,12 +15,6 @@ class DeleteCurrencyWatchlistItemUseCase @Inject constructor(
             emit(Resource.Loading<String>())
             database.currencyDao().delete(currencyWatchlistItemUid)
             emit(Resource.Success<String>(currencyWatchlistItemUid))
-        } catch (e: HttpException) {
-            emit(
-                Resource.Error<String>(
-                    e.localizedMessage ?: "An unexpected error occurred."
-                )
-            )
         } catch (e: IOException) {
             emit(Resource.Error<String>("Couldn't reach database."))
         }

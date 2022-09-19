@@ -5,7 +5,6 @@ import com.tarikyasar.curmin.data.database.AppDatabase
 import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
@@ -17,12 +16,6 @@ class GetCurrencyWatchlistItemsUseCase @Inject constructor(
             emit(Resource.Loading<List<CurrencyWatchlistItemData>>())
             val currencyWatchlistItems = database.currencyDao().getAll()
             emit(Resource.Success<List<CurrencyWatchlistItemData>>(currencyWatchlistItems))
-        } catch (e: HttpException) {
-            emit(
-                Resource.Error<List<CurrencyWatchlistItemData>>(
-                    e.localizedMessage ?: "An unexpected error occurred."
-                )
-            )
         } catch (e: IOException) {
             emit(Resource.Error<List<CurrencyWatchlistItemData>>("Couldn't reach database."))
         }
