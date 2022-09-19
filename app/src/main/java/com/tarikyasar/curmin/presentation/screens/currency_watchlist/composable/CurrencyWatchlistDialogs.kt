@@ -7,7 +7,9 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,8 +36,7 @@ fun CreateWatchlistItemDialog(
         ) {
             Surface(
                 modifier = Modifier
-                    .padding(vertical = 10.dp)
-                    .height(260.dp),
+                    .height(220.dp),
                 shape = RoundedCornerShape(10.dp)
             ) {
                 Scaffold(
@@ -64,13 +65,15 @@ fun CreateWatchlistItemDialog(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
                             .fillMaxHeight()
-                            .padding(20.dp)
                     ) {
                         Row(
                             horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier.fillMaxWidth()
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp, horizontal = 10.dp)
                         ) {
-                            Text(text = "Base Currency")
+                            Text(text = "Base Currency", fontSize = 20.sp)
 
                             CurminDropdown(
                                 expanded = baseCurrencyListExpanded,
@@ -90,12 +93,16 @@ fun CreateWatchlistItemDialog(
                             }
                         }
 
+                        Divider()
+
                         Row(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp, horizontal = 10.dp)
                         ) {
-                            Text(text = "Target Currency")
+                            Text(text = "Target Currency", fontSize = 20.sp)
 
                             CurminDropdown(
                                 expanded = targetCurrencyListExpanded,
@@ -121,11 +128,21 @@ fun CreateWatchlistItemDialog(
                                     baseCurrencyState,
                                     targetCurrencyState
                                 )
-                                onDismissRequest()
                                 baseCurrencyState = currencyList[0].code
                                 targetCurrencyState = currencyList[0].code
+                                onDismissRequest()
                             },
-                            enabled = baseCurrencyState != targetCurrencyState
+                            enabled = baseCurrencyState != targetCurrencyState,
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = MaterialTheme.colors.primary,
+                                disabledBackgroundColor = MaterialTheme.colors.secondaryVariant
+                            ),
+                            modifier = Modifier
+                                .clip(RectangleShape)
+                                .background(if (baseCurrencyState != targetCurrencyState) MaterialTheme.colors.primary else MaterialTheme.colors.secondaryVariant)
+                                .fillMaxWidth()
+                                .align(Alignment.End),
+                            elevation = null
                         ) {
                             Text(
                                 text = "Add",
