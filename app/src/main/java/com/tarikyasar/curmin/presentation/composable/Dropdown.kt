@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
@@ -45,6 +46,7 @@ fun CurminDropdown(
 
     Box(
         modifier = Modifier
+            .clip(RoundedCornerShape(4.dp))
             .clickable(onClick = { onExpandedChangeRequest(true) })
     ) {
         Row(
@@ -52,7 +54,7 @@ fun CurminDropdown(
             modifier = Modifier
                 .background(
                     color = MaterialTheme.colors.surface,
-                    shape = RoundedCornerShape(20)
+                    shape = RoundedCornerShape(4.dp)
                 )
                 .padding(8.dp)
         ) {
