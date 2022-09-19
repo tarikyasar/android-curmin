@@ -6,7 +6,8 @@ val BackgroundColorDark = Color(0xFF303030)
 val BackgroundColorLight = Color(0xFFCFCFCF)
 val PrimaryColor = Color(0xFF029485)
 val PrimaryColorVariant = Color(0xFF0BE2CC)
-val SecondaryColor = Color(0xFFF35321)
+val SecondaryColorDark = Color(0xFF636363)
+val SecondaryColorLight = Color(0xFF747474)
 val SecondaryColorVariant = Color(0xFFFC754B)
 val SurfaceColorDark = Color(0xFF3C3C3C)
 val SurfaceColorLight = Color(0xFFD8D8D8)
@@ -24,5 +25,5 @@ val PositiveButtonTextColor = CurrencyArrowUpColor
 val NegativeButtonBackgroundColor = CurrencyDownColor
 val NegativeButtonTextColor = CurrencyArrowDownColor
 
-val DialogWarningBorderColor = Color(0xFFF38B3A)
-val DialogErrorBorderColor = Color(0xFFEB5050)
+val DialogWarningColor = Color(0xFFE9995C)
+val DialogErrorColor = Color(0xFFEB5050)

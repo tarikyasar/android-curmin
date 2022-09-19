@@ -15,12 +15,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshState
+import com.tarikyasar.curmin.R
 import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
 import com.tarikyasar.curmin.domain.model.Symbol
 import com.tarikyasar.curmin.presentation.composable.CurminErrorDialog
@@ -45,7 +47,19 @@ fun CurrencyWatchlist(
     var showAddWatchlistItemDialog by remember { mutableStateOf(false) }
     var showErrorDialog by remember { mutableStateOf(state.error.isEmpty().not()) }
     val swipeRefreshState by remember { mutableStateOf(SwipeRefreshState(false)) }
-    var deleteItemUid by remember { mutableStateOf("") }
+    var deleteItem by remember {
+        mutableStateOf(
+            CurrencyWatchlistItemData(
+                "",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+            )
+        )
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -77,7 +91,7 @@ fun CurrencyWatchlist(
                                     val dismissState = rememberDismissState(
                                         confirmStateChange = {
                                             if (it == DismissValue.DismissedToStart) {
-                                                deleteItemUid = currency.uid
+                                                deleteItem = currency
                                                 showDeleteWatchlistItemDialog = true
                                                 false
                                             } else {
@@ -128,13 +142,25 @@ fun CurrencyWatchlist(
                         }
                     }
                 } else if (state.isLoading.not()) {
-                    Text(
-                        text = "There is no currency on the list. You can add them with the button down below.",
-                        fontSize = 20.sp,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colors.onBackground,
-                        modifier = Modifier.padding(10.dp)
-                    )
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_empty),
+                            contentDescription = null,
+                            tint = MaterialTheme.colors.secondary,
+                            modifier = Modifier
+                                .size(70.dp)
+                        )
+
+                        Text(
+                            text = "There is no currency on the list. You can add them with the button down below.",
+                            fontSize = 20.sp,
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colors.secondary,
+                            modifier = Modifier.padding(10.dp)
+                        )
+                    }
                 }
             }
 
@@ -198,11 +224,11 @@ fun CurrencyWatchlist(
                     showDeleteWatchlistItemDialog = false
                 },
                 onPositiveButtonClick = {
-                    viewModel.deleteCurrency(deleteItemUid)
+                    viewModel.deleteCurrency(deleteItem.uid)
                 },
                 onNegativeButtonClick = { showDeleteWatchlistItemDialog = false },
-                baseCurrency = "XXX",
-                targetCurrency = "TRY"
+                baseCurrency = deleteItem.baseCurrencyCode ?: "",
+                targetCurrency = deleteItem.targetCurrencyCode ?: ""
             )
 
             CurminErrorDialog(
@@ -213,7 +239,7 @@ fun CurrencyWatchlist(
                 onPositiveButtonClick = {
                     showErrorDialog = false
                 },
-                warningMessage = state.error
+                errorMessage = state.error
             )
         }
     }

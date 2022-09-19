@@ -1,24 +1,27 @@
-@file:OptIn(ExperimentalComposeUiApi::class)
-
 package com.tarikyasar.curmin.presentation.composable
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.tarikyasar.curmin.R
 import com.tarikyasar.curmin.presentation.ui.theme.*
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CurminDialog(
     onDismissRequest: () -> Unit,
@@ -71,64 +74,64 @@ fun CurminWarningDialog(
             properties = properties
         ) {
             Surface(
-                border = BorderStroke(1.dp, DialogWarningBorderColor),
                 modifier = Modifier
-                    .padding(vertical = 10.dp)
-                    .height(260.dp),
+                    .height(300.dp),
                 shape = RoundedCornerShape(10.dp)
             ) {
                 Scaffold(
                     topBar = {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 10.dp)
                         ) {
-                            Text(
-                                text = "Warning",
-                                color = MaterialTheme.colors.onSurface,
-                                fontSize = 24.sp,
-                                modifier = Modifier.padding(10.dp),
-                                textAlign = TextAlign.Center
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_warning),
+                                contentDescription = "Dialog icon warning",
+                                tint = DialogWarningColor,
+                                modifier = Modifier
+                                    .size(120.dp)
+                                    .align(CenterHorizontally)
                             )
                         }
+
                     },
-                    modifier = Modifier.background(
-                        MaterialTheme.colors.surface,
-                        RoundedCornerShape(10.dp)
-                    )
+                    modifier = Modifier
+                        .background(
+                            MaterialTheme.colors.surface,
+                            RoundedCornerShape(10.dp)
+                        )
                 ) {
                     Column(
                         verticalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .padding(20.dp)
+                        modifier = Modifier.fillMaxHeight()
                     ) {
                         Text(
                             text = warningMessage,
                             fontSize = 18.sp,
                             color = MaterialTheme.colors.onSurface,
                             textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(bottom = 20.dp)
+                            modifier = Modifier.padding(top = 10.dp, bottom = 20.dp)
                         )
 
                         Row(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             modifier = Modifier
                                 .fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.Bottom
                         ) {
                             Button(
                                 onClick = {
                                     onPositiveButtonClick()
                                     onDismissRequest()
                                 },
-                                shape = RoundedCornerShape(10.dp),
                                 colors = ButtonDefaults.buttonColors(backgroundColor = PositiveButtonBackgroundColor),
                                 modifier = Modifier
+                                    .clip(RectangleShape)
+                                    .background(PositiveButtonBackgroundColor)
                                     .fillMaxWidth()
                                     .weight(1f)
-                                    .padding(10.dp)
+                                    .height(60.dp)
                             ) {
                                 Text(
                                     text = "Yes",
@@ -142,12 +145,13 @@ fun CurminWarningDialog(
                                     onNegativeButtonClick()
                                     onDismissRequest()
                                 },
-                                shape = RoundedCornerShape(10.dp),
                                 colors = ButtonDefaults.buttonColors(backgroundColor = NegativeButtonBackgroundColor),
                                 modifier = Modifier
+                                    .clip(RectangleShape)
+                                    .background(NegativeButtonBackgroundColor)
                                     .fillMaxWidth()
                                     .weight(1f)
-                                    .padding(10.dp)
+                                    .height(60.dp),
                             ) {
                                 Text(
                                     text = "No",
@@ -168,7 +172,7 @@ fun CurminErrorDialog(
     showErrorDialog: Boolean,
     onDismissRequest: () -> Unit,
     onPositiveButtonClick: () -> Unit,
-    warningMessage: String,
+    errorMessage: String,
     properties: DialogProperties = DialogProperties()
 ) {
     if (showErrorDialog) {
@@ -177,7 +181,6 @@ fun CurminErrorDialog(
             properties = properties
         ) {
             Surface(
-                border = BorderStroke(1.dp, DialogErrorBorderColor),
                 modifier = Modifier
                     .padding(vertical = 10.dp)
                     .height(260.dp),
@@ -211,7 +214,7 @@ fun CurminErrorDialog(
                             .padding(20.dp)
                     ) {
                         Text(
-                            text = warningMessage,
+                            text = errorMessage,
                             fontSize = 18.sp,
                             color = MaterialTheme.colors.onSurface,
                             textAlign = TextAlign.Center,

@@ -5,11 +5,14 @@ import androidx.appcompat.app.AppCompatDelegate.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.tarikyasar.curmin.R
@@ -49,16 +52,38 @@ fun CurminApp(
                         .fillMaxWidth()
                         .padding(16.dp)
                 ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_settings),
-                        contentDescription = null,
-                        tint = MaterialTheme.colors.onBackground,
+                    Box(
                         modifier = Modifier
-                            .size(32.dp)
+                            .clip(CircleShape)
                             .clickable {
                                 showSettingsDialog = true
                             }
-                    )
+                            .size(34.dp)
+                    ) {
+                        if (showSettingsDialog) {
+                            Box(
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+                                    .clip(CircleShape)
+                                    .size(34.dp)
+                                    .background(MaterialTheme.colors.primary)
+                            )
+                        }
+
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_settings),
+                            contentDescription = null,
+                            tint = MaterialTheme.colors.onBackground,
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .background(
+                                    MaterialTheme.colors.background,
+                                    CircleShape
+                                )
+                                .size(32.dp)
+                        )
+                    }
+
                 }
 
                 CurrencyWatchlist()
