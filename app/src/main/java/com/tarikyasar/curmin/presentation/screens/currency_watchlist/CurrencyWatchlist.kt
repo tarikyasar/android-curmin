@@ -2,6 +2,7 @@ package com.tarikyasar.curmin.presentation.screens.currency_watchlist
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,6 +15,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -29,6 +31,7 @@ import com.tarikyasar.curmin.presentation.composable.CurminErrorDialog
 import com.tarikyasar.curmin.presentation.composable.CurrencyWatchlistItem
 import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.CreateWatchlistItemDialog
 import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.DeleteWatchlistItemDialog
+import com.tarikyasar.curmin.presentation.screens.settings_dialog.SettingsDialog
 import com.tarikyasar.curmin.presentation.ui.theme.SwipeDeleteButtonBackgroundColor
 import com.tarikyasar.curmin.presentation.ui.theme.SwipeDeleteButtonLabelColor
 import java.util.*
@@ -44,7 +47,8 @@ fun CurrencyWatchlist(
     val state = viewModel.state.value
     var changeValue1 by remember { mutableStateOf(Random.nextDouble(-0.25, 0.25)) }
     var showDeleteWatchlistItemDialog by remember { mutableStateOf(false) }
-    var showAddWatchlistItemDialog by remember { mutableStateOf(false) }
+    var showAddToWatchlistDialog by remember { mutableStateOf(false) }
+    var showSettingsDialog by remember { mutableStateOf(false) }
     var showErrorDialog by remember { mutableStateOf(state.error.isEmpty().not()) }
     val swipeRefreshState by remember { mutableStateOf(SwipeRefreshState(false)) }
     var deleteItem by remember {
@@ -66,10 +70,90 @@ fun CurrencyWatchlist(
         color = MaterialTheme.colors.background,
     ) {
         Box {
+            if (state.isLoading || swipeRefreshState.isRefreshing) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            }
+
             Column(
                 verticalArrangement = if (state.currencies.isNotEmpty()) Arrangement.Top else Arrangement.Center,
-                modifier = Modifier.fillMaxHeight()
+                modifier = Modifier.fillMaxHeight().align(Alignment.TopCenter)
             ) {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .clickable {
+                                showAddToWatchlistDialog = true
+                            }
+                            .size(34.dp)
+                    ) {
+                        if (showAddToWatchlistDialog) {
+                            Box(
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+                                    .clip(CircleShape)
+                                    .size(34.dp)
+                                    .background(MaterialTheme.colors.primary)
+                            )
+                        }
+
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = null,
+                            tint = MaterialTheme.colors.onBackground,
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .background(
+                                    MaterialTheme.colors.background,
+                                    CircleShape
+                                )
+                                .size(32.dp)
+                        )
+                    }
+
+                    Text(
+                        text = "Curmin",
+                        color = MaterialTheme.colors.onBackground,
+                        fontSize = 24.sp
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .clickable {
+                                showSettingsDialog = true
+                            }
+                            .size(34.dp)
+                    ) {
+                        if (showSettingsDialog) {
+                            Box(
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+                                    .clip(CircleShape)
+                                    .size(34.dp)
+                                    .background(MaterialTheme.colors.primary)
+                            )
+                        }
+
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_settings),
+                            contentDescription = null,
+                            tint = MaterialTheme.colors.onBackground,
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .background(
+                                    MaterialTheme.colors.background,
+                                    CircleShape
+                                )
+                                .size(32.dp)
+                        )
+                    }
+                }
 
                 if (state.currencies.isNotEmpty()) {
                     SwipeRefresh(
@@ -164,35 +248,14 @@ fun CurrencyWatchlist(
                 }
             }
 
-            if (state.isLoading || swipeRefreshState.isRefreshing) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
-
-            Button(
-                onClick = {
-                    showAddWatchlistItemDialog = true
-                },
-                shape = CircleShape,
-                colors = ButtonDefaults
-                    .buttonColors(backgroundColor = MaterialTheme.colors.primary),
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(20.dp)
-                    .size(70.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = null,
-                    tint = MaterialTheme.colors.onPrimary,
-                    modifier = Modifier
-                        .width(50.dp)
-                        .height(50.dp)
-                )
-            }
+            SettingsDialog(
+                openSettingsDialog = showSettingsDialog,
+                onDismissRequest = { showSettingsDialog = false }
+            )
 
             CreateWatchlistItemDialog(
-                showCreateWatchlistItemDialog = showAddWatchlistItemDialog,
-                onDismissRequest = { showAddWatchlistItemDialog = false },
+                showCreateWatchlistItemDialog = showAddToWatchlistDialog,
+                onDismissRequest = { showAddToWatchlistDialog = false },
                 onPositiveButtonClick = { baseCurrency, targetCurrency ->
                     viewModel.insertCurrency(
                         CurrencyWatchlistItemData(

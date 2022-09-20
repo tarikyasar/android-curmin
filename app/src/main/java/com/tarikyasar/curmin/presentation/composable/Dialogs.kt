@@ -125,10 +125,10 @@ fun CurminWarningDialog(
                                     onPositiveButtonClick()
                                     onDismissRequest()
                                 },
-                                colors = ButtonDefaults.buttonColors(backgroundColor = PositiveButtonBackgroundColor),
+                                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
                                 modifier = Modifier
                                     .clip(RectangleShape)
-                                    .background(PositiveButtonBackgroundColor)
+                                    .background(MaterialTheme.colors.primary)
                                     .fillMaxWidth()
                                     .weight(1f)
                                     .height(60.dp)
@@ -136,7 +136,7 @@ fun CurminWarningDialog(
                                 Text(
                                     text = "Yes",
                                     fontSize = 24.sp,
-                                    color = PositiveButtonTextColor
+                                    color = MaterialTheme.colors.onPrimary
                                 )
                             }
 
@@ -145,10 +145,10 @@ fun CurminWarningDialog(
                                     onNegativeButtonClick()
                                     onDismissRequest()
                                 },
-                                colors = ButtonDefaults.buttonColors(backgroundColor = NegativeButtonBackgroundColor),
+                                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.surface),
                                 modifier = Modifier
                                     .clip(RectangleShape)
-                                    .background(NegativeButtonBackgroundColor)
+                                    .background(MaterialTheme.colors.surface)
                                     .fillMaxWidth()
                                     .weight(1f)
                                     .height(60.dp),
@@ -156,7 +156,7 @@ fun CurminWarningDialog(
                                 Text(
                                     text = "No",
                                     fontSize = 24.sp,
-                                    color = NegativeButtonTextColor
+                                    color = MaterialTheme.colors.onSurface
                                 )
                             }
                         }
