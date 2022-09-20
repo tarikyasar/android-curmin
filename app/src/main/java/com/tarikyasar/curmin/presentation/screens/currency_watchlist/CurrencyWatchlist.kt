@@ -69,14 +69,14 @@ fun CurrencyWatchlist(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colors.background,
     ) {
-        Box {
-            if (state.isLoading || swipeRefreshState.isRefreshing) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
-
+        Box(
+            modifier = Modifier.fillMaxHeight(),
+            contentAlignment = Alignment.TopCenter
+        ) {
             Column(
-                verticalArrangement = if (state.currencies.isNotEmpty()) Arrangement.Top else Arrangement.Center,
-                modifier = Modifier.fillMaxHeight().align(Alignment.TopCenter)
+                verticalArrangement = Arrangement.Top,
+                modifier = Modifier
+                    .fillMaxHeight()
             ) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -221,13 +221,14 @@ fun CurrencyWatchlist(
 
                                     Spacer(modifier = Modifier.height(10.dp))
                                 }
-
                             }
                         }
                     }
                 } else if (state.isLoading.not()) {
                     Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxHeight()
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_empty),
@@ -246,6 +247,10 @@ fun CurrencyWatchlist(
                         )
                     }
                 }
+            }
+
+            if (state.isLoading || swipeRefreshState.isRefreshing) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
 
             SettingsDialog(

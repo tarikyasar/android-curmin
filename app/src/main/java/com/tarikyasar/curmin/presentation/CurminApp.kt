@@ -12,7 +12,6 @@ import com.tarikyasar.curmin.utils.manager.ThemeManager
 
 
 @SuppressLint("UnrememberedMutableState")
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CurminApp(
     themeManager: ThemeManager,
