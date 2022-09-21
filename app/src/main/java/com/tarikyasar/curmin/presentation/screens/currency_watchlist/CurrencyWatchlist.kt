@@ -29,7 +29,7 @@ import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
 import com.tarikyasar.curmin.domain.model.Symbol
 import com.tarikyasar.curmin.presentation.composable.CurminErrorDialog
 import com.tarikyasar.curmin.presentation.composable.CurrencyWatchlistItem
-import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.CreateWatchlistItemDialog
+import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.AddToWatchlistDialog
 import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.DeleteWatchlistItemDialog
 import com.tarikyasar.curmin.presentation.screens.settings_dialog.SettingsDialog
 import com.tarikyasar.curmin.presentation.ui.theme.SwipeDeleteButtonBackgroundColor
@@ -258,7 +258,7 @@ fun CurrencyWatchlist(
                 onDismissRequest = { showSettingsDialog = false }
             )
 
-            CreateWatchlistItemDialog(
+            AddToWatchlistDialog(
                 showCreateWatchlistItemDialog = showAddToWatchlistDialog,
                 onDismissRequest = { showAddToWatchlistDialog = false },
                 onPositiveButtonClick = { baseCurrency, targetCurrency ->

@@ -19,7 +19,7 @@ import com.tarikyasar.curmin.presentation.composable.CurminDropdown
 import com.tarikyasar.curmin.presentation.composable.CurminWarningDialog
 
 @Composable
-fun CreateWatchlistItemDialog(
+fun AddToWatchlistDialog(
     showCreateWatchlistItemDialog: Boolean,
     onDismissRequest: () -> Unit,
     onPositiveButtonClick: (baseCurrency: String, targetCurrency: String) -> Unit,
@@ -36,7 +36,7 @@ fun CreateWatchlistItemDialog(
         ) {
             Surface(
                 modifier = Modifier
-                    .height(220.dp),
+                    .height(260.dp),
                 shape = RoundedCornerShape(10.dp)
             ) {
                 Scaffold(
@@ -47,10 +47,10 @@ fun CreateWatchlistItemDialog(
                             horizontalArrangement = Arrangement.Center
                         ) {
                             Text(
-                                text = "Add To Watchlist",
+                                text = "Select base and target currencies. Remember, they must be different from each other.",
                                 color = MaterialTheme.colors.onSurface,
-                                fontSize = 24.sp,
-                                modifier = Modifier.padding(10.dp),
+                                fontSize = 16.sp,
+                                modifier = Modifier.padding(vertical = 20.dp),
                                 textAlign = TextAlign.Center
                             )
                         }
@@ -137,15 +137,17 @@ fun CreateWatchlistItemDialog(
                                 backgroundColor = MaterialTheme.colors.primary,
                                 disabledBackgroundColor = MaterialTheme.colors.secondaryVariant
                             ),
+                            shape = RoundedCornerShape(10.dp),
                             modifier = Modifier
-                                .clip(RectangleShape)
-                                .background(if (baseCurrencyState != targetCurrencyState) MaterialTheme.colors.primary else MaterialTheme.colors.secondaryVariant)
-                                .fillMaxWidth()
-                                .align(Alignment.End),
-                            elevation = null
+                                .padding(vertical = 20.dp)
+                                .background(
+                                    if (baseCurrencyState != targetCurrencyState) MaterialTheme.colors.primary else MaterialTheme.colors.secondaryVariant,
+                                    RoundedCornerShape(10.dp)
+                                ),
+                            elevation = ButtonDefaults.elevation()
                         ) {
                             Text(
-                                text = "Add",
+                                text = "Add To Watchlist",
                                 fontSize = 20.sp,
                                 color = if (baseCurrencyState != targetCurrencyState) MaterialTheme.colors.onPrimary else Color.Gray
                             )

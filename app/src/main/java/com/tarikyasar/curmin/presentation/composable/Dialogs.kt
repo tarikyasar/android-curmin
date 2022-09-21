@@ -75,7 +75,7 @@ fun CurminWarningDialog(
         ) {
             Surface(
                 modifier = Modifier
-                    .height(300.dp),
+                    .height(310.dp),
                 shape = RoundedCornerShape(10.dp)
             ) {
                 Scaffold(
@@ -117,7 +117,8 @@ fun CurminWarningDialog(
                         Row(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             modifier = Modifier
-                                .fillMaxWidth(),
+                                .fillMaxWidth()
+                                .padding(vertical = 10.dp),
                             verticalAlignment = Alignment.Bottom
                         ) {
                             Button(
@@ -127,11 +128,11 @@ fun CurminWarningDialog(
                                 },
                                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
                                 modifier = Modifier
-                                    .clip(RectangleShape)
-                                    .background(MaterialTheme.colors.primary)
+                                    .padding(horizontal = 10.dp)
+                                    .clip(RoundedCornerShape(10.dp))
                                     .fillMaxWidth()
                                     .weight(1f)
-                                    .height(60.dp)
+                                    .background(MaterialTheme.colors.primary, RoundedCornerShape(10.dp))
                             ) {
                                 Text(
                                     text = "Yes",
@@ -147,11 +148,11 @@ fun CurminWarningDialog(
                                 },
                                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.surface),
                                 modifier = Modifier
-                                    .clip(RectangleShape)
-                                    .background(MaterialTheme.colors.surface)
+                                    .padding(horizontal = 10.dp)
+                                    .clip(RoundedCornerShape(10.dp))
                                     .fillMaxWidth()
                                     .weight(1f)
-                                    .height(60.dp),
+                                    .background(MaterialTheme.colors.surface, RoundedCornerShape(10.dp))
                             ) {
                                 Text(
                                     text = "No",
