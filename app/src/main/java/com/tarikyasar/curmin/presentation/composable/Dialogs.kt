@@ -133,10 +133,6 @@ fun CurminWarningDialog(
                                     .clip(RoundedCornerShape(10.dp))
                                     .fillMaxWidth()
                                     .weight(1f)
-                                    .background(
-                                        MaterialTheme.colors.primary,
-                                        RoundedCornerShape(10.dp)
-                                    )
                             ) {
                                 Text(
                                     text = "Yes",
@@ -156,10 +152,6 @@ fun CurminWarningDialog(
                                     .clip(RoundedCornerShape(10.dp))
                                     .fillMaxWidth()
                                     .weight(1f)
-                                    .background(
-                                        MaterialTheme.colors.surface,
-                                        RoundedCornerShape(10.dp)
-                                    )
                             ) {
                                 Text(
                                     text = "No",

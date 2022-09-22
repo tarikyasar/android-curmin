@@ -34,25 +34,11 @@ fun AddToWatchlistDialog(
         ) {
             Surface(
                 modifier = Modifier
-                    .height(260.dp),
+                    .height(280.dp),
                 shape = RoundedCornerShape(10.dp)
             ) {
                 Scaffold(
-                    topBar = {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Text(
-                                text = "Select base and target currencies. Remember, they must be different from each other.",
-                                color = MaterialTheme.colors.onSurface,
-                                fontSize = 16.sp,
-                                modifier = Modifier.padding(vertical = 20.dp),
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                    },
+                    topBar = {},
                     modifier = Modifier.background(
                         MaterialTheme.colors.surface,
                         RoundedCornerShape(10.dp)
@@ -63,6 +49,7 @@ fun AddToWatchlistDialog(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
                             .fillMaxHeight()
+                            .padding(top = 10.dp)
                     ) {
                         Row(
                             horizontalArrangement = Arrangement.SpaceBetween,
@@ -120,6 +107,16 @@ fun AddToWatchlistDialog(
                             }
                         }
 
+                        Divider()
+
+                        Text(
+                            text = "Base and target currency must be different from each other.",
+                            color = MaterialTheme.colors.onSurface,
+                            fontSize = 16.sp,
+                            modifier = Modifier.padding(vertical = 10.dp, horizontal = 10.dp),
+                            textAlign = TextAlign.Center
+                        )
+
                         Button(
                             onClick = {
                                 onPositiveButtonClick(
@@ -131,18 +128,14 @@ fun AddToWatchlistDialog(
                                 onDismissRequest()
                             },
                             enabled = baseCurrencyState != targetCurrencyState,
+                            shape = RoundedCornerShape(10.dp),
+                            modifier = Modifier
+                                .padding(bottom = 10.dp),
+                            elevation = ButtonDefaults.elevation(),
                             colors = ButtonDefaults.buttonColors(
                                 backgroundColor = MaterialTheme.colors.primary,
                                 disabledBackgroundColor = MaterialTheme.colors.secondaryVariant
                             ),
-                            shape = RoundedCornerShape(10.dp),
-                            modifier = Modifier
-                                .padding(vertical = 20.dp)
-                                .background(
-                                    if (baseCurrencyState != targetCurrencyState) MaterialTheme.colors.primary else MaterialTheme.colors.secondaryVariant,
-                                    RoundedCornerShape(10.dp)
-                                ),
-                            elevation = ButtonDefaults.elevation()
                         ) {
                             Text(
                                 text = "Add To Watchlist",
@@ -150,6 +143,8 @@ fun AddToWatchlistDialog(
                                 color = if (baseCurrencyState != targetCurrencyState) MaterialTheme.colors.onPrimary else Color.Gray
                             )
                         }
+
+
                     }
                 }
             }

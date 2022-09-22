@@ -106,11 +106,11 @@ fun CurrencyWatchlist(
                         Icon(
                             imageVector = Icons.Default.Add,
                             contentDescription = null,
-                            tint = MaterialTheme.colors.onBackground,
+                            tint = MaterialTheme.colors.background,
                             modifier = Modifier
                                 .align(Alignment.Center)
                                 .background(
-                                    MaterialTheme.colors.background,
+                                    MaterialTheme.colors.onBackground,
                                     CircleShape
                                 )
                                 .size(32.dp)
