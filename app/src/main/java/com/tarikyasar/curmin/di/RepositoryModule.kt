@@ -1,8 +1,6 @@
 package com.tarikyasar.curmin.di
 
 import com.tarikyasar.curmin.data.repository.settings.SettingsRepositoryImpl
-import com.tarikyasar.curmin.data.repository.settings.datasource.SettingsCacheDataSource
-import com.tarikyasar.curmin.data.repository.settings.datasource.SettingsDataSource
 import com.tarikyasar.curmin.domain.repository.SettingsRepository
 import dagger.Binds
 import dagger.Module

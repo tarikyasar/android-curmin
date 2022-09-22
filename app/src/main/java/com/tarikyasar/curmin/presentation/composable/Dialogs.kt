@@ -11,7 +11,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -19,7 +18,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.tarikyasar.curmin.R
-import com.tarikyasar.curmin.presentation.ui.theme.*
+import com.tarikyasar.curmin.presentation.ui.theme.DialogWarningColor
+import com.tarikyasar.curmin.presentation.ui.theme.PositiveButtonBackgroundColor
+import com.tarikyasar.curmin.presentation.ui.theme.PositiveButtonTextColor
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -132,7 +133,10 @@ fun CurminWarningDialog(
                                     .clip(RoundedCornerShape(10.dp))
                                     .fillMaxWidth()
                                     .weight(1f)
-                                    .background(MaterialTheme.colors.primary, RoundedCornerShape(10.dp))
+                                    .background(
+                                        MaterialTheme.colors.primary,
+                                        RoundedCornerShape(10.dp)
+                                    )
                             ) {
                                 Text(
                                     text = "Yes",
@@ -152,7 +156,10 @@ fun CurminWarningDialog(
                                     .clip(RoundedCornerShape(10.dp))
                                     .fillMaxWidth()
                                     .weight(1f)
-                                    .background(MaterialTheme.colors.surface, RoundedCornerShape(10.dp))
+                                    .background(
+                                        MaterialTheme.colors.surface,
+                                        RoundedCornerShape(10.dp)
+                                    )
                             ) {
                                 Text(
                                     text = "No",

@@ -3,7 +3,6 @@ package com.tarikyasar.curmin.presentation
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatDelegate.*
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import com.tarikyasar.curmin.domain.model.Themes
 import com.tarikyasar.curmin.presentation.screens.currency_watchlist.CurrencyWatchlist

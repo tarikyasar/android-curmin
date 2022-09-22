@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
-import com.tarikyasar.curmin.domain.model.Symbol
 import com.tarikyasar.curmin.domain.model.Themes
 import com.tarikyasar.curmin.utils.GsonHolder
 import com.tarikyasar.curmin.utils.fromJson

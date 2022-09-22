@@ -1,15 +1,12 @@
 package com.tarikyasar.curmin.di
 
-import android.app.Application
 import android.content.Context
 import androidx.room.Room
-import com.tarikyasar.curmin.Curmin
 import com.tarikyasar.curmin.common.Constants
 import com.tarikyasar.curmin.data.database.AppDatabase
 import com.tarikyasar.curmin.data.remote.CurrencyApi
 import com.tarikyasar.curmin.data.repository.currency.CurrencyRepositoryImpl
 import com.tarikyasar.curmin.domain.repository.CurrencyRepository
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
