@@ -1,9 +1,10 @@
 package com.tarikyasar.curmin.presentation
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.*
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.tarikyasar.curmin.common.Navigations
 import com.tarikyasar.curmin.domain.model.Symbol
 import com.tarikyasar.curmin.domain.model.Themes
@@ -11,9 +12,10 @@ import com.tarikyasar.curmin.utils.manager.ThemeManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun rememberCurminAppState(
-    navController: NavHostController = rememberNavController(),
+    navController: NavHostController = rememberAnimatedNavController(),
     themeManager: ThemeManager,
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) = remember(
@@ -58,6 +60,4 @@ class CurminAppState(
     
     // Navigation
     val startDestination = Navigations.CurrencyWatchlistNavigation.ROUTE
-    
-    
 }

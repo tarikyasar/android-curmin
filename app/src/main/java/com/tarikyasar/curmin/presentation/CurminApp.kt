@@ -2,9 +2,15 @@ package com.tarikyasar.curmin.presentation
 
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatDelegate.*
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+import androidx.compose.ui.unit.IntOffset
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
 import com.tarikyasar.curmin.common.Navigations
 import com.tarikyasar.curmin.domain.model.Themes
 import com.tarikyasar.curmin.presentation.screens.currency_detail.CurrencyDetail
@@ -13,6 +19,7 @@ import com.tarikyasar.curmin.presentation.ui.theme.CurminTheme
 import com.tarikyasar.curmin.utils.manager.ThemeManager
 
 
+@OptIn(ExperimentalAnimationApi::class)
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun CurminApp(
@@ -28,10 +35,25 @@ fun CurminApp(
         Themes.SYSTEM_THEME -> setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
     }
 
+    val springSpec = spring<IntOffset>(dampingRatio = Spring.DampingRatioNoBouncy)
+    val offSetX = 1000
+
     CurminTheme(darkTheme = appState.isDarkTheme) {
-        NavHost(
+        AnimatedNavHost(
             navController = appState.navController,
-            startDestination = appState.startDestination
+            startDestination = appState.startDestination,
+            enterTransition = {
+                slideInHorizontally(initialOffsetX = { offSetX }, animationSpec = springSpec)
+            },
+            exitTransition = {
+                slideOutHorizontally(targetOffsetX = { -offSetX }, animationSpec = springSpec)
+            },
+            popEnterTransition = {
+                slideInHorizontally(initialOffsetX = { -offSetX }, animationSpec = springSpec)
+            },
+            popExitTransition = {
+                slideOutHorizontally(targetOffsetX = { offSetX }, animationSpec = springSpec)
+            }
         ) {
             composable(
                 Navigations.CurrencyWatchlistNavigation.ROUTE,

@@ -105,4 +105,5 @@ dependencies {
 
     // Navigation
     implementation "androidx.navigation:navigation-compose:$navigation_version"
+    implementation "com.google.accompanist:accompanist-navigation-animation:$nav_animation_version"
 }

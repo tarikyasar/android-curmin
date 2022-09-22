@@ -6,6 +6,7 @@ buildscript {
         room_version = "2.4.0"
         swiperefresh_version = "0.23.0"
         navigation_version = "2.5.2"
+        nav_animation_version = "0.24.4-alpha"
     }
     repositories {
         google()
