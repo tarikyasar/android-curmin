@@ -102,4 +102,7 @@ dependencies {
 
     // Swipe Refresh
     implementation "com.google.accompanist:accompanist-swiperefresh:$swiperefresh_version"
+
+    // Navigation
+    implementation "androidx.navigation:navigation-compose:$navigation_version"
 }

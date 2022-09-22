@@ -43,6 +43,7 @@ import kotlin.random.Random
 @Composable
 fun CurrencyWatchlist(
     viewModel: CurrencyWatchlistViewModel = hiltViewModel(),
+    onNavigateToCurrencyDetail: (baseCurrency: String, targetCurrency: String) -> Unit
 ) {
     val state = viewModel.state.value
     var changeValue1 by remember { mutableStateOf(Random.nextDouble(-0.25, 0.25)) }
@@ -213,7 +214,13 @@ fun CurrencyWatchlist(
                                                 value = ((currency.rate
                                                     ?: 0.0) * 100.0).roundToInt() / 100.0,
                                                 change = (changeValue1 * 100.0).roundToInt() / 100.0,
-                                                date = "14.09.2022"
+                                                date = "14.09.2022",
+                                                onClick = {
+                                                    onNavigateToCurrencyDetail(
+                                                        currency.baseCurrencyCode!!,
+                                                        currency.targetCurrencyCode!!
+                                                    )
+                                                }
                                             )
                                         },
                                         directions = setOf(DismissDirection.EndToStart)

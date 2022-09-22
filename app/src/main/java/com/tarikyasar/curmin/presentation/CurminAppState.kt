@@ -2,19 +2,26 @@ package com.tarikyasar.curmin.presentation
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.*
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.tarikyasar.curmin.common.Navigations
 import com.tarikyasar.curmin.domain.model.Symbol
 import com.tarikyasar.curmin.domain.model.Themes
 import com.tarikyasar.curmin.utils.manager.ThemeManager
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @Composable
 fun rememberCurminAppState(
+    navController: NavHostController = rememberNavController(),
     themeManager: ThemeManager,
     coroutineScope: CoroutineScope = rememberCoroutineScope()
-) = remember(themeManager) {
+) = remember(
+    navController,
+    themeManager
+) {
     CurminAppState(
+        navController = navController,
         themeManager = themeManager,
         coroutineScope = coroutineScope
     )
@@ -22,6 +29,7 @@ fun rememberCurminAppState(
 
 @Stable
 class CurminAppState(
+    val navController: NavHostController,
     val themeManager: ThemeManager,
     coroutineScope: CoroutineScope
 ) {
@@ -46,4 +54,10 @@ class CurminAppState(
     private var _currency by mutableStateOf(Symbol("USD", "United States Dollar"))
     val currency: Symbol
         @Composable get() = _currency
+    
+    
+    // Navigation
+    val startDestination = Navigations.CurrencyWatchlistNavigation.ROUTE
+    
+    
 }

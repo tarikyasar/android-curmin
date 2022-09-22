@@ -2,6 +2,7 @@ package com.tarikyasar.curmin.presentation.composable
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
@@ -26,7 +27,8 @@ fun CurrencyWatchlistItem(
     target: String,
     value: Double,
     change: Double,
-    date: String
+    date: String,
+    onClick: () -> Unit
 ) {
     val rotationState by animateFloatAsState(targetValue = if (change < 0) 360f else 180f)
 
@@ -34,6 +36,9 @@ fun CurrencyWatchlistItem(
         modifier = Modifier
             .clip(RoundedCornerShape(10.dp))
             .background(MaterialTheme.colors.surface)
+            .clickable {
+                onClick()
+            }
     ) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(10.dp),
