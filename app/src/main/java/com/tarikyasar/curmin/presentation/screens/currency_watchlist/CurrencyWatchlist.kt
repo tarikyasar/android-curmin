@@ -66,9 +66,89 @@ fun CurrencyWatchlist(
         )
     }
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colors.background,
+    Scaffold(
+        topBar = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .clickable {
+                            showAddToWatchlistDialog = true
+                        }
+                        .size(34.dp)
+                ) {
+                    if (showAddToWatchlistDialog) {
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .clip(CircleShape)
+                                .size(34.dp)
+                                .background(MaterialTheme.colors.primary)
+                        )
+                    }
+
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.background,
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .background(
+                                MaterialTheme.colors.onBackground,
+                                CircleShape
+                            )
+                            .size(32.dp)
+                    )
+                }
+
+                Text(
+                    text = "Curmin",
+                    color = MaterialTheme.colors.onBackground,
+                    fontSize = 24.sp
+                )
+
+                Box(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .clickable {
+                            showSettingsDialog = true
+                        }
+                        .size(34.dp)
+                ) {
+                    if (showSettingsDialog) {
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .clip(CircleShape)
+                                .size(34.dp)
+                                .background(MaterialTheme.colors.primary)
+                        )
+                    }
+
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_settings),
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.onBackground,
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .background(
+                                MaterialTheme.colors.background,
+                                CircleShape
+                            )
+                            .size(32.dp)
+                    )
+                }
+            }
+        },
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background)
     ) {
         Box(
             modifier = Modifier.fillMaxHeight(),
@@ -79,83 +159,6 @@ fun CurrencyWatchlist(
                 modifier = Modifier
                     .fillMaxHeight()
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .clip(CircleShape)
-                            .clickable {
-                                showAddToWatchlistDialog = true
-                            }
-                            .size(34.dp)
-                    ) {
-                        if (showAddToWatchlistDialog) {
-                            Box(
-                                modifier = Modifier
-                                    .align(Alignment.Center)
-                                    .clip(CircleShape)
-                                    .size(34.dp)
-                                    .background(MaterialTheme.colors.primary)
-                            )
-                        }
-
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = null,
-                            tint = MaterialTheme.colors.background,
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .background(
-                                    MaterialTheme.colors.onBackground,
-                                    CircleShape
-                                )
-                                .size(32.dp)
-                        )
-                    }
-
-                    Text(
-                        text = "Curmin",
-                        color = MaterialTheme.colors.onBackground,
-                        fontSize = 24.sp
-                    )
-
-                    Box(
-                        modifier = Modifier
-                            .clip(CircleShape)
-                            .clickable {
-                                showSettingsDialog = true
-                            }
-                            .size(34.dp)
-                    ) {
-                        if (showSettingsDialog) {
-                            Box(
-                                modifier = Modifier
-                                    .align(Alignment.Center)
-                                    .clip(CircleShape)
-                                    .size(34.dp)
-                                    .background(MaterialTheme.colors.primary)
-                            )
-                        }
-
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_settings),
-                            contentDescription = null,
-                            tint = MaterialTheme.colors.onBackground,
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .background(
-                                    MaterialTheme.colors.background,
-                                    CircleShape
-                                )
-                                .size(32.dp)
-                        )
-                    }
-                }
-
                 if (state.currencies.isNotEmpty()) {
                     SwipeRefresh(
                         state = swipeRefreshState,

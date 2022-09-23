@@ -1,6 +1,7 @@
 package com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -8,9 +9,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.tarikyasar.curmin.R
 import com.tarikyasar.curmin.domain.model.Symbol
 import com.tarikyasar.curmin.presentation.composable.CurminDialog
 import com.tarikyasar.curmin.presentation.composable.CurminDropdown
@@ -34,11 +37,30 @@ fun AddToWatchlistDialog(
         ) {
             Surface(
                 modifier = Modifier
-                    .height(280.dp),
+                    .height(300.dp),
                 shape = RoundedCornerShape(10.dp)
             ) {
                 Scaffold(
-                    topBar = {},
+                    topBar = {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.End,
+                            modifier = Modifier
+                                .padding(10.dp)
+                                .fillMaxWidth()
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_close),
+                                contentDescription = null,
+                                tint = MaterialTheme.colors.onSurface,
+                                modifier = Modifier
+                                    .size(30.dp)
+                                    .clickable {
+                                        onDismissRequest()
+                                    }
+                            )
+                        }
+                    },
                     modifier = Modifier.background(
                         MaterialTheme.colors.surface,
                         RoundedCornerShape(10.dp)
@@ -51,6 +73,8 @@ fun AddToWatchlistDialog(
                             .fillMaxHeight()
                             .padding(top = 10.dp)
                     ) {
+                        Divider()
+
                         Row(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically,
