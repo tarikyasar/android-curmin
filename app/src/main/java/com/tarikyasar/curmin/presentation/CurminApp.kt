@@ -73,7 +73,7 @@ fun CurminApp(
 
             composable(Navigations.CurrencyDetailNavigation.ROUTE) { backStackEntry ->
                 CurrencyDetail(
-                    onNavigate = {
+                    onNavigateBack = {
                         appState.navController.popBackStack()
                     },
                     baseCurrency = backStackEntry.arguments?.getString(Navigations.CurrencyDetailNavigation.ARG_BASE_CURRENCY),
