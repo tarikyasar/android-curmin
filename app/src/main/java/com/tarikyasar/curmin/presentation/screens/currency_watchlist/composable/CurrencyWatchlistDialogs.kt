@@ -167,8 +167,6 @@ fun AddToWatchlistDialog(
                                 color = if (baseCurrencyState != targetCurrencyState) MaterialTheme.colors.onPrimary else Color.Gray
                             )
                         }
-
-
                     }
                 }
             }

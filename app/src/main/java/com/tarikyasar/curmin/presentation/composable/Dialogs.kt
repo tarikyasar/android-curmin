@@ -9,7 +9,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -127,12 +126,14 @@ fun CurminWarningDialog(
                                     onPositiveButtonClick()
                                     onDismissRequest()
                                 },
-                                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
+                                shape = RoundedCornerShape(10.dp),
                                 modifier = Modifier
-                                    .padding(horizontal = 10.dp)
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .fillMaxWidth()
-                                    .weight(1f)
+                                    .padding(end = 5.dp, start = 10.dp)
+                                    .weight(1f),
+                                elevation = ButtonDefaults.elevation(),
+                                colors = ButtonDefaults.buttonColors(
+                                    backgroundColor = MaterialTheme.colors.primary,
+                                ),
                             ) {
                                 Text(
                                     text = "Yes",
@@ -146,12 +147,14 @@ fun CurminWarningDialog(
                                     onNegativeButtonClick()
                                     onDismissRequest()
                                 },
-                                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.surface),
+                                shape = RoundedCornerShape(10.dp),
                                 modifier = Modifier
-                                    .padding(horizontal = 10.dp)
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .fillMaxWidth()
-                                    .weight(1f)
+                                    .padding(start = 5.dp, end = 10.dp)
+                                    .weight(1f),
+                                elevation = ButtonDefaults.elevation(),
+                                colors = ButtonDefaults.buttonColors(
+                                    backgroundColor = MaterialTheme.colors.surface,
+                                ),
                             ) {
                                 Text(
                                     text = "No",
