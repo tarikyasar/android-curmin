@@ -256,7 +256,7 @@ fun CurrencyWatchlist(
                         )
 
                         Text(
-                            text = "There is no currency on the list. You can add them with the button down below.",
+                            text = "There is no currency on the list. You can add them with the button upper left.",
                             fontSize = 20.sp,
                             textAlign = TextAlign.Center,
                             color = MaterialTheme.colors.secondary,
