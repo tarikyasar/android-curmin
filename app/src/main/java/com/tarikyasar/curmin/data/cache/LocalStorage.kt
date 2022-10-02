@@ -29,6 +29,18 @@ class LocalStorage @Inject constructor(
             }
         }
 
+    var askRemoveItem: Boolean?
+        get() {
+            val json = preferences.getString(PreferenceKey.ASK_REMOVE_ITEM.key, "")
+            return GsonHolder.gson.fromJson(json)
+        }
+        set(value) {
+            val json = GsonHolder.gson.toJson(value)
+            preferences.edit {
+                putString(PreferenceKey.ASK_REMOVE_ITEM.key, json)
+            }
+        }
+
     companion object {
         fun getSharedPreferences(context: Context): SharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(context)
@@ -38,7 +50,8 @@ class LocalStorage @Inject constructor(
 enum class PreferenceKey(
     val key: String,
 ) {
-    SYSTEM_THEME("SYSTEM_THEME");
+    SYSTEM_THEME("SYSTEM_THEME"),
+    ASK_REMOVE_ITEM("ASK_REMOVE_ITEM");
 
     override fun toString(): String = key
 }

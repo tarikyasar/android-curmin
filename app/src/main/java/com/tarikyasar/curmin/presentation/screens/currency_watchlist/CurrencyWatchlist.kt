@@ -43,7 +43,8 @@ import kotlin.random.Random
 @Composable
 fun CurrencyWatchlist(
     viewModel: CurrencyWatchlistViewModel = hiltViewModel(),
-    onNavigateToCurrencyDetail: (baseCurrency: String, targetCurrency: String) -> Unit
+    onNavigateToCurrencyDetail: (baseCurrency: String, targetCurrency: String) -> Unit,
+    askRemoveItem: Boolean?
 ) {
     val state = viewModel.state.value
     var changeValue1 by remember { mutableStateOf(Random.nextDouble(-0.25, 0.25)) }
@@ -180,7 +181,13 @@ fun CurrencyWatchlist(
                                         confirmStateChange = {
                                             if (it == DismissValue.DismissedToStart) {
                                                 deleteItem = currency
-                                                showDeleteWatchlistItemDialog = true
+
+                                                if (askRemoveItem == true) {
+                                                    showDeleteWatchlistItemDialog = true
+                                                } else {
+                                                    viewModel.deleteCurrency(deleteItem.uid)
+                                                }
+
                                                 false
                                             } else {
                                                 true
@@ -265,7 +272,10 @@ fun CurrencyWatchlist(
 
             SettingsDialog(
                 openSettingsDialog = showSettingsDialog,
-                onDismissRequest = { showSettingsDialog = false }
+                onDismissRequest = {
+                    showSettingsDialog = false
+                    viewModel.getCurrencies()
+                }
             )
 
             AddToWatchlistDialog(
@@ -306,7 +316,11 @@ fun CurrencyWatchlist(
                 },
                 onNegativeButtonClick = { showDeleteWatchlistItemDialog = false },
                 baseCurrency = deleteItem.baseCurrencyCode ?: "",
-                targetCurrency = deleteItem.targetCurrencyCode ?: ""
+                targetCurrency = deleteItem.targetCurrencyCode ?: "",
+                onCheckBoxChange = {
+                    viewModel.setAskRemoveItem(askRemoveItem = it.not())
+                },
+                askRemoveItem = askRemoveItem ?: true
             )
 
             CurminErrorDialog(

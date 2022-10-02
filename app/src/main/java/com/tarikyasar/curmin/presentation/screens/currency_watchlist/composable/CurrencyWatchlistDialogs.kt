@@ -13,11 +13,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogProperties
 import com.tarikyasar.curmin.R
 import com.tarikyasar.curmin.domain.model.Symbol
 import com.tarikyasar.curmin.presentation.composable.CurminDialog
 import com.tarikyasar.curmin.presentation.composable.CurminDropdown
-import com.tarikyasar.curmin.presentation.composable.CurminWarningDialog
+import com.tarikyasar.curmin.presentation.ui.theme.DialogWarningColor
 
 @Composable
 fun AddToWatchlistDialog(
@@ -180,14 +181,134 @@ fun DeleteWatchlistItemDialog(
     onDismissRequest: () -> Unit,
     onPositiveButtonClick: () -> Unit,
     onNegativeButtonClick: () -> Unit,
+    onCheckBoxChange: (Boolean) -> Unit,
     baseCurrency: String,
     targetCurrency: String,
+    askRemoveItem: Boolean,
+    properties: DialogProperties = DialogProperties()
 ) {
-    CurminWarningDialog(
-        showWarningDialog = showDeleteWatchlistItemDialog,
-        onDismissRequest = onDismissRequest,
-        onPositiveButtonClick = onPositiveButtonClick,
-        onNegativeButtonClick = onNegativeButtonClick,
-        warningMessage = "Watchlist item containing $baseCurrency-$targetCurrency currencies will be deleted.\nAre you sure?"
-    )
+    var checkboxChecked by remember { mutableStateOf(askRemoveItem.not()) }
+
+    if (showDeleteWatchlistItemDialog) {
+        CurminDialog(
+            onDismissRequest = onDismissRequest,
+            properties = properties
+        ) {
+            Surface(
+                modifier = Modifier
+                    .height(340.dp),
+                shape = RoundedCornerShape(10.dp)
+            ) {
+                Scaffold(
+                    topBar = {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 10.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_warning),
+                                contentDescription = "Dialog icon warning",
+                                tint = DialogWarningColor,
+                                modifier = Modifier
+                                    .size(120.dp)
+                                    .align(Alignment.CenterHorizontally)
+                            )
+                        }
+
+                    },
+                    modifier = Modifier
+                        .background(
+                            MaterialTheme.colors.surface,
+                            RoundedCornerShape(10.dp)
+                        )
+                ) {
+                    Column(
+                        verticalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxHeight()
+                    ) {
+                        Text(
+                            text = "Watchlist item containing $baseCurrency-$targetCurrency currencies will be deleted.\nAre you sure?",
+                            fontSize = 18.sp,
+                            color = MaterialTheme.colors.onSurface,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(top = 10.dp, bottom = 10.dp)
+                        )
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
+                        ) {
+                            Checkbox(
+                                checked = checkboxChecked,
+                                onCheckedChange = {
+                                    checkboxChecked = it
+                                    onCheckBoxChange(it)
+                                },
+                                colors = CheckboxDefaults.colors(
+                                    checkedColor = MaterialTheme.colors.primary,
+                                    checkmarkColor = MaterialTheme.colors.onPrimary
+                                )
+                            )
+
+                            Text(text = "Don't ask again")
+                        }
+
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 6.dp),
+                            verticalAlignment = Alignment.Bottom
+                        ) {
+                            Button(
+                                onClick = {
+                                    onPositiveButtonClick()
+                                    onDismissRequest()
+                                },
+                                shape = RoundedCornerShape(10.dp),
+                                modifier = Modifier
+                                    .padding(end = 5.dp, start = 10.dp)
+                                    .weight(1f),
+                                elevation = ButtonDefaults.elevation(),
+                                colors = ButtonDefaults.buttonColors(
+                                    backgroundColor = MaterialTheme.colors.primary,
+                                ),
+                            ) {
+                                Text(
+                                    text = "Yes",
+                                    fontSize = 24.sp,
+                                    color = MaterialTheme.colors.onPrimary
+                                )
+                            }
+
+                            Button(
+                                onClick = {
+                                    onNegativeButtonClick()
+                                    onDismissRequest()
+                                },
+                                shape = RoundedCornerShape(10.dp),
+                                modifier = Modifier
+                                    .padding(start = 5.dp, end = 10.dp)
+                                    .weight(1f),
+                                elevation = ButtonDefaults.elevation(),
+                                colors = ButtonDefaults.buttonColors(
+                                    backgroundColor = MaterialTheme.colors.surface,
+                                ),
+                            ) {
+                                Text(
+                                    text = "No",
+                                    fontSize = 24.sp,
+                                    color = MaterialTheme.colors.onSurface
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

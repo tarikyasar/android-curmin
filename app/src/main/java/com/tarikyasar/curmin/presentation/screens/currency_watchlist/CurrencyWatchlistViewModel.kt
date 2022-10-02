@@ -9,6 +9,7 @@ import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
 import com.tarikyasar.curmin.domain.usecase.database.DeleteCurrencyWatchlistItemUseCase
 import com.tarikyasar.curmin.domain.usecase.database.GetCurrencyWatchlistItemsUseCase
 import com.tarikyasar.curmin.domain.usecase.database.InsertCurrencyWatchlistItemUseCase
+import com.tarikyasar.curmin.utils.manager.PreferenceManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -16,6 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CurrencyWatchlistViewModel @Inject constructor(
+    private val preferenceManager: PreferenceManager,
     private val getCurrencyWatchlistItems: GetCurrencyWatchlistItemsUseCase,
     private val insertCurrencyWatchlistItemUseCase: InsertCurrencyWatchlistItemUseCase,
     private val deleteCurrencyWatchlistItemUseCase: DeleteCurrencyWatchlistItemUseCase
@@ -26,6 +28,7 @@ class CurrencyWatchlistViewModel @Inject constructor(
 
     init {
         getCurrencies()
+        getAskRemoveItem()
     }
 
     fun getCurrencies() {
@@ -89,5 +92,15 @@ class CurrencyWatchlistViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    fun getAskRemoveItem() {
+        _state.value = _state.value.copy(
+            askRemoveItem = preferenceManager.getPreference()
+        )
+    }
+
+    fun setAskRemoveItem(askRemoveItem: Boolean) {
+        preferenceManager.setPreference(askRemoveItem = askRemoveItem)
     }
 }

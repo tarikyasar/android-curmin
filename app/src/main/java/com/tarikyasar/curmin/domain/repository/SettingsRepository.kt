@@ -6,5 +6,9 @@ interface SettingsRepository {
 
     fun setThemeParameters(themes: Themes?)
 
+    fun setAskRemoveItem(askRemoveItem: Boolean?)
+
     fun getThemeParameters(): Themes?
+
+    fun getAskRemoveItem(): Boolean?
 }

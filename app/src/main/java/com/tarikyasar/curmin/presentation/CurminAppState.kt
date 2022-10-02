@@ -6,8 +6,8 @@ import androidx.compose.runtime.*
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.tarikyasar.curmin.common.Navigations
-import com.tarikyasar.curmin.domain.model.Symbol
 import com.tarikyasar.curmin.domain.model.Themes
+import com.tarikyasar.curmin.utils.manager.PreferenceManager
 import com.tarikyasar.curmin.utils.manager.ThemeManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -17,14 +17,17 @@ import kotlinx.coroutines.launch
 fun rememberCurminAppState(
     navController: NavHostController = rememberAnimatedNavController(),
     themeManager: ThemeManager,
+    preferenceManager: PreferenceManager,
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) = remember(
     navController,
-    themeManager
+    themeManager,
+    preferenceManager
 ) {
     CurminAppState(
         navController = navController,
         themeManager = themeManager,
+        preferenceManager = preferenceManager,
         coroutineScope = coroutineScope
     )
 }
@@ -33,12 +36,19 @@ fun rememberCurminAppState(
 class CurminAppState(
     val navController: NavHostController,
     val themeManager: ThemeManager,
+    val preferenceManager: PreferenceManager,
     coroutineScope: CoroutineScope
 ) {
     init {
         coroutineScope.launch {
             themeManager.theme.collect {
                 _themes = it
+            }
+        }
+
+        coroutineScope.launch {
+            preferenceManager.preference.collect {
+                _preference = it
             }
         }
     }
@@ -52,12 +62,11 @@ class CurminAppState(
             Themes.LIGHT -> false
         }
 
-    // Base Currency State
-    private var _currency by mutableStateOf(Symbol("USD", "United States Dollar"))
-    val currency: Symbol
-        @Composable get() = _currency
-    
-    
+    // Preference State
+    private var _preference by mutableStateOf(true)
+    val askRemoveItem: Boolean
+        @Composable get() = _preference
+
     // Navigation
     val startDestination = Navigations.CurrencyWatchlistNavigation.ROUTE
 }

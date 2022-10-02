@@ -29,6 +29,7 @@ fun SettingsDialog(
         CurminDialog(
             onDismissRequest = {
                 viewModel.getTheme()
+                viewModel.getAskRemoveItem()
                 onDismissRequest()
             }
         ) {
@@ -62,6 +63,7 @@ fun SettingsDialog(
                                     .clickable {
                                         onDismissRequest()
                                         viewModel.getTheme()
+                                        viewModel.getAskRemoveItem()
                                     }
                             )
                         }
@@ -74,6 +76,15 @@ fun SettingsDialog(
                                 onSelectTheme = { themes ->
                                     viewModel.setTheme(themes)
                                 })
+
+                            Divider()
+
+                            AskRemoveItemSetting(
+                                askRemoveItem = state.askRemoveItem,
+                                onCheckboxChange = {
+                                    viewModel.setAskRemoveItem(askRemoveItem = it)
+                                }
+                            )
 
                             Divider()
                         }
@@ -120,5 +131,35 @@ fun ThemeSetting(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun AskRemoveItemSetting(
+    askRemoveItem: Boolean?,
+    onCheckboxChange: (Boolean) -> Unit
+) {
+    var checkboxChecked by remember { mutableStateOf(askRemoveItem) }
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .padding(10.dp)
+            .fillMaxWidth()
+    ) {
+        Text(text = "Ask Remove Item", fontSize = 20.sp)
+
+        Checkbox(
+            checked = checkboxChecked ?: true,
+            onCheckedChange = {
+                checkboxChecked = it
+                onCheckboxChange(it)
+            },
+            colors = CheckboxDefaults.colors(
+                checkedColor = MaterialTheme.colors.primary,
+                checkmarkColor = MaterialTheme.colors.onPrimary
+            )
+        )
     }
 }
