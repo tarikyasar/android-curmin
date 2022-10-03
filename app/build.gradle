@@ -106,4 +106,7 @@ dependencies {
     // Navigation
     implementation "androidx.navigation:navigation-compose:$navigation_version"
     implementation "com.google.accompanist:accompanist-navigation-animation:$nav_animation_version"
+
+    // Swipe
+    implementation "me.saket.swipe:swipe:1.0.0"
 }

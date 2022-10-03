@@ -2,21 +2,15 @@ package com.tarikyasar.curmin.presentation.screens.currency_watchlist
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -30,10 +24,12 @@ import com.tarikyasar.curmin.domain.model.Symbol
 import com.tarikyasar.curmin.presentation.composable.CurminErrorDialog
 import com.tarikyasar.curmin.presentation.composable.CurrencyWatchlistItem
 import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.AddToWatchlistDialog
+import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.CurrencyWatchlistTopBar
 import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.DeleteWatchlistItemDialog
 import com.tarikyasar.curmin.presentation.screens.settings_dialog.SettingsDialog
 import com.tarikyasar.curmin.presentation.ui.theme.SwipeDeleteButtonBackgroundColor
-import com.tarikyasar.curmin.presentation.ui.theme.SwipeDeleteButtonLabelColor
+import me.saket.swipe.SwipeAction
+import me.saket.swipe.SwipeableActionsBox
 import java.util.*
 import kotlin.math.roundToInt
 import kotlin.random.Random
@@ -46,7 +42,6 @@ fun CurrencyWatchlist(
     onNavigateToCurrencyDetail: (baseCurrency: String, targetCurrency: String) -> Unit,
 ) {
     val state = viewModel.state.value
-    var changeValue1 by remember { mutableStateOf(Random.nextDouble(-0.25, 0.25)) }
     var showDeleteWatchlistItemDialog by remember { mutableStateOf(false) }
     var showAddToWatchlistDialog by remember { mutableStateOf(false) }
     var showSettingsDialog by remember { mutableStateOf(false) }
@@ -68,83 +63,10 @@ fun CurrencyWatchlist(
 
     Scaffold(
         topBar = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .clickable {
-                            showAddToWatchlistDialog = true
-                        }
-                        .size(34.dp)
-                ) {
-                    if (showAddToWatchlistDialog) {
-                        Box(
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .clip(CircleShape)
-                                .size(34.dp)
-                                .background(MaterialTheme.colors.primary)
-                        )
-                    }
-
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = null,
-                        tint = MaterialTheme.colors.background,
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                            .background(
-                                MaterialTheme.colors.onBackground,
-                                CircleShape
-                            )
-                            .size(32.dp)
-                    )
-                }
-
-                Text(
-                    text = "Curmin",
-                    color = MaterialTheme.colors.onBackground,
-                    fontSize = 24.sp
-                )
-
-                Box(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .clickable {
-                            showSettingsDialog = true
-                        }
-                        .size(34.dp)
-                ) {
-                    if (showSettingsDialog) {
-                        Box(
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .clip(CircleShape)
-                                .size(34.dp)
-                                .background(MaterialTheme.colors.primary)
-                        )
-                    }
-
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_settings),
-                        contentDescription = null,
-                        tint = MaterialTheme.colors.onBackground,
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                            .background(
-                                MaterialTheme.colors.background,
-                                CircleShape
-                            )
-                            .size(32.dp)
-                    )
-                }
-            }
+            CurrencyWatchlistTopBar(
+                onAddButtonClick = { showAddToWatchlistDialog = true },
+                onSettingsButtonClick = { showSettingsDialog = true },
+            )
         },
         modifier = Modifier
             .fillMaxSize()
@@ -154,116 +76,24 @@ fun CurrencyWatchlist(
             modifier = Modifier.fillMaxHeight(),
             contentAlignment = Alignment.TopCenter
         ) {
-            Column(
-                verticalArrangement = Arrangement.Top,
-                modifier = Modifier
-                    .fillMaxHeight()
-            ) {
-                if (state.currencies.isNotEmpty()) {
-                    SwipeRefresh(
-                        state = swipeRefreshState,
-                        onRefresh = {
-                            viewModel.getCurrencies()
-                            changeValue1 = Random.nextDouble(-0.5, 0.5)
-                        }
-                    ) {
-                        LazyColumn(
-                            verticalArrangement = Arrangement.Top,
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier
-                                .padding(10.dp)
-                                .fillMaxHeight()
-                        ) {
-                            items(state.currencies) { currency ->
-                                key(currency.uid) {
-                                    val dismissState = rememberDismissState(
-                                        confirmStateChange = {
-                                            if (it == DismissValue.DismissedToStart) {
-                                                deleteItem = currency
+            CurrencyWatchlistContent(
+                currencies = state.currencies,
+                getCurrencies = { viewModel.getCurrencies() },
+                onDelete = {
+                    deleteItem = it
 
-                                                if (state.askRemoveItem == true) {
-                                                    showDeleteWatchlistItemDialog = true
-                                                } else {
-                                                    viewModel.deleteCurrency(deleteItem.uid)
-                                                }
-
-                                                false
-                                            } else {
-                                                true
-                                            }
-                                        }
-                                    )
-
-                                    SwipeToDismiss(
-                                        state = dismissState,
-                                        background = {
-                                            val color = when (dismissState.dismissDirection) {
-                                                DismissDirection.EndToStart -> SwipeDeleteButtonBackgroundColor
-                                                else -> Color.Transparent
-                                            }
-
-                                            Box(
-                                                modifier = Modifier
-                                                    .fillMaxSize()
-                                                    .background(color, RoundedCornerShape(10.dp))
-                                                    .padding(10.dp)
-                                            ) {
-                                                Icon(
-                                                    imageVector = Icons.Default.Delete,
-                                                    contentDescription = null,
-                                                    tint = SwipeDeleteButtonLabelColor,
-                                                    modifier = Modifier.align(Alignment.CenterEnd)
-                                                )
-                                            }
-                                        },
-                                        dismissContent = {
-                                            CurrencyWatchlistItem(
-                                                base = currency.baseCurrencyCode ?: "",
-                                                target = currency.targetCurrencyCode ?: "",
-                                                value = ((currency.rate
-                                                    ?: 0.0) * 100.0).roundToInt() / 100.0,
-                                                change = (changeValue1 * 100.0).roundToInt() / 100.0,
-                                                date = "14.09.2022",
-                                                onClick = {
-                                                    onNavigateToCurrencyDetail(
-                                                        currency.baseCurrencyCode!!,
-                                                        currency.targetCurrencyCode!!
-                                                    )
-                                                }
-                                            )
-                                        },
-                                        directions = setOf(DismissDirection.EndToStart)
-                                    )
-
-                                    Spacer(modifier = Modifier.height(10.dp))
-                                }
-                            }
-                        }
+                    if (state.askRemoveItem == true) {
+                        showDeleteWatchlistItemDialog = true
+                    } else {
+                        viewModel.deleteCurrency(deleteItem.uid)
                     }
-                } else if (state.isLoading.not()) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-                        modifier = Modifier.fillMaxHeight()
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_empty),
-                            contentDescription = null,
-                            tint = MaterialTheme.colors.secondary,
-                            modifier = Modifier
-                                .size(70.dp)
-                        )
-
-                        Text(
-                            text = "There is no currency on the list. You can add them with the button upper left.",
-                            fontSize = 20.sp,
-                            textAlign = TextAlign.Center,
-                            color = MaterialTheme.colors.secondary,
-                            modifier = Modifier.padding(10.dp)
-                        )
-                    }
+                },
+                isLoading = state.isLoading,
+                swipeRefreshState = swipeRefreshState,
+                onNavigateToCurrencyDetail = { baseCurrency, targetCurrency ->
+                    onNavigateToCurrencyDetail(baseCurrency, targetCurrency)
                 }
-            }
+            )
 
             if (state.isLoading || swipeRefreshState.isRefreshing) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
@@ -329,6 +159,101 @@ fun CurrencyWatchlist(
                 },
                 errorMessage = state.error
             )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun CurrencyWatchlistContent(
+    currencies: List<CurrencyWatchlistItemData>,
+    getCurrencies: () -> Unit,
+    onDelete: (currency: CurrencyWatchlistItemData) -> Unit,
+    isLoading: Boolean,
+    swipeRefreshState: SwipeRefreshState,
+    onNavigateToCurrencyDetail: (baseCurrency: String, targetCurrency: String) -> Unit
+) {
+    var changeValue1 by remember { mutableStateOf(Random.nextDouble(-0.25, 0.25)) }
+
+    Column(
+        verticalArrangement = Arrangement.Top,
+        modifier = Modifier
+            .fillMaxHeight()
+    ) {
+        if (currencies.isNotEmpty()) {
+            SwipeRefresh(
+                state = swipeRefreshState,
+                onRefresh = {
+                    getCurrencies()
+                    changeValue1 = Random.nextDouble(-0.5, 0.5)
+                }
+            ) {
+                LazyColumn(
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .fillMaxHeight()
+                ) {
+                    items(currencies) { currency ->
+                        key(currency.uid) {
+                            val deleteSwipeAction = SwipeAction(
+                                icon = painterResource(R.drawable.ic_close),
+                                background = SwipeDeleteButtonBackgroundColor,
+                                onSwipe = {
+                                    onDelete(currency)
+                                }
+                            )
+
+                            SwipeableActionsBox(
+                                endActions = listOf(deleteSwipeAction),
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(MaterialTheme.colors.surface)
+                            ) {
+                                CurrencyWatchlistItem(
+                                    base = currency.baseCurrencyCode ?: "",
+                                    target = currency.targetCurrencyCode ?: "",
+                                    value = ((currency.rate
+                                        ?: 0.0) * 100.0).roundToInt() / 100.0,
+                                    change = (changeValue1 * 100.0).roundToInt() / 100.0,
+                                    date = "14.09.2022",
+                                    onClick = {
+                                        onNavigateToCurrencyDetail(
+                                            currency.baseCurrencyCode!!,
+                                            currency.targetCurrencyCode!!
+                                        )
+                                    }
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.height(10.dp))
+                        }
+                    }
+                }
+            }
+        } else if (isLoading.not()) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxHeight()
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_empty),
+                    contentDescription = null,
+                    tint = MaterialTheme.colors.secondary,
+                    modifier = Modifier
+                        .size(70.dp)
+                )
+
+                Text(
+                    text = "There is no currency on the list. You can add them with the button upper left.",
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colors.secondary,
+                    modifier = Modifier.padding(10.dp)
+                )
+            }
         }
     }
 }
