@@ -198,7 +198,7 @@ fun CurrencyWatchlistContent(
                     items(currencies) { currency ->
                         key(currency.uid) {
                             val deleteSwipeAction = SwipeAction(
-                                icon = painterResource(R.drawable.ic_close),
+                                icon = painterResource(R.drawable.ic_delete),
                                 background = SwipeDeleteButtonBackgroundColor,
                                 onSwipe = {
                                     onDelete(currency)
