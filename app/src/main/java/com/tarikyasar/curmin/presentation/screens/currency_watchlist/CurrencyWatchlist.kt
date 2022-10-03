@@ -1,6 +1,8 @@
 package com.tarikyasar.curmin.presentation.screens.currency_watchlist
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -163,7 +165,7 @@ fun CurrencyWatchlist(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun CurrencyWatchlistContent(
     currencies: List<CurrencyWatchlistItemData>,
@@ -194,6 +196,7 @@ fun CurrencyWatchlistContent(
                     modifier = Modifier
                         .padding(10.dp)
                         .fillMaxHeight()
+                        .animateContentSize()
                 ) {
                     items(currencies) { currency ->
                         key(currency.uid) {
@@ -207,6 +210,7 @@ fun CurrencyWatchlistContent(
 
                             SwipeableActionsBox(
                                 endActions = listOf(deleteSwipeAction),
+                                swipeThreshold = 60.dp,
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(10.dp))
                                     .background(MaterialTheme.colors.surface)

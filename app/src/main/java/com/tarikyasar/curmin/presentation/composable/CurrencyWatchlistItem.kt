@@ -28,12 +28,13 @@ fun CurrencyWatchlistItem(
     value: Double,
     change: Double,
     date: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val rotationState by animateFloatAsState(targetValue = if (change < 0) 360f else 180f)
 
     Surface(
-        modifier = Modifier
+        modifier = modifier
             .clip(RoundedCornerShape(10.dp))
             .background(MaterialTheme.colors.surface)
             .clickable {
