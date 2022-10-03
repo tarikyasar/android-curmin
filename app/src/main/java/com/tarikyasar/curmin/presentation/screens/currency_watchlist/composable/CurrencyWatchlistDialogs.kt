@@ -1,14 +1,20 @@
 package com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -31,6 +37,7 @@ fun AddToWatchlistDialog(
     var targetCurrencyListExpanded by remember { mutableStateOf(false) }
     var baseCurrencyState by remember { mutableStateOf(currencyList[0].code) }
     var targetCurrencyState by remember { mutableStateOf(currencyList[0].code) }
+    val context = LocalContext.current
 
     if (showCreateWatchlistItemDialog) {
         CurminDialog(
@@ -38,18 +45,35 @@ fun AddToWatchlistDialog(
         ) {
             Surface(
                 modifier = Modifier
-                    .height(300.dp),
+                    .height(230.dp),
                 shape = RoundedCornerShape(10.dp)
             ) {
                 Scaffold(
                     topBar = {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.End,
+                            horizontalArrangement = Arrangement.SpaceBetween,
                             modifier = Modifier
                                 .padding(10.dp)
                                 .fillMaxWidth()
                         ) {
+                            Icon(
+                                imageVector = Icons.Default.Info,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .clip(CircleShape)
+                                    .clickable {
+                                        Toast
+                                            .makeText(
+                                                context,
+                                                "Base and target currency must be different from each other.",
+                                                Toast.LENGTH_SHORT
+                                            )
+                                            .show()
+                                    }
+                            )
+
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_close),
                                 contentDescription = null,
@@ -72,10 +96,7 @@ fun AddToWatchlistDialog(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
                             .fillMaxHeight()
-                            .padding(top = 10.dp)
                     ) {
-                        Divider()
-
                         Row(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically,
@@ -134,13 +155,6 @@ fun AddToWatchlistDialog(
 
                         Divider()
 
-                        Text(
-                            text = "Base and target currency must be different from each other.",
-                            color = MaterialTheme.colors.onSurface,
-                            fontSize = 16.sp,
-                            modifier = Modifier.padding(vertical = 10.dp, horizontal = 10.dp),
-                            textAlign = TextAlign.Center
-                        )
 
                         Button(
                             onClick = {
@@ -154,13 +168,12 @@ fun AddToWatchlistDialog(
                             },
                             enabled = baseCurrencyState != targetCurrencyState,
                             shape = RoundedCornerShape(10.dp),
-                            modifier = Modifier
-                                .padding(bottom = 10.dp),
                             elevation = ButtonDefaults.elevation(),
                             colors = ButtonDefaults.buttonColors(
                                 backgroundColor = MaterialTheme.colors.primary,
                                 disabledBackgroundColor = MaterialTheme.colors.secondaryVariant
                             ),
+                            modifier = Modifier.padding(bottom = 10.dp)
                         ) {
                             Text(
                                 text = "Add To Watchlist",
