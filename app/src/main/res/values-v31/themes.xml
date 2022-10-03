@@ -3,9 +3,12 @@
     <style name="Theme.Curmin" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@color/background_color</item>
         <item name="android:navigationBarColor">@color/background_color</item>
+        <item name="android:splashScreenTheme">@style/SplashScreenTheme</item>
     </style>
 
     <style name="SplashScreenTheme" parent="Theme.Curmin">
-        <item name="android:windowBackground">@drawable/bg_splash</item>
+        <item name="android:windowSplashScreenBackground">#4f4f4f</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/bg_splash</item>
+        <item name="android:windowSplashScreenAnimationDuration">400</item>
     </style>
 </resources>
