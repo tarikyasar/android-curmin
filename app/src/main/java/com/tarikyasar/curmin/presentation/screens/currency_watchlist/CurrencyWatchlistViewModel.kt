@@ -99,8 +99,4 @@ class CurrencyWatchlistViewModel @Inject constructor(
             askRemoveItem = preferenceManager.getPreference()
         )
     }
-
-    fun setAskRemoveItem(askRemoveItem: Boolean) {
-        preferenceManager.setPreference(askRemoveItem = askRemoveItem)
-    }
 }

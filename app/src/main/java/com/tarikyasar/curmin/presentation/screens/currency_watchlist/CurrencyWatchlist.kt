@@ -44,7 +44,6 @@ import kotlin.random.Random
 fun CurrencyWatchlist(
     viewModel: CurrencyWatchlistViewModel = hiltViewModel(),
     onNavigateToCurrencyDetail: (baseCurrency: String, targetCurrency: String) -> Unit,
-    askRemoveItem: Boolean?
 ) {
     val state = viewModel.state.value
     var changeValue1 by remember { mutableStateOf(Random.nextDouble(-0.25, 0.25)) }
@@ -182,7 +181,7 @@ fun CurrencyWatchlist(
                                             if (it == DismissValue.DismissedToStart) {
                                                 deleteItem = currency
 
-                                                if (askRemoveItem == true) {
+                                                if (state.askRemoveItem == true) {
                                                     showDeleteWatchlistItemDialog = true
                                                 } else {
                                                     viewModel.deleteCurrency(deleteItem.uid)
@@ -274,6 +273,7 @@ fun CurrencyWatchlist(
                 openSettingsDialog = showSettingsDialog,
                 onDismissRequest = {
                     showSettingsDialog = false
+                    viewModel.getAskRemoveItem()
                     viewModel.getCurrencies()
                 }
             )
@@ -316,11 +316,7 @@ fun CurrencyWatchlist(
                 },
                 onNegativeButtonClick = { showDeleteWatchlistItemDialog = false },
                 baseCurrency = deleteItem.baseCurrencyCode ?: "",
-                targetCurrency = deleteItem.targetCurrencyCode ?: "",
-                onCheckBoxChange = {
-                    viewModel.setAskRemoveItem(askRemoveItem = it.not())
-                },
-                askRemoveItem = askRemoveItem ?: true
+                targetCurrency = deleteItem.targetCurrencyCode ?: ""
             )
 
             CurminErrorDialog(

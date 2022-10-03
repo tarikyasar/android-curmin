@@ -181,14 +181,10 @@ fun DeleteWatchlistItemDialog(
     onDismissRequest: () -> Unit,
     onPositiveButtonClick: () -> Unit,
     onNegativeButtonClick: () -> Unit,
-    onCheckBoxChange: (Boolean) -> Unit,
     baseCurrency: String,
     targetCurrency: String,
-    askRemoveItem: Boolean,
     properties: DialogProperties = DialogProperties()
 ) {
-    var checkboxChecked by remember { mutableStateOf(askRemoveItem.not()) }
-
     if (showDeleteWatchlistItemDialog) {
         CurminDialog(
             onDismissRequest = onDismissRequest,
@@ -196,7 +192,7 @@ fun DeleteWatchlistItemDialog(
         ) {
             Surface(
                 modifier = Modifier
-                    .height(340.dp),
+                    .height(310.dp),
                 shape = RoundedCornerShape(10.dp)
             ) {
                 Scaffold(
@@ -234,28 +230,6 @@ fun DeleteWatchlistItemDialog(
                             textAlign = TextAlign.Center,
                             modifier = Modifier.padding(top = 10.dp, bottom = 10.dp)
                         )
-
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(
-                                checked = checkboxChecked,
-                                onCheckedChange = {
-                                    checkboxChecked = it
-                                    onCheckBoxChange(it)
-                                },
-                                colors = CheckboxDefaults.colors(
-                                    checkedColor = MaterialTheme.colors.primary,
-                                    checkmarkColor = MaterialTheme.colors.onPrimary
-                                )
-                            )
-
-                            Text(text = "Don't ask again")
-                        }
 
                         Row(
                             horizontalArrangement = Arrangement.SpaceBetween,

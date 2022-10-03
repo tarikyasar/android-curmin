@@ -70,8 +70,7 @@ fun CurminApp(
                                 targetCurrency = targetCurrency
                             )
                         )
-                    },
-                    askRemoveItem = appState.askRemoveItem
+                    }
                 )
             }
 

@@ -64,5 +64,8 @@ class SettingsDialogViewModel @Inject constructor(
 
     fun setAskRemoveItem(askRemoveItem: Boolean) {
         preferenceManager.setPreference(askRemoveItem = askRemoveItem)
+        _state.value = _state.value.copy(
+            askRemoveItem = askRemoveItem
+        )
     }
 }
