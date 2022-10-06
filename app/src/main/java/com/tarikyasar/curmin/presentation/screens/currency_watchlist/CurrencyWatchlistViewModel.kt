@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tarikyasar.curmin.common.Resource
 import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
+import com.tarikyasar.curmin.domain.usecase.api.GetCurrencySymbolsUseCase
 import com.tarikyasar.curmin.domain.usecase.database.DeleteCurrencyWatchlistItemUseCase
 import com.tarikyasar.curmin.domain.usecase.database.GetCurrencyWatchlistItemsUseCase
 import com.tarikyasar.curmin.domain.usecase.database.InsertCurrencyWatchlistItemUseCase
@@ -20,13 +21,15 @@ class CurrencyWatchlistViewModel @Inject constructor(
     private val preferenceManager: PreferenceManager,
     private val getCurrencyWatchlistItems: GetCurrencyWatchlistItemsUseCase,
     private val insertCurrencyWatchlistItemUseCase: InsertCurrencyWatchlistItemUseCase,
-    private val deleteCurrencyWatchlistItemUseCase: DeleteCurrencyWatchlistItemUseCase
+    private val deleteCurrencyWatchlistItemUseCase: DeleteCurrencyWatchlistItemUseCase,
+    private val getCurrencySymbolsUseCase: GetCurrencySymbolsUseCase
 ) : ViewModel() {
 
     private val _state = mutableStateOf(CurrencyWatchlistState())
     val state: State<CurrencyWatchlistState> = _state
 
     init {
+        getSymbols()
         getCurrencies()
         getAskRemoveItem()
     }
@@ -99,4 +102,20 @@ class CurrencyWatchlistViewModel @Inject constructor(
             askRemoveItem = preferenceManager.getPreference()
         )
     }
+
+    private fun getSymbols() {
+        getCurrencySymbolsUseCase().onEach { result ->
+            when (result) {
+                is Resource.Success -> _state.value = _state.value.copy(
+                    currencySymbols = result.data ?: emptyList()
+                )
+                is Resource.Error -> _state.value = _state.value.copy(
+                    error = result.message ?: "An unexpected error occurred."
+                )
+                is Resource.Loading -> _state.value =
+                    _state.value.copy(isLoading = true)
+            }
+        }.launchIn(viewModelScope)
+    }
+
 }

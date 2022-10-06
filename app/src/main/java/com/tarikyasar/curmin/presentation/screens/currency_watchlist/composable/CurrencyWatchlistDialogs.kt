@@ -35,8 +35,8 @@ fun AddToWatchlistDialog(
 ) {
     var baseCurrencyListExpanded by remember { mutableStateOf(false) }
     var targetCurrencyListExpanded by remember { mutableStateOf(false) }
-    var baseCurrencyState by remember { mutableStateOf(currencyList[0].code) }
-    var targetCurrencyState by remember { mutableStateOf(currencyList[0].code) }
+    var baseCurrencyState by remember { mutableStateOf("") }
+    var targetCurrencyState by remember { mutableStateOf("") }
     val context = LocalContext.current
 
     if (showCreateWatchlistItemDialog) {
@@ -111,7 +111,7 @@ fun AddToWatchlistDialog(
                                 onExpandedChangeRequest = {
                                     baseCurrencyListExpanded = it
                                 },
-                                selectedItemText = baseCurrencyState
+                                selectedItemText = baseCurrencyState,
                             ) {
                                 currencyList.forEach { symbol ->
                                     DropdownMenuItem(onClick = {
@@ -166,7 +166,7 @@ fun AddToWatchlistDialog(
                                 targetCurrencyState = currencyList[0].code
                                 onDismissRequest()
                             },
-                            enabled = baseCurrencyState != targetCurrencyState,
+                            enabled = baseCurrencyState != targetCurrencyState && baseCurrencyState != "" && targetCurrencyState != "",
                             shape = RoundedCornerShape(10.dp),
                             elevation = ButtonDefaults.elevation(),
                             colors = ButtonDefaults.buttonColors(
@@ -178,7 +178,7 @@ fun AddToWatchlistDialog(
                             Text(
                                 text = "Add To Watchlist",
                                 fontSize = 20.sp,
-                                color = if (baseCurrencyState != targetCurrencyState) MaterialTheme.colors.onPrimary else Color.Gray
+                                color = if (baseCurrencyState != targetCurrencyState && baseCurrencyState != "" && targetCurrencyState != "") MaterialTheme.colors.onPrimary else Color.Gray
                             )
                         }
                     }

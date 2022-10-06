@@ -22,7 +22,6 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.tarikyasar.curmin.R
 import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
-import com.tarikyasar.curmin.domain.model.Symbol
 import com.tarikyasar.curmin.presentation.composable.CurminErrorDialog
 import com.tarikyasar.curmin.presentation.composable.CurrencyWatchlistItem
 import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.AddToWatchlistDialog
@@ -37,7 +36,6 @@ import kotlin.math.roundToInt
 import kotlin.random.Random
 
 @SuppressLint("UnrememberedMutableState")
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CurrencyWatchlist(
     viewModel: CurrencyWatchlistViewModel = hiltViewModel(),
@@ -126,16 +124,7 @@ fun CurrencyWatchlist(
                         )
                     )
                 },
-                currencyList = listOf(
-                    Symbol("ABC", ""),
-                    Symbol("DEF", ""),
-                    Symbol("GHI", ""),
-                    Symbol("JKL", ""),
-                    Symbol("MNO", ""),
-                    Symbol("PRS", ""),
-                    Symbol("TUV", ""),
-                    Symbol("WYZ", ""),
-                )
+                currencyList = state.currencySymbols
             )
 
             DeleteWatchlistItemDialog(
