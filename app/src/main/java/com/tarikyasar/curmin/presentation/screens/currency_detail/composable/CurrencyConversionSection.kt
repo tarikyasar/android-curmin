@@ -9,8 +9,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.tarikyasar.curmin.utils.CurrencyUtils
 
 @Composable
 fun CurrencyConversionSection(
@@ -18,8 +20,9 @@ fun CurrencyConversionSection(
     targetCurrency: String,
     currencyRate: Double
 ) {
-    var baseCurrencyText by remember { mutableStateOf("") }
-    var targetCurrencyText by remember { mutableStateOf("") }
+    var baseCurrencyText by remember { mutableStateOf(CurrencyUtils.formatCurrency(0.0)) }
+    var targetCurrencyText by remember { mutableStateOf(CurrencyUtils.formatCurrency(0.0)) }
+    var isBaseEditing by remember { mutableStateOf(true) }
 
     Column {
         Text(
@@ -38,12 +41,20 @@ fun CurrencyConversionSection(
                 OutlinedTextField(
                     value = baseCurrencyText,
                     onValueChange = {
-                        baseCurrencyText = it
-                        targetCurrencyText = (baseCurrencyText.toDouble() * currencyRate).toString()
+                        if (isBaseEditing) {
+                            baseCurrencyText = it
+                            targetCurrencyText =
+                                CurrencyUtils.formatCurrency(if (baseCurrencyText.isEmpty()) 0.0 else baseCurrencyText.toDouble() * currencyRate)
+                        }
                     },
                     modifier = Modifier
                         .background(MaterialTheme.colors.surface)
                         .fillMaxWidth()
+                        .onFocusEvent {
+                            if (it.isFocused) {
+                                isBaseEditing = true
+                            }
+                        }
                 )
 
                 Row(
@@ -73,12 +84,20 @@ fun CurrencyConversionSection(
                 OutlinedTextField(
                     value = targetCurrencyText,
                     onValueChange = {
-//                        baseCurrencyText = it
-//                        targetCurrencyText = (baseCurrencyText.toDouble() * currencyRate).toString()
+                        if (!isBaseEditing) {
+                            targetCurrencyText = it
+                            baseCurrencyText =
+                                CurrencyUtils.formatCurrency(if (targetCurrencyText.isEmpty()) 0.0 else targetCurrencyText.toDouble() / currencyRate)
+                        }
                     },
                     modifier = Modifier
                         .background(MaterialTheme.colors.surface)
                         .fillMaxWidth()
+                        .onFocusEvent {
+                            if (it.isFocused) {
+                                isBaseEditing = false
+                            }
+                        }
                 )
 
                 Row(
@@ -103,3 +122,4 @@ fun CurrencyConversionSection(
 
     }
 }
+

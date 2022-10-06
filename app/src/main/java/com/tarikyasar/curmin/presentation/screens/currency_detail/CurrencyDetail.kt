@@ -28,23 +28,28 @@ fun CurrencyDetail(
             )
         }
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top,
-            modifier = Modifier.padding(horizontal = 10.dp)
-        ) {
-            Divider()
+        CurrencyDetailContent()
+    }
+}
 
-            RefreshInformationSection(time = "14:04:45 25.09.2022")
+@Composable
+fun CurrencyDetailContent() {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top,
+        modifier = Modifier.padding(horizontal = 10.dp)
+    ) {
+        Divider()
 
-            Divider()
+        RefreshInformationSection(time = "14:04:45 25.09.2022")
 
-            CurrencyConversionSection(
-                baseCurrency = "United States Dollar",
-                targetCurrency = "Turkish Lira",
-                currencyRate = 18.42
-            )
-        }
+        Divider()
+
+        CurrencyConversionSection(
+            baseCurrency = "United States Dollar",
+            targetCurrency = "Turkish Lira",
+            currencyRate = 18.42
+        )
     }
 }
 
