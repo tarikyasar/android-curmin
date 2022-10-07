@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -104,7 +105,7 @@ fun AddToWatchlistDialog(
                                 .fillMaxWidth()
                                 .padding(vertical = 4.dp, horizontal = 10.dp)
                         ) {
-                            Text(text = "Base Currency", fontSize = 20.sp)
+                            Text(text = stringResource(id = R.string.base_currency), fontSize = 20.sp)
 
                             CurminDropdown(
                                 expanded = baseCurrencyListExpanded,
@@ -133,7 +134,7 @@ fun AddToWatchlistDialog(
                                 .fillMaxWidth()
                                 .padding(vertical = 4.dp, horizontal = 10.dp)
                         ) {
-                            Text(text = "Target Currency", fontSize = 20.sp)
+                            Text(text = stringResource(id = R.string.target_currency), fontSize = 20.sp)
 
                             CurminDropdown(
                                 expanded = targetCurrencyListExpanded,
@@ -176,7 +177,7 @@ fun AddToWatchlistDialog(
                             modifier = Modifier.padding(bottom = 10.dp)
                         ) {
                             Text(
-                                text = "Add To Watchlist",
+                                text = stringResource(id = R.string.add_to_watchlist),
                                 fontSize = 20.sp,
                                 color = if (baseCurrencyState != targetCurrencyState && baseCurrencyState != "" && targetCurrencyState != "") MaterialTheme.colors.onPrimary else Color.Gray
                             )
@@ -237,7 +238,7 @@ fun DeleteWatchlistItemDialog(
                         modifier = Modifier.fillMaxHeight()
                     ) {
                         Text(
-                            text = "Watchlist item containing $baseCurrency-$targetCurrency currencies will be deleted.\nAre you sure?",
+                            text = stringResource(id = R.string.watchlist_item_deletion_warning, baseCurrency, targetCurrency),
                             fontSize = 18.sp,
                             color = MaterialTheme.colors.onSurface,
                             textAlign = TextAlign.Center,
@@ -266,7 +267,7 @@ fun DeleteWatchlistItemDialog(
                                 ),
                             ) {
                                 Text(
-                                    text = "Yes",
+                                    text = stringResource(id = R.string.yes),
                                     fontSize = 24.sp,
                                     color = MaterialTheme.colors.onPrimary
                                 )
@@ -287,7 +288,7 @@ fun DeleteWatchlistItemDialog(
                                 ),
                             ) {
                                 Text(
-                                    text = "No",
+                                    text = stringResource(id = R.string.no),
                                     fontSize = 24.sp,
                                     color = MaterialTheme.colors.onSurface
                                 )

@@ -1,5 +1,7 @@
 package com.tarikyasar.curmin.presentation.screens.currency_detail
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -12,7 +14,10 @@ import androidx.compose.ui.unit.dp
 import com.tarikyasar.curmin.presentation.screens.currency_detail.composable.CurrencyConversionSection
 import com.tarikyasar.curmin.presentation.screens.currency_detail.composable.CurrencyDetailTopBar
 import com.tarikyasar.curmin.presentation.screens.currency_detail.composable.RefreshInformationSection
+import com.tarikyasar.curmin.utils.DateUtils
+import java.time.LocalDateTime
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CurrencyDetail(
     onNavigateBack: () -> Unit,
@@ -32,6 +37,7 @@ fun CurrencyDetail(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CurrencyDetailContent() {
     Column(
@@ -41,10 +47,11 @@ fun CurrencyDetailContent() {
     ) {
         Divider()
 
-        RefreshInformationSection(time = "14:04:45 25.09.2022")
+        RefreshInformationSection(time = DateUtils.formatTime(LocalDateTime.now()))
 
         Divider()
 
+        // TODO: Update these strings
         CurrencyConversionSection(
             baseCurrency = "United States Dollar",
             targetCurrency = "Turkish Lira",

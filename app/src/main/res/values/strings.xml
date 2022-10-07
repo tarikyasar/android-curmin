@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">Curmin</string>
+    <string name="error">Error</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="okay">Okay</string>
+
+    <string name="currency_conversion">"Currency Conversion"</string>
+    <string name="refresh_time">Refreshed at: %s</string>
+
+    <!-- Watchlist Screen -->
+    <string name="watchlist_item_deletion_warning">"Watchlist item containing %s-%s currencies will be deleted.\nAre you sure?"</string>
+    <string name="add_to_watchlist">Add To Watchlist</string>
+    <string name="base_currency">Base Currency</string>
+    <string name="target_currency">Target Currency</string>
+    <string name="empty_watchlist">There is no currency on the list. You can add them with the button upper left.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings">Settings</string>
+    <string name="theme">Theme</string>
+    <string name="ask_to_remove_item">Ask To Remove Item</string>
 </resources>

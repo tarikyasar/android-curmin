@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tarikyasar.curmin.R
@@ -53,7 +54,7 @@ fun CurrencyWatchlistTopBar(
         }
 
         Text(
-            text = "Curmin",
+            text = stringResource(id = R.string.app_name),
             color = MaterialTheme.colors.onBackground,
             fontSize = 24.sp
         )

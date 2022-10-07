@@ -10,8 +10,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusEvent
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.tarikyasar.curmin.R
 import com.tarikyasar.curmin.utils.CurrencyUtils
 
 @Composable
@@ -26,7 +28,7 @@ fun CurrencyConversionSection(
 
     Column {
         Text(
-            text = "Currency Conversion",
+            text = stringResource(id = R.string.currency_conversion),
             modifier = Modifier.align(Alignment.Start),
             fontSize = 24.sp
         )

@@ -1,6 +1,8 @@
 package com.tarikyasar.curmin.presentation.screens.currency_watchlist
 
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -14,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,12 +32,15 @@ import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.
 import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.DeleteWatchlistItemDialog
 import com.tarikyasar.curmin.presentation.screens.settings_dialog.SettingsDialog
 import com.tarikyasar.curmin.presentation.ui.theme.SwipeDeleteButtonBackgroundColor
+import com.tarikyasar.curmin.utils.DateUtils
 import me.saket.swipe.SwipeAction
 import me.saket.swipe.SwipeableActionsBox
+import java.time.LocalDateTime
 import java.util.*
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
+@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun CurrencyWatchlist(
@@ -120,7 +126,7 @@ fun CurrencyWatchlist(
                             rate = Random.nextDouble(0.0, 20.0),
                             previousChangeRate = Random.nextDouble(0.0, 0.5),
                             currentChangeRate = Random.nextDouble(0.0, 0.5),
-                            date = "18.09.2022",
+                            date = DateUtils.formatTime(LocalDateTime.now()),
                         )
                     )
                 },
@@ -154,6 +160,7 @@ fun CurrencyWatchlist(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun CurrencyWatchlistContent(
@@ -210,7 +217,7 @@ fun CurrencyWatchlistContent(
                                     value = ((currency.rate
                                         ?: 0.0) * 100.0).roundToInt() / 100.0,
                                     change = (changeValue1 * 100.0).roundToInt() / 100.0,
-                                    date = "14.09.2022",
+                                    date = DateUtils.formatTime(LocalDateTime.now()),
                                     onClick = {
                                         onNavigateToCurrencyDetail(
                                             currency.baseCurrencyCode!!,
@@ -240,7 +247,7 @@ fun CurrencyWatchlistContent(
                 )
 
                 Text(
-                    text = "There is no currency on the list. You can add them with the button upper left.",
+                    text = stringResource(id = R.string.empty_watchlist),
                     fontSize = 20.sp,
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colors.secondary,

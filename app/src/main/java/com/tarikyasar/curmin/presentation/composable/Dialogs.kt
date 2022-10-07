@@ -11,6 +11,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -197,7 +198,7 @@ fun CurminErrorDialog(
                             horizontalArrangement = Arrangement.Center
                         ) {
                             Text(
-                                text = "Warning",
+                                text = stringResource(id = R.string.error),
                                 color = MaterialTheme.colors.onSurface,
                                 fontSize = 24.sp,
                                 modifier = Modifier.padding(10.dp),
@@ -243,7 +244,7 @@ fun CurminErrorDialog(
                                     .padding(10.dp)
                             ) {
                                 Text(
-                                    text = "Yes",
+                                    text = stringResource(id = R.string.okay),
                                     fontSize = 24.sp,
                                     color = PositiveButtonTextColor
                                 )
