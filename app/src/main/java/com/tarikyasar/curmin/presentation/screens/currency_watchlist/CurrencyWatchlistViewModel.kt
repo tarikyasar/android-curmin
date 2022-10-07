@@ -31,7 +31,7 @@ class CurrencyWatchlistViewModel @Inject constructor(
     init {
         getSymbols()
         getCurrencies()
-        getAskRemoveItem()
+        getAskToRemoveItemParameter()
     }
 
     fun getCurrencies() {
@@ -97,9 +97,9 @@ class CurrencyWatchlistViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun getAskRemoveItem() {
+    fun getAskToRemoveItemParameter() {
         _state.value = _state.value.copy(
-            askRemoveItem = preferenceManager.getPreference()
+            askToRemoveItemParameter = preferenceManager.getPreference()
         )
     }
 

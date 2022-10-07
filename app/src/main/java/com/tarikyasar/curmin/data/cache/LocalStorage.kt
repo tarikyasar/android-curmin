@@ -29,7 +29,7 @@ class LocalStorage @Inject constructor(
             }
         }
 
-    var askRemoveItem: Boolean?
+    var askToRemoveItemParameter: Boolean?
         get() {
             val json = preferences.getString(PreferenceKey.ASK_REMOVE_ITEM.key, "")
             return GsonHolder.gson.fromJson(json)

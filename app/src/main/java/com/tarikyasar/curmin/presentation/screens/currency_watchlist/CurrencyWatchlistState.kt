@@ -7,6 +7,6 @@ data class CurrencyWatchlistState(
     val isLoading: Boolean = false,
     val error: String = "",
     var currencies: MutableList<CurrencyWatchlistItemData> = mutableListOf(),
-    var askRemoveItem: Boolean? = false,
+    var askToRemoveItemParameter: Boolean? = false,
     var currencySymbols: List<Symbol> = emptyList()
 )

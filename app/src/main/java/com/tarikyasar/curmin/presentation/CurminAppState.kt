@@ -64,7 +64,7 @@ class CurminAppState(
 
     // Preference State
     private var _preference by mutableStateOf(true)
-    val askRemoveItem: Boolean
+    val askToRemoveItemParameter: Boolean
         @Composable get() = _preference
 
     // Navigation

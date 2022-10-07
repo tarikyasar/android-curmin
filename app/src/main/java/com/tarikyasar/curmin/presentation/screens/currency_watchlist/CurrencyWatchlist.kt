@@ -88,7 +88,7 @@ fun CurrencyWatchlist(
                 onDelete = {
                     deleteItem = it
 
-                    if (state.askRemoveItem == true) {
+                    if (state.askToRemoveItemParameter == true) {
                         showDeleteWatchlistItemDialog = true
                     } else {
                         viewModel.deleteCurrency(deleteItem.uid)
@@ -109,7 +109,7 @@ fun CurrencyWatchlist(
                 openSettingsDialog = showSettingsDialog,
                 onDismissRequest = {
                     showSettingsDialog = false
-                    viewModel.getAskRemoveItem()
+                    viewModel.getAskToRemoveItemParameter()
                     viewModel.getCurrencies()
                 }
             )

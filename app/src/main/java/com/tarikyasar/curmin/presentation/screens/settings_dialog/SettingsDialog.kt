@@ -30,7 +30,7 @@ fun SettingsDialog(
         CurminDialog(
             onDismissRequest = {
                 viewModel.getTheme()
-                viewModel.getAskRemoveItem()
+                viewModel.getAskToRemoveItemParameter()
                 onDismissRequest()
             }
         ) {
@@ -64,7 +64,7 @@ fun SettingsDialog(
                                     .clickable {
                                         onDismissRequest()
                                         viewModel.getTheme()
-                                        viewModel.getAskRemoveItem()
+                                        viewModel.getAskToRemoveItemParameter()
                                     }
                             )
                         }
@@ -80,10 +80,10 @@ fun SettingsDialog(
 
                             Divider()
 
-                            AskRemoveItemSetting(
-                                askRemoveItem = state.askRemoveItem,
+                            AskToRemoveItemParameterSetting(
+                                askToRemoveItemParameter = state.askToRemoveItemParameter,
                                 onCheckboxChange = {
-                                    viewModel.setAskRemoveItem(askRemoveItem = it)
+                                    viewModel.setAskToRemoveItemParameter(askToRemoveItemParameter = it)
                                 }
                             )
 
@@ -136,11 +136,11 @@ fun ThemeSetting(
 }
 
 @Composable
-fun AskRemoveItemSetting(
-    askRemoveItem: Boolean?,
+fun AskToRemoveItemParameterSetting(
+    askToRemoveItemParameter: Boolean?,
     onCheckboxChange: (Boolean) -> Unit
 ) {
-    var checkboxChecked by remember { mutableStateOf(askRemoveItem) }
+    var checkboxChecked by remember { mutableStateOf(askToRemoveItemParameter) }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,

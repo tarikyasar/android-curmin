@@ -12,15 +12,15 @@ class SettingsCacheDataSource @Inject constructor(
         localStorage.themes = themes
     }
 
-    override fun setAskRemoveItem(askRemoveItem: Boolean?) {
-        localStorage.askRemoveItem = askRemoveItem
+    override fun setAskToRemoveItemParameter(askToRemoveItemParameter: Boolean?) {
+        localStorage.askToRemoveItemParameter = askToRemoveItemParameter
     }
 
     override fun getThemeParameters(): Themes? {
         return localStorage.themes
     }
 
-    override fun getAskRemoveItem(): Boolean? {
-        return localStorage.askRemoveItem
+    override fun getAskToRemoveItemParameter(): Boolean? {
+        return localStorage.askToRemoveItemParameter
     }
 }

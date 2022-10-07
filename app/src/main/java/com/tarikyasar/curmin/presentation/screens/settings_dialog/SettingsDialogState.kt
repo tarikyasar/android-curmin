@@ -9,5 +9,5 @@ data class SettingsDialogState(
     val baseCurrency: Symbol? = null,
     val currencySymbols: List<Symbol> = emptyList(),
     val error: String = "",
-    val askRemoveItem: Boolean? = null
+    val askToRemoveItemParameter: Boolean? = null
 )
