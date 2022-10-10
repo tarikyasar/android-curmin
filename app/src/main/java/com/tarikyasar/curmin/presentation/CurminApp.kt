@@ -1,13 +1,19 @@
 package com.tarikyasar.curmin.presentation
 
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate.*
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.layout.Box
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -19,7 +25,7 @@ import com.tarikyasar.curmin.presentation.ui.theme.CurminTheme
 import com.tarikyasar.curmin.utils.manager.PreferenceManager
 import com.tarikyasar.curmin.utils.manager.ThemeManager
 
-
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalAnimationApi::class)
 @SuppressLint("UnrememberedMutableState")
 @Composable
@@ -42,45 +48,55 @@ fun CurminApp(
     val offSetX = 1000
 
     CurminTheme(darkTheme = appState.isDarkTheme) {
-        AnimatedNavHost(
-            navController = appState.navController,
-            startDestination = appState.startDestination,
-            enterTransition = {
-                slideInHorizontally(initialOffsetX = { offSetX }, animationSpec = springSpec)
-            },
-            exitTransition = {
-                slideOutHorizontally(targetOffsetX = { -offSetX }, animationSpec = springSpec)
-            },
-            popEnterTransition = {
-                slideInHorizontally(initialOffsetX = { -offSetX }, animationSpec = springSpec)
-            },
-            popExitTransition = {
-                slideOutHorizontally(targetOffsetX = { offSetX }, animationSpec = springSpec)
-            }
-        ) {
-            composable(
-                Navigations.CurrencyWatchlistNavigation.ROUTE,
-                arguments = Navigations.CurrencyDetailNavigation.arguments
+        Box {
+            AnimatedNavHost(
+                navController = appState.navController,
+                startDestination = appState.startDestination,
+                enterTransition = {
+                    slideInHorizontally(initialOffsetX = { offSetX }, animationSpec = springSpec)
+                },
+                exitTransition = {
+                    slideOutHorizontally(targetOffsetX = { -offSetX }, animationSpec = springSpec)
+                },
+                popEnterTransition = {
+                    slideInHorizontally(initialOffsetX = { -offSetX }, animationSpec = springSpec)
+                },
+                popExitTransition = {
+                    slideOutHorizontally(targetOffsetX = { offSetX }, animationSpec = springSpec)
+                },
+                modifier = Modifier.align(Alignment.Center)
             ) {
-                CurrencyWatchlist(
-                    onNavigateToCurrencyDetail = { baseCurrency, targetCurrency ->
-                        appState.navController.navigate(
-                            Navigations.CurrencyDetailNavigation.currencyDetailDestination(
-                                baseCurrency = baseCurrency,
-                                targetCurrency = targetCurrency
+                composable(
+                    Navigations.CurrencyWatchlistNavigation.ROUTE,
+                    arguments = Navigations.CurrencyDetailNavigation.arguments
+                ) {
+                    CurrencyWatchlist(
+                        onNavigateToCurrencyDetail = { baseCurrency, targetCurrency ->
+                            appState.navController.navigate(
+                                Navigations.CurrencyDetailNavigation.currencyDetailDestination(
+                                    baseCurrency = baseCurrency,
+                                    targetCurrency = targetCurrency
+                                )
                             )
-                        )
-                    }
-                )
+                        },
+                        isLoading = appState.isLoading
+                    )
+                }
+
+                composable(Navigations.CurrencyDetailNavigation.ROUTE) { backStackEntry ->
+                    CurrencyDetail(
+                        onNavigateBack = {
+                            appState.navController.popBackStack()
+                        },
+                        baseCurrency = backStackEntry.arguments?.getString(Navigations.CurrencyDetailNavigation.ARG_BASE_CURRENCY),
+                        targetCurrency = backStackEntry.arguments?.getString(Navigations.CurrencyDetailNavigation.ARG_TARGET_CURRENCY)
+                    )
+                }
             }
 
-            composable(Navigations.CurrencyDetailNavigation.ROUTE) { backStackEntry ->
-                CurrencyDetail(
-                    onNavigateBack = {
-                        appState.navController.popBackStack()
-                    },
-                    baseCurrency = backStackEntry.arguments?.getString(Navigations.CurrencyDetailNavigation.ARG_BASE_CURRENCY),
-                    targetCurrency = backStackEntry.arguments?.getString(Navigations.CurrencyDetailNavigation.ARG_TARGET_CURRENCY)
+            if (appState.isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
                 )
             }
         }

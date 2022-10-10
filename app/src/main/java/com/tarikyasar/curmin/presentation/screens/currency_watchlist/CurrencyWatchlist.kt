@@ -4,13 +4,15 @@ import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,6 +48,7 @@ import kotlin.random.Random
 fun CurrencyWatchlist(
     viewModel: CurrencyWatchlistViewModel = hiltViewModel(),
     onNavigateToCurrencyDetail: (baseCurrency: String, targetCurrency: String) -> Unit,
+    isLoading: Boolean
 ) {
     val state = viewModel.state.value
     var showDeleteWatchlistItemDialog by remember { mutableStateOf(false) }
@@ -94,16 +97,12 @@ fun CurrencyWatchlist(
                         viewModel.deleteCurrency(deleteItem.uid)
                     }
                 },
-                isLoading = state.isLoading,
+                isLoading = isLoading,
                 swipeRefreshState = swipeRefreshState,
                 onNavigateToCurrencyDetail = { baseCurrency, targetCurrency ->
                     onNavigateToCurrencyDetail(baseCurrency, targetCurrency)
                 }
             )
-
-            if (state.isLoading || swipeRefreshState.isRefreshing) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
 
             SettingsDialog(
                 openSettingsDialog = showSettingsDialog,
@@ -161,7 +160,6 @@ fun CurrencyWatchlist(
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun CurrencyWatchlistContent(
     currencies: List<CurrencyWatchlistItemData>,
