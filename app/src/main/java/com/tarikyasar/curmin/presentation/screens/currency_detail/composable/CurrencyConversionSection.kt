@@ -11,10 +11,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tarikyasar.curmin.R
 import com.tarikyasar.curmin.utils.CurrencyUtils
+import com.tarikyasar.curmin.utils.insert
 
 @Composable
 fun CurrencyConversionSection(
@@ -22,8 +25,8 @@ fun CurrencyConversionSection(
     targetCurrency: String,
     currencyRate: Double
 ) {
-    var baseCurrencyText by remember { mutableStateOf(CurrencyUtils.formatCurrency(0.0)) }
-    var targetCurrencyText by remember { mutableStateOf(CurrencyUtils.formatCurrency(0.0)) }
+    var baseCurrencyText by remember { mutableStateOf(TextFieldValue(CurrencyUtils.formatCurrency(0.0))) }
+    var targetCurrencyText by remember { mutableStateOf(TextFieldValue(CurrencyUtils.formatCurrency(0.0))) }
     var isBaseEditing by remember { mutableStateOf(true) }
 
     Column {
@@ -44,9 +47,24 @@ fun CurrencyConversionSection(
                     value = baseCurrencyText,
                     onValueChange = {
                         if (isBaseEditing) {
-                            baseCurrencyText = it
-                            targetCurrencyText =
-                                CurrencyUtils.formatCurrency(if (baseCurrencyText.isEmpty()) 0.0 else baseCurrencyText.toDouble() * currencyRate)
+                            var valueText = it.text.filter { char ->
+                                char.isDigit()
+                            }
+
+                            val value = when {
+                                valueText.isEmpty() -> 0.0
+                                else -> {
+                                    valueText = valueText.insert(valueText.length - 2, '.')
+                                    valueText.toDouble()
+                                }
+                            }
+
+                            baseCurrencyText = TextFieldValue(
+                                text = CurrencyUtils.formatCurrency(value),
+                                selection = TextRange(CurrencyUtils.formatCurrency(value).length)
+                            )
+                            targetCurrencyText = TextFieldValue(text = CurrencyUtils.formatCurrency(value*currencyRate))
+
                         }
                     },
                     modifier = Modifier
@@ -57,6 +75,7 @@ fun CurrencyConversionSection(
                                 isBaseEditing = true
                             }
                         }
+
                 )
 
                 Row(
@@ -87,9 +106,23 @@ fun CurrencyConversionSection(
                     value = targetCurrencyText,
                     onValueChange = {
                         if (!isBaseEditing) {
-                            targetCurrencyText = it
-                            baseCurrencyText =
-                                CurrencyUtils.formatCurrency(if (targetCurrencyText.isEmpty()) 0.0 else targetCurrencyText.toDouble() / currencyRate)
+                            var valueText = it.text.filter { char ->
+                                char.isDigit()
+                            }
+
+                            val value = when {
+                                valueText.isEmpty() -> 0.0
+                                else -> {
+                                    valueText = valueText.insert(valueText.length - 2, '.')
+                                    valueText.toDouble()
+                                }
+                            }
+
+                            targetCurrencyText = TextFieldValue(
+                                text = CurrencyUtils.formatCurrency(value),
+                                selection = TextRange(CurrencyUtils.formatCurrency(value).length)
+                            )
+                            baseCurrencyText = TextFieldValue(text = CurrencyUtils.formatCurrency(value/currencyRate))
                         }
                     },
                     modifier = Modifier
@@ -121,7 +154,6 @@ fun CurrencyConversionSection(
                 }
             }
         }
-
     }
 }
 

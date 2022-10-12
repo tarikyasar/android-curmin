@@ -17,3 +17,7 @@ inline fun <reified T : Any> Gson.fromJson(json: String?): T? {
         }
     }
 }
+
+fun String.insert(index: Int, char: Char): String {
+    return toMutableList().apply { add(index, char) }.joinToString("")
+}
