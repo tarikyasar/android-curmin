@@ -10,7 +10,7 @@
 
     <!-- Watchlist Screen -->
     <string name="watchlist_item_deletion_warning">"Watchlist item containing %s-%s currencies will be deleted.\nAre you sure?"</string>
-    <string name="add_to_watchlist">Add To Watchlist</string>
+    <string name="add_to_watchlist">Add</string>
     <string name="base_currency">Base Currency</string>
     <string name="target_currency">Target Currency</string>
     <string name="empty_watchlist">There is no currency on the list. You can add them with the button upper left.</string>

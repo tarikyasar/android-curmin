@@ -36,8 +36,8 @@ fun AddToWatchlistDialog(
 ) {
     var baseCurrencyListExpanded by remember { mutableStateOf(false) }
     var targetCurrencyListExpanded by remember { mutableStateOf(false) }
-    var baseCurrencyState by remember { mutableStateOf("") }
-    var targetCurrencyState by remember { mutableStateOf("") }
+    var baseCurrencyState by remember { mutableStateOf("AED") }
+    var targetCurrencyState by remember { mutableStateOf("AED") }
     val context = LocalContext.current
 
     if (showCreateWatchlistItemDialog) {
@@ -105,7 +105,10 @@ fun AddToWatchlistDialog(
                                 .fillMaxWidth()
                                 .padding(vertical = 4.dp, horizontal = 10.dp)
                         ) {
-                            Text(text = stringResource(id = R.string.base_currency), fontSize = 20.sp)
+                            Text(
+                                text = stringResource(id = R.string.base_currency),
+                                fontSize = 20.sp
+                            )
 
                             CurminDropdown(
                                 expanded = baseCurrencyListExpanded,
@@ -134,7 +137,10 @@ fun AddToWatchlistDialog(
                                 .fillMaxWidth()
                                 .padding(vertical = 4.dp, horizontal = 10.dp)
                         ) {
-                            Text(text = stringResource(id = R.string.target_currency), fontSize = 20.sp)
+                            Text(
+                                text = stringResource(id = R.string.target_currency),
+                                fontSize = 20.sp
+                            )
 
                             CurminDropdown(
                                 expanded = targetCurrencyListExpanded,
@@ -174,11 +180,13 @@ fun AddToWatchlistDialog(
                                 backgroundColor = MaterialTheme.colors.primary,
                                 disabledBackgroundColor = MaterialTheme.colors.secondaryVariant
                             ),
-                            modifier = Modifier.padding(bottom = 10.dp)
+                            modifier = Modifier
+                                .padding(10.dp)
+                                .fillMaxWidth()
                         ) {
                             Text(
                                 text = stringResource(id = R.string.add_to_watchlist),
-                                fontSize = 20.sp,
+                                fontSize = 22.sp,
                                 color = if (baseCurrencyState != targetCurrencyState && baseCurrencyState != "" && targetCurrencyState != "") MaterialTheme.colors.onPrimary else Color.Gray
                             )
                         }
@@ -238,7 +246,11 @@ fun DeleteWatchlistItemDialog(
                         modifier = Modifier.fillMaxHeight()
                     ) {
                         Text(
-                            text = stringResource(id = R.string.watchlist_item_deletion_warning, baseCurrency, targetCurrency),
+                            text = stringResource(
+                                id = R.string.watchlist_item_deletion_warning,
+                                baseCurrency,
+                                targetCurrency
+                            ),
                             fontSize = 18.sp,
                             color = MaterialTheme.colors.onSurface,
                             textAlign = TextAlign.Center,
