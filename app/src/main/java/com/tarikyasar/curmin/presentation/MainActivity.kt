@@ -17,7 +17,6 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var preferenceManager: PreferenceManager
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

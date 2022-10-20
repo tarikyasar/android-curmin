@@ -10,6 +10,7 @@ import com.tarikyasar.curmin.domain.usecase.api.GetCurrencySymbolsUseCase
 import com.tarikyasar.curmin.domain.usecase.database.DeleteCurrencyWatchlistItemUseCase
 import com.tarikyasar.curmin.domain.usecase.database.GetCurrencyWatchlistItemsUseCase
 import com.tarikyasar.curmin.domain.usecase.database.InsertCurrencyWatchlistItemUseCase
+import com.tarikyasar.curmin.utils.Symbols
 import com.tarikyasar.curmin.utils.manager.PreferenceManager
 import com.tarikyasar.curmin.utils.receivers.LoadingReceiver
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -115,23 +116,23 @@ class CurrencyWatchlistViewModel @Inject constructor(
     }
 
     private fun getSymbols() {
-        getCurrencySymbolsUseCase().onEach { result ->
-            when (result) {
-                is Resource.Success -> {
-                    _state.value = _state.value.copy(
-                        currencySymbols = result.data ?: emptyList()
-                    )
-                    LoadingReceiver.sendLoadingEvents(false)
-                }
-                is Resource.Error -> {
-                    _state.value = _state.value.copy(
-                        error = result.message ?: "An unexpected error occurred."
-                    )
-                    LoadingReceiver.sendLoadingEvents(false)
-                }
-                is Resource.Loading -> LoadingReceiver.sendLoadingEvents(true)
+        if (Symbols.symbols.isEmpty()) {
+            getCurrencySymbolsUseCase().onEach { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        Symbols.symbols = result.data ?: emptyList()
+                        LoadingReceiver.sendLoadingEvents(false)
+                    }
+                    is Resource.Error -> {
+                        _state.value = _state.value.copy(
+                            error = result.message ?: "An unexpected error occurred."
+                        )
+                        LoadingReceiver.sendLoadingEvents(false)
+                    }
+                    is Resource.Loading -> LoadingReceiver.sendLoadingEvents(true)
 
-            }
-        }.launchIn(viewModelScope)
+                }
+            }.launchIn(viewModelScope)
+        }
     }
 }

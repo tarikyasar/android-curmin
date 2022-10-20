@@ -59,6 +59,10 @@ class CurminAppState(
                 _isLoading = it
             }
         }
+
+        coroutineScope.launch {
+
+        }
     }
 
     // Theme State

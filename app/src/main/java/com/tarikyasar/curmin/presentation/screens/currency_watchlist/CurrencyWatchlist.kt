@@ -35,6 +35,7 @@ import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.
 import com.tarikyasar.curmin.presentation.screens.settings_dialog.SettingsDialog
 import com.tarikyasar.curmin.presentation.ui.theme.SwipeDeleteButtonBackgroundColor
 import com.tarikyasar.curmin.utils.DateUtils
+import com.tarikyasar.curmin.utils.Symbols
 import me.saket.swipe.SwipeAction
 import me.saket.swipe.SwipeableActionsBox
 import java.time.LocalDateTime
@@ -129,7 +130,7 @@ fun CurrencyWatchlist(
                         )
                     )
                 },
-                currencyList = state.currencySymbols
+                currencyList = Symbols.symbols
             )
 
             DeleteWatchlistItemDialog(
