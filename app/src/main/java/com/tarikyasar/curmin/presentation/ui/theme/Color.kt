@@ -26,5 +26,9 @@ val PositiveButtonTextColor = CurrencyArrowUpColor
 val NegativeButtonBackgroundColor = CurrencyDownColor
 val NegativeButtonTextColor = CurrencyArrowDownColor
 
+// Used in currency conversion section to label
+// currencies
+val CurrencyTextColor = Color(0xFF999999)
+
 val DialogWarningColor = Color(0xFFE9995C)
 val DialogErrorColor = Color(0xFFEB5050)

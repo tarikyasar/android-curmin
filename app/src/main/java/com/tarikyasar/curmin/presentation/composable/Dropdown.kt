@@ -82,7 +82,7 @@ fun CurminDropdown(
                     rotationX = rotateX.value
                 }
                 .alpha(alpha.value)
-                .height(300.dp)
+                .heightIn(0.dp, 300.dp)
         ) {
             content()
         }

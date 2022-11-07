@@ -16,6 +16,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tarikyasar.curmin.R
+import com.tarikyasar.curmin.presentation.ui.theme.CurrencyTextColor
 import com.tarikyasar.curmin.utils.CurrencyUtils
 import com.tarikyasar.curmin.utils.insert
 
@@ -25,8 +26,24 @@ fun CurrencyConversionSection(
     targetCurrency: String,
     currencyRate: Double
 ) {
-    var baseCurrencyText by remember { mutableStateOf(TextFieldValue(CurrencyUtils.formatCurrency(0.0))) }
-    var targetCurrencyText by remember { mutableStateOf(TextFieldValue(CurrencyUtils.formatCurrency(0.0))) }
+    var baseCurrencyText by remember {
+        mutableStateOf(
+            TextFieldValue(
+                CurrencyUtils.formatCurrency(
+                    0.0
+                )
+            )
+        )
+    }
+    var targetCurrencyText by remember {
+        mutableStateOf(
+            TextFieldValue(
+                CurrencyUtils.formatCurrency(
+                    0.0
+                )
+            )
+        )
+    }
     var isBaseEditing by remember { mutableStateOf(true) }
 
     Column {
@@ -63,7 +80,8 @@ fun CurrencyConversionSection(
                                 text = CurrencyUtils.formatCurrency(value),
                                 selection = TextRange(CurrencyUtils.formatCurrency(value).length)
                             )
-                            targetCurrencyText = TextFieldValue(text = CurrencyUtils.formatCurrency(value*currencyRate))
+                            targetCurrencyText =
+                                TextFieldValue(text = CurrencyUtils.formatCurrency(value * currencyRate))
 
                         }
                     },
@@ -86,12 +104,12 @@ fun CurrencyConversionSection(
                         modifier = Modifier
                             .height(40.dp)
                             .width(1.dp)
-                            .background(MaterialTheme.colors.onSurface)
+                            .background(CurrencyTextColor)
                     )
 
                     Text(
                         text = baseCurrency,
-                        color = MaterialTheme.colors.onBackground,
+                        color = CurrencyTextColor,
                         modifier = Modifier.padding(horizontal = 10.dp)
                     )
                 }
@@ -122,7 +140,8 @@ fun CurrencyConversionSection(
                                 text = CurrencyUtils.formatCurrency(value),
                                 selection = TextRange(CurrencyUtils.formatCurrency(value).length)
                             )
-                            baseCurrencyText = TextFieldValue(text = CurrencyUtils.formatCurrency(value/currencyRate))
+                            baseCurrencyText =
+                                TextFieldValue(text = CurrencyUtils.formatCurrency(value / currencyRate))
                         }
                     },
                     modifier = Modifier
@@ -143,12 +162,12 @@ fun CurrencyConversionSection(
                         modifier = Modifier
                             .height(40.dp)
                             .width(1.dp)
-                            .background(MaterialTheme.colors.onSurface)
+                            .background(CurrencyTextColor)
                     )
 
                     Text(
                         text = targetCurrency,
-                        color = MaterialTheme.colors.onBackground,
+                        color = CurrencyTextColor,
                         modifier = Modifier.padding(horizontal = 10.dp)
                     )
                 }

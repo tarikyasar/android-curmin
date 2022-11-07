@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tarikyasar.curmin.R
 import com.tarikyasar.curmin.presentation.ui.theme.*
+import com.tarikyasar.curmin.utils.formatDate
 
 @Composable
 fun CurrencyWatchlistItem(
@@ -42,7 +43,9 @@ fun CurrencyWatchlistItem(
             }
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(10.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -83,10 +86,21 @@ fun CurrencyWatchlistItem(
                 }
             }
 
-            Text(
-                text = date,
-                color = MaterialTheme.colors.onSurface
-            )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = date.formatDate().first,
+                    color = MaterialTheme.colors.onSurface
+                )
+
+                Text(
+                    text = date.formatDate().second,
+                    color = MaterialTheme.colors.onSurface,
+                    fontSize = 12.sp
+                )
+            }
+
         }
     }
 }

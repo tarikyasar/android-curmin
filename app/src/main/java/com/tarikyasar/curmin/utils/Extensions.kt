@@ -21,3 +21,9 @@ inline fun <reified T : Any> Gson.fromJson(json: String?): T? {
 fun String.insert(index: Int, char: Char): String {
     return toMutableList().apply { add(index, char) }.joinToString("")
 }
+
+fun String.formatDate(): Pair<String, String> {
+    val splittedString = this.split(" ")
+
+    return Pair(splittedString.first(), splittedString.last())
+}
