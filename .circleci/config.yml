@@ -21,6 +21,6 @@ jobs:
       - image: circleci/android:api-26-node
 
 workflows:
-  android-test-workflow:
+  deploy-to-firebase:
     jobs:
       - fastlane
