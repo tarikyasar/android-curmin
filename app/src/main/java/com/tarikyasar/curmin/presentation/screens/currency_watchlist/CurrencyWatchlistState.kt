@@ -6,5 +6,6 @@ import com.tarikyasar.curmin.domain.model.Symbol
 data class CurrencyWatchlistState(
     val error: String = "",
     var currencies: MutableList<CurrencyWatchlistItemData> = mutableListOf(),
+    var symbols: List<Symbol> = emptyList(),
     var askToRemoveItemParameter: Boolean? = false
 )

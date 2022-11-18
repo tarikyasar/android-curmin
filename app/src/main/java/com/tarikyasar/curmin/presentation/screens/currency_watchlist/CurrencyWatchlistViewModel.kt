@@ -6,11 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tarikyasar.curmin.common.Resource
 import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
+import com.tarikyasar.curmin.domain.SymbolListManager
 import com.tarikyasar.curmin.domain.usecase.api.GetCurrencySymbolsUseCase
 import com.tarikyasar.curmin.domain.usecase.database.DeleteCurrencyWatchlistItemUseCase
 import com.tarikyasar.curmin.domain.usecase.database.GetCurrencyWatchlistItemsUseCase
 import com.tarikyasar.curmin.domain.usecase.database.InsertCurrencyWatchlistItemUseCase
-import com.tarikyasar.curmin.utils.Symbols
 import com.tarikyasar.curmin.utils.manager.PreferenceManager
 import com.tarikyasar.curmin.utils.receivers.LoadingReceiver
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -116,11 +116,13 @@ class CurrencyWatchlistViewModel @Inject constructor(
     }
 
     private fun getSymbols() {
-        if (Symbols.symbols.isEmpty()) {
+        if (SymbolListManager.symbols.isEmpty()) {
             getCurrencySymbolsUseCase().onEach { result ->
                 when (result) {
                     is Resource.Success -> {
-                        Symbols.symbols = result.data ?: emptyList()
+                        _state.value = _state.value.copy(
+                            symbols = result.data ?: emptyList()
+                        )
                         LoadingReceiver.sendLoadingEvents(false)
                     }
                     is Resource.Error -> {
