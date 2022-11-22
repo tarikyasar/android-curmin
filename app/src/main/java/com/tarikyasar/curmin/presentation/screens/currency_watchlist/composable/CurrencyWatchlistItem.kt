@@ -41,6 +41,7 @@ fun SwipeableCurrencyWatchlistItem(
     onSwipeAction: () -> Unit
 ) {
     var offsetX by remember { mutableStateOf(0f) }
+    var isSwipeLocked by remember { mutableStateOf(false) }
 
     Box(
         contentAlignment = Alignment.Center,
@@ -52,10 +53,7 @@ fun SwipeableCurrencyWatchlistItem(
                 .height(70.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .background(backgroundColor)
-                .clickable {
-                    offsetX = 0F
-                    onSwipeAction()
-                }
+                .clickable { onSwipeAction() }
         ) {
             Icon(
                 painter = icon,
@@ -73,7 +71,14 @@ fun SwipeableCurrencyWatchlistItem(
                 value = value,
                 change = change,
                 date = date,
-                onClick = { onItemClick() },
+                onClick = {
+                    if (isSwipeLocked) {
+                        offsetX = 0f
+                        isSwipeLocked = false
+                    } else {
+                        onItemClick()
+                    }
+                },
                 modifier = Modifier
                     .offset {
                         IntOffset(offsetX.roundToInt(), 0)
@@ -81,23 +86,46 @@ fun SwipeableCurrencyWatchlistItem(
                     .draggable(
                         orientation = Orientation.Horizontal,
                         state = rememberDraggableState { delta ->
-                            if (delta <= 0) {
-                                offsetX += delta
-                            }
-
-                            if (offsetX <= -200F) {
-                                offsetX = -200F
+                            handleDragAmount(
+                                isSwipeLocked,
+                                offsetX,
+                                delta
+                            ) { location ->
+                                offsetX = location
                             }
                         },
                         onDragStopped = {
-                            if (offsetX <= -175F) {
-                                offsetX = -175F
+                            if (offsetX <= -175f) {
+                                offsetX = -175f
+                                isSwipeLocked = true
                             } else {
-                                offsetX = 0F
+                                offsetX = 0f
+                                isSwipeLocked = false
                             }
                         }
                     ),
             )
+        }
+    }
+}
+
+private fun handleDragAmount(
+    isSwipeLocked: Boolean,
+    offsetX: Float,
+    delta: Float,
+    onChange: (result: Float) -> Unit
+) {
+    if (isSwipeLocked && delta >= 0) {
+        onChange(offsetX + delta)
+
+        if (offsetX >= 0) {
+            onChange(0f)
+        }
+    } else if (delta <= 0) {
+        onChange(offsetX + delta)
+
+        if (offsetX <= -200f) {
+            onChange(-200f)
         }
     }
 }
