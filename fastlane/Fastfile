@@ -9,7 +9,7 @@ platform :android do
         )
         firebase_app_distribution(
             app: options[:firebase_app_id],
-            testers: "m.tarikyasar@gmail.com, alperuzun5599@gmail.com, edizcandeniz@gmail.com",
+            testers: "m.tarikyasar@gmail.com, tyasar@protel.com.tr",
             release_notes: "Lots of amazing new features to test out!",
             firebase_cli_token: options[:firebase_token],
             android_artifact_type: "APK",
