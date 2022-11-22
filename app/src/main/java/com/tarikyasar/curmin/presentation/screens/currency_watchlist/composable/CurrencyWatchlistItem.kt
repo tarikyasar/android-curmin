@@ -3,24 +3,104 @@ package com.tarikyasar.curmin.presentation.composable
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.draggable
+import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tarikyasar.curmin.R
 import com.tarikyasar.curmin.presentation.ui.theme.*
 import com.tarikyasar.curmin.utils.formatDate
+import kotlin.math.roundToInt
+
+@Composable
+fun SwipeableCurrencyWatchlistItem(
+    base: String,
+    target: String,
+    value: Double,
+    change: Double,
+    date: String,
+    onItemClick: () -> Unit,
+    backgroundColor: Color,
+    icon: Painter,
+    onSwipeAction: () -> Unit
+) {
+    var offsetX by remember { mutableStateOf(0f) }
+
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(70.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .background(backgroundColor)
+                .clickable {
+                    offsetX = 0F
+                    onSwipeAction()
+                }
+        ) {
+            Icon(
+                painter = icon,
+                contentDescription = "",
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .size(46.dp)
+                    .padding(end = 12.dp),
+                tint = CurrencyArrowDownColor
+            )
+
+            CurrencyWatchlistItem(
+                base = base,
+                target = target,
+                value = value,
+                change = change,
+                date = date,
+                onClick = { onItemClick() },
+                modifier = Modifier
+                    .offset {
+                        IntOffset(offsetX.roundToInt(), 0)
+                    }
+                    .draggable(
+                        orientation = Orientation.Horizontal,
+                        state = rememberDraggableState { delta ->
+                            if (delta <= 0) {
+                                offsetX += delta
+                            }
+
+                            if (offsetX <= -200F) {
+                                offsetX = -200F
+                            }
+                        },
+                        onDragStopped = {
+                            if (offsetX <= -175F) {
+                                offsetX = -175F
+                            } else {
+                                offsetX = 0F
+                            }
+                        }
+                    ),
+            )
+        }
+    }
+}
 
 @Composable
 fun CurrencyWatchlistItem(
@@ -36,6 +116,7 @@ fun CurrencyWatchlistItem(
 
     Surface(
         modifier = modifier
+            .height(70.dp)
             .clip(RoundedCornerShape(10.dp))
             .background(MaterialTheme.colors.surface)
             .clickable {

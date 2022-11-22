@@ -8,7 +8,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -16,7 +15,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -28,15 +26,13 @@ import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.tarikyasar.curmin.R
 import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
 import com.tarikyasar.curmin.presentation.composable.CurminErrorDialog
-import com.tarikyasar.curmin.presentation.composable.CurrencyWatchlistItem
+import com.tarikyasar.curmin.presentation.composable.SwipeableCurrencyWatchlistItem
 import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.AddToWatchlistDialog
 import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.CurrencyWatchlistTopBar
 import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.DeleteWatchlistItemDialog
 import com.tarikyasar.curmin.presentation.screens.settings_dialog.SettingsDialog
-import com.tarikyasar.curmin.presentation.ui.theme.SwipeDeleteButtonBackgroundColor
+import com.tarikyasar.curmin.presentation.ui.theme.CurrencyDownColor
 import com.tarikyasar.curmin.utils.DateUtils
-import me.saket.swipe.SwipeAction
-import me.saket.swipe.SwipeableActionsBox
 import java.time.LocalDateTime
 import java.util.*
 import kotlin.math.roundToInt
@@ -193,40 +189,27 @@ fun CurrencyWatchlistContent(
                         .animateContentSize()
                 ) {
                     items(currencies) { currency ->
-                        key(currency.uid) {
-                            val deleteSwipeAction = SwipeAction(
-                                icon = painterResource(R.drawable.ic_delete),
-                                background = SwipeDeleteButtonBackgroundColor,
-                                onSwipe = {
-                                    onDelete(currency)
-                                }
-                            )
-
-                            SwipeableActionsBox(
-                                endActions = listOf(deleteSwipeAction),
-                                swipeThreshold = 60.dp,
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .background(MaterialTheme.colors.surface)
-                            ) {
-                                CurrencyWatchlistItem(
-                                    base = currency.baseCurrencyCode ?: "",
-                                    target = currency.targetCurrencyCode ?: "",
-                                    value = ((currency.rate
-                                        ?: 0.0) * 100.0).roundToInt() / 100.0,
-                                    change = (changeValue1 * 100.0).roundToInt() / 100.0,
-                                    date = DateUtils.formatTime(LocalDateTime.now()),
-                                    onClick = {
-                                        onNavigateToCurrencyDetail(
-                                            currency.baseCurrencyCode!!,
-                                            currency.targetCurrencyCode!!
-                                        )
-                                    }
+                        SwipeableCurrencyWatchlistItem(
+                            base = currency.baseCurrencyCode ?: "",
+                            target = currency.targetCurrencyCode ?: "",
+                            value = ((currency.rate
+                                ?: 0.0) * 100.0).roundToInt() / 100.0,
+                            change = (changeValue1 * 100.0).roundToInt() / 100.0,
+                            date = DateUtils.formatTime(LocalDateTime.now()),
+                            onItemClick = {
+                                onNavigateToCurrencyDetail(
+                                    currency.baseCurrencyCode!!,
+                                    currency.targetCurrencyCode!!
                                 )
+                            },
+                            backgroundColor = CurrencyDownColor,
+                            icon = painterResource(id = R.drawable.ic_delete),
+                            onSwipeAction = {
+                                onDelete(currency)
                             }
+                        )
 
-                            Spacer(modifier = Modifier.height(10.dp))
-                        }
+                        Spacer(modifier = Modifier.height(10.dp))
                     }
                 }
             }
