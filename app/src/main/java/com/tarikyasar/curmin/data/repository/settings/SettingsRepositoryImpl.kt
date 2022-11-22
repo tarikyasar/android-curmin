@@ -19,6 +19,7 @@ class SettingsRepositoryImpl @Inject constructor(
 
     override fun getThemeParameters() = settingsCacheDataSource.getThemeParameters()
 
-    override fun getAskToRemoveItemParameter() = settingsCacheDataSource.getAskToRemoveItemParameter()
+    override fun getAskToRemoveItemParameter() =
+        settingsCacheDataSource.getAskToRemoveItemParameter()
 
 }
