@@ -18,9 +18,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.tarikyasar.curmin.R
+import com.tarikyasar.curmin.presentation.ui.theme.DialogErrorColor
 import com.tarikyasar.curmin.presentation.ui.theme.DialogWarningColor
-import com.tarikyasar.curmin.presentation.ui.theme.PositiveButtonBackgroundColor
-import com.tarikyasar.curmin.presentation.ui.theme.PositiveButtonTextColor
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -95,7 +94,6 @@ fun CurminWarningDialog(
                                     .align(CenterHorizontally)
                             )
                         }
-
                     },
                     modifier = Modifier
                         .background(
@@ -187,22 +185,23 @@ fun CurminErrorDialog(
             Surface(
                 modifier = Modifier
                     .padding(vertical = 10.dp)
-                    .height(260.dp),
+                    .height(320.dp),
                 shape = RoundedCornerShape(10.dp)
             ) {
                 Scaffold(
                     topBar = {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 10.dp)
                         ) {
-                            Text(
-                                text = stringResource(id = R.string.error),
-                                color = MaterialTheme.colors.onSurface,
-                                fontSize = 24.sp,
-                                modifier = Modifier.padding(10.dp),
-                                textAlign = TextAlign.Center
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_error),
+                                contentDescription = "Dialog icon error",
+                                tint = DialogErrorColor,
+                                modifier = Modifier
+                                    .size(120.dp)
+                                    .align(CenterHorizontally),
                             )
                         }
                     },
@@ -237,7 +236,7 @@ fun CurminErrorDialog(
                                     onDismissRequest()
                                 },
                                 shape = RoundedCornerShape(10.dp),
-                                colors = ButtonDefaults.buttonColors(backgroundColor = PositiveButtonBackgroundColor),
+                                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .weight(1f)
@@ -246,7 +245,7 @@ fun CurminErrorDialog(
                                 Text(
                                     text = stringResource(id = R.string.okay),
                                     fontSize = 24.sp,
-                                    color = PositiveButtonTextColor
+                                    color = MaterialTheme.colors.onPrimary
                                 )
                             }
                         }
