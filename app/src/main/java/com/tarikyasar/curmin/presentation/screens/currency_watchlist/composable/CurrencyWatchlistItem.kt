@@ -53,7 +53,11 @@ fun SwipeableCurrencyWatchlistItem(
                 .height(70.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .background(backgroundColor)
-                .clickable { onSwipeAction() }
+                .clickable {
+                    offsetX = 0f
+                    isSwipeLocked = false
+                    onSwipeAction()
+                }
         ) {
             Icon(
                 painter = icon,
