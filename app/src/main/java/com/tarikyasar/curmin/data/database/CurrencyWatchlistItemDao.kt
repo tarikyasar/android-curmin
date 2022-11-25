@@ -3,6 +3,7 @@ package com.tarikyasar.curmin.data.database
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
 
 @Dao
@@ -15,6 +16,9 @@ interface CurrencyWatchlistItemDao {
 
     @Insert
     suspend fun insert(vararg currencies: CurrencyWatchlistItemData)
+
+    @Update
+    suspend fun updateCurrencyWatchlistItem(currencyWatchlistItemData: CurrencyWatchlistItemData)
 
     @Query("DELETE FROM currencywatchlistitemdata WHERE uid = :currencyWatchlistItemUid")
     suspend fun delete(currencyWatchlistItemUid: String)
