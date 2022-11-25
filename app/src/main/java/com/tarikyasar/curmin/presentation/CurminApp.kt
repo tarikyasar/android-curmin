@@ -71,11 +71,12 @@ fun CurminApp(
                     arguments = Navigations.CurrencyDetailNavigation.arguments
                 ) {
                     CurrencyWatchlist(
-                        onNavigateToCurrencyDetail = { baseCurrency, targetCurrency ->
+                        onNavigateToCurrencyDetail = { baseCurrency, targetCurrency, rate ->
                             appState.navController.navigate(
                                 Navigations.CurrencyDetailNavigation.currencyDetailDestination(
                                     baseCurrency = baseCurrency,
-                                    targetCurrency = targetCurrency
+                                    targetCurrency = targetCurrency,
+                                    rate = rate
                                 )
                             )
                         },
@@ -89,7 +90,8 @@ fun CurminApp(
                             appState.navController.popBackStack()
                         },
                         baseCurrency = backStackEntry.arguments?.getString(Navigations.CurrencyDetailNavigation.ARG_BASE_CURRENCY),
-                        targetCurrency = backStackEntry.arguments?.getString(Navigations.CurrencyDetailNavigation.ARG_TARGET_CURRENCY)
+                        targetCurrency = backStackEntry.arguments?.getString(Navigations.CurrencyDetailNavigation.ARG_TARGET_CURRENCY),
+                        rate = backStackEntry.arguments?.getString(Navigations.CurrencyDetailNavigation.ARG_CURRENCY_RATE)
                     )
                 }
             }

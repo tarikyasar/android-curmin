@@ -43,7 +43,7 @@ import kotlin.random.Random
 @Composable
 fun CurrencyWatchlist(
     viewModel: CurrencyWatchlistViewModel = hiltViewModel(),
-    onNavigateToCurrencyDetail: (baseCurrency: String, targetCurrency: String) -> Unit,
+    onNavigateToCurrencyDetail: (baseCurrency: String, targetCurrency: String, rate: String) -> Unit,
     isLoading: Boolean
 ) {
     val state = viewModel.state.value
@@ -95,8 +95,12 @@ fun CurrencyWatchlist(
                 },
                 isLoading = isLoading,
                 swipeRefreshState = swipeRefreshState,
-                onNavigateToCurrencyDetail = { baseCurrency, targetCurrency ->
-                    onNavigateToCurrencyDetail(baseCurrency, targetCurrency)
+                onNavigateToCurrencyDetail = { baseCurrency, targetCurrency, rate ->
+                    onNavigateToCurrencyDetail(
+                        baseCurrency,
+                        targetCurrency,
+                        rate.toString()
+                    )
                 }
             )
 
@@ -163,7 +167,7 @@ fun CurrencyWatchlistContent(
     onDelete: (currency: CurrencyWatchlistItemData) -> Unit,
     isLoading: Boolean,
     swipeRefreshState: SwipeRefreshState,
-    onNavigateToCurrencyDetail: (baseCurrency: String, targetCurrency: String) -> Unit
+    onNavigateToCurrencyDetail: (baseCurrency: String, targetCurrency: String, rate: Double) -> Unit
 ) {
     var changeValue1 by remember { mutableStateOf(Random.nextDouble(-0.25, 0.25)) }
 
@@ -198,8 +202,9 @@ fun CurrencyWatchlistContent(
                             date = DateUtils.formatTime(LocalDateTime.now()),
                             onItemClick = {
                                 onNavigateToCurrencyDetail(
-                                    currency.baseCurrencyCode!!,
-                                    currency.targetCurrencyCode!!
+                                    currency.baseCurrencyCode ?: "",
+                                    currency.targetCurrencyCode ?: "",
+                                    currency.rate ?: 0.0
                                 )
                             },
                             backgroundColor = CurrencyDownColor,

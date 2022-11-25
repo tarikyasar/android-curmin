@@ -21,9 +21,13 @@ import java.time.LocalDateTime
 @Composable
 fun CurrencyDetail(
     onNavigateBack: () -> Unit,
-    baseCurrency: String? = "",
-    targetCurrency: String? = ""
+    baseCurrency: String?,
+    targetCurrency: String?,
+    rate: String?
 ) {
+    println(baseCurrency)
+    println(targetCurrency)
+    println(rate)
     Scaffold(
         topBar = {
             CurrencyDetailTopBar(
@@ -33,13 +37,21 @@ fun CurrencyDetail(
             )
         }
     ) {
-        CurrencyDetailContent()
+        CurrencyDetailContent(
+            baseCurrency = baseCurrency,
+            targetCurrency = targetCurrency,
+            rate = rate
+        )
     }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CurrencyDetailContent() {
+fun CurrencyDetailContent(
+    baseCurrency: String?,
+    targetCurrency: String?,
+    rate: String?
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
@@ -51,11 +63,10 @@ fun CurrencyDetailContent() {
 
         Divider()
 
-        // TODO: Update these strings
         CurrencyConversionSection(
-            baseCurrency = "United States Dollar",
-            targetCurrency = "Turkish Lira",
-            currencyRate = 18.42
+            baseCurrency = baseCurrency ?: "",
+            targetCurrency = targetCurrency ?: "",
+            currencyRate = rate?.toDouble() ?: 0.0
         )
     }
 }
