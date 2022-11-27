@@ -15,6 +15,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -35,7 +36,6 @@ import com.tarikyasar.curmin.presentation.ui.theme.CurrencyDownColor
 import com.tarikyasar.curmin.utils.DateUtils
 import java.time.LocalDateTime
 import kotlin.math.roundToInt
-import kotlin.random.Random
 
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnrememberedMutableState")
@@ -73,6 +73,7 @@ fun CurrencyWatchlist(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
+            .blur(if (isLoading) 50.dp else 0.dp)
     ) {
         Box(
             modifier = Modifier.fillMaxHeight(),
@@ -106,7 +107,6 @@ fun CurrencyWatchlist(
                 onDismissRequest = {
                     showSettingsDialog = false
                     viewModel.getAskToRemoveItemParameter()
-                    viewModel.getCurrencies(false)
                 }
             )
 
@@ -159,8 +159,6 @@ fun CurrencyWatchlistContent(
     swipeRefreshState: SwipeRefreshState,
     onNavigateToCurrencyDetail: (baseCurrency: String, targetCurrency: String, rate: Double) -> Unit
 ) {
-    var changeValue1 by remember { mutableStateOf(Random.nextDouble(-0.25, 0.25)) }
-
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
@@ -171,7 +169,6 @@ fun CurrencyWatchlistContent(
                 state = swipeRefreshState,
                 onRefresh = {
                     getCurrencies()
-                    changeValue1 = Random.nextDouble(-0.5, 0.5)
                 }
             ) {
                 LazyColumn(
@@ -188,7 +185,7 @@ fun CurrencyWatchlistContent(
                             target = currency.targetCurrencyCode ?: "",
                             value = ((currency.rate
                                 ?: 0.0) * 100.0).roundToInt() / 100.0,
-                            change = (changeValue1 * 100.0).roundToInt() / 100.0,
+                            change = (0.1 * 100.0).roundToInt() / 100.0,
                             date = DateUtils.formatTime(LocalDateTime.now()),
                             onItemClick = {
                                 onNavigateToCurrencyDetail(

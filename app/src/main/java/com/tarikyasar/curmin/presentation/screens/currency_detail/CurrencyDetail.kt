@@ -25,9 +25,6 @@ fun CurrencyDetail(
     targetCurrency: String?,
     rate: String?
 ) {
-    println(baseCurrency)
-    println(targetCurrency)
-    println(rate)
     Scaffold(
         topBar = {
             CurrencyDetailTopBar(
