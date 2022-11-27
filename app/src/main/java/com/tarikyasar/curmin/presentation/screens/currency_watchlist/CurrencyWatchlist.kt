@@ -34,7 +34,6 @@ import com.tarikyasar.curmin.presentation.screens.settings_dialog.SettingsDialog
 import com.tarikyasar.curmin.presentation.ui.theme.CurrencyDownColor
 import com.tarikyasar.curmin.utils.DateUtils
 import java.time.LocalDateTime
-import java.util.*
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
@@ -56,8 +55,6 @@ fun CurrencyWatchlist(
         mutableStateOf(
             CurrencyWatchlistItemData(
                 "",
-                null,
-                null,
                 null,
                 null,
                 null,
@@ -117,16 +114,9 @@ fun CurrencyWatchlist(
                 showCreateWatchlistItemDialog = showAddToWatchlistDialog,
                 onDismissRequest = { showAddToWatchlistDialog = false },
                 onPositiveButtonClick = { baseCurrency, targetCurrency ->
-                    viewModel.insertCurrency(
-                        CurrencyWatchlistItemData(
-                            uid = UUID.randomUUID().toString(),
-                            baseCurrencyCode = baseCurrency,
-                            targetCurrencyCode = targetCurrency,
-                            rate = Random.nextDouble(0.0, 20.0),
-                            previousChangeRate = Random.nextDouble(0.0, 0.5),
-                            currentChangeRate = Random.nextDouble(0.0, 0.5),
-                            date = DateUtils.formatTime(LocalDateTime.now()),
-                        )
+                    viewModel.createCurrencyWatchlisttem(
+                        baseCurrencyCode = baseCurrency,
+                        targetCurrencyCode = targetCurrency
                     )
                 },
                 currencyList = state.symbols

@@ -21,6 +21,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.time.LocalDateTime
+import java.util.*
 import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -78,28 +79,6 @@ class CurrencyWatchlistViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun insertCurrency(currencyWatchlistItem: CurrencyWatchlistItemData) {
-        insertCurrencyWatchlistItemUseCase(currencyWatchlistItem).onEach { result ->
-            when (result) {
-                is Resource.Success -> {
-                    _state.value = _state.value.copy(
-                        currencies = (_state.value.currencies + currencyWatchlistItem) as MutableList<CurrencyWatchlistItemData>
-                    )
-                    LoadingReceiver.sendLoadingEvents(false)
-                }
-                is Resource.Error -> {
-                    _state.value = _state.value.copy(
-                        error = result.message ?: "An unexpected error occurred."
-                    )
-                    LoadingReceiver.sendLoadingEvents(false)
-                }
-                is Resource.Loading -> {
-                    LoadingReceiver.sendLoadingEvents(true)
-                }
-            }
-        }.launchIn(viewModelScope)
-    }
-
     fun deleteCurrency(currencyWatchlistItemUid: String) {
         deleteCurrencyWatchlistItemUseCase(currencyWatchlistItemUid).onEach { result ->
             when (result) {
@@ -122,6 +101,40 @@ class CurrencyWatchlistViewModel @Inject constructor(
                 }
                 is Resource.Loading -> LoadingReceiver.sendLoadingEvents(true)
 
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    fun createCurrencyWatchlisttem(
+        baseCurrencyCode: String,
+        targetCurrencyCode: String
+    ) {
+        var newCurrencyWatchlistItem: CurrencyWatchlistItemData? = null
+
+        convertCurrencyUseCase(
+            fromCurrencySymbol = baseCurrencyCode,
+            toCurrencySymbol = targetCurrencyCode,
+            amount = 1.0
+        ).onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    newCurrencyWatchlistItem = CurrencyWatchlistItemData(
+                        uid = UUID.randomUUID().toString(),
+                        baseCurrencyCode = baseCurrencyCode,
+                        targetCurrencyCode = targetCurrencyCode,
+                        rate = result.data?.rate ?: 0.0,
+                        date = DateUtils.formatTime(LocalDateTime.now())
+                    )
+
+                    insertCurrency(newCurrencyWatchlistItem!!)
+                }
+                is Resource.Error -> {
+                    _state.value = _state.value.copy(
+                        error = result.message ?: "An unexpected error occurred."
+                    )
+                    LoadingReceiver.sendLoadingEvents(false)
+                }
+                is Resource.Loading -> LoadingReceiver.sendLoadingEvents(true)
             }
         }.launchIn(viewModelScope)
     }
@@ -180,6 +193,28 @@ class CurrencyWatchlistViewModel @Inject constructor(
                     LoadingReceiver.sendLoadingEvents(false)
                 }
                 is Resource.Loading -> LoadingReceiver.sendLoadingEvents(true)
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    private fun insertCurrency(currencyWatchlistItem: CurrencyWatchlistItemData) {
+        insertCurrencyWatchlistItemUseCase(currencyWatchlistItem).onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    _state.value = _state.value.copy(
+                        currencies = (_state.value.currencies + currencyWatchlistItem) as MutableList<CurrencyWatchlistItemData>
+                    )
+                    LoadingReceiver.sendLoadingEvents(false)
+                }
+                is Resource.Error -> {
+                    _state.value = _state.value.copy(
+                        error = result.message ?: "An unexpected error occurred."
+                    )
+                    LoadingReceiver.sendLoadingEvents(false)
+                }
+                is Resource.Loading -> {
+                    LoadingReceiver.sendLoadingEvents(true)
+                }
             }
         }.launchIn(viewModelScope)
     }
