@@ -15,6 +15,9 @@
     <string name="target_currency">Target Currency</string>
     <string name="empty_watchlist">There is no currency on the list. You can add them with the button upper left.</string>
 
+    <!-- Dialog -->
+    <string name="search_currency">Search for a currency</string>
+
     <!-- Settings Screen -->
     <string name="settings">Settings</string>
     <string name="theme">Theme</string>
