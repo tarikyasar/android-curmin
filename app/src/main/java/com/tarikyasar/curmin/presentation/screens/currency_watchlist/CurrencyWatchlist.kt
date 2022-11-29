@@ -8,10 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,8 +37,7 @@ import kotlin.math.roundToInt
 @Composable
 fun CurrencyWatchlist(
     viewModel: CurrencyWatchlistViewModel = hiltViewModel(),
-    onNavigateToCurrencyDetail: (currency: CurrencyWatchlistItemData) -> Unit,
-    isLoading: Boolean
+    onNavigateToCurrencyDetail: (currency: CurrencyWatchlistItemData) -> Unit
 ) {
     val state = viewModel.state.value
     var showDeleteWatchlistItemDialog by remember { mutableStateOf(false) }
@@ -61,83 +57,91 @@ fun CurrencyWatchlist(
         )
     }
 
-    Scaffold(
-        topBar = {
-            CurrencyWatchlistTopBar(
-                onAddButtonClick = { showAddToWatchlistDialog = true },
-                onSettingsButtonClick = { showSettingsDialog = true },
-            )
-        },
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.background)
-            .blur(if (isLoading) 50.dp else 0.dp)
-    ) {
-        Box(
-            modifier = Modifier.fillMaxHeight(),
-            contentAlignment = Alignment.TopCenter
+    Box {
+        Scaffold(
+            topBar = {
+                CurrencyWatchlistTopBar(
+                    onAddButtonClick = { showAddToWatchlistDialog = true },
+                    onSettingsButtonClick = { showSettingsDialog = true },
+                )
+            },
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colors.background)
+                .blur(if (state.isLoading) 50.dp else 0.dp)
         ) {
-            CurrencyWatchlistContent(
-                currencies = state.currencies,
-                getCurrencies = { viewModel.getCurrencies(true) },
-                onDelete = {
-                    deleteItem = it
+            Box(
+                modifier = Modifier.fillMaxHeight(),
+                contentAlignment = Alignment.TopCenter
+            ) {
+                CurrencyWatchlistContent(
+                    currencies = state.currencies,
+                    getCurrencies = { viewModel.getCurrencies(true) },
+                    onDelete = {
+                        deleteItem = it
 
-                    if (state.askToRemoveItemParameter == true) {
-                        showDeleteWatchlistItemDialog = true
-                    } else {
-                        viewModel.deleteCurrency(deleteItem.uid)
+                        if (state.askToRemoveItemParameter == true) {
+                            showDeleteWatchlistItemDialog = true
+                        } else {
+                            viewModel.deleteCurrency(deleteItem.uid)
+                        }
+                    },
+                    isLoading = state.isLoading,
+                    swipeRefreshState = swipeRefreshState,
+                    onNavigateToCurrencyDetail = { currency ->
+                        onNavigateToCurrencyDetail(currency)
                     }
-                },
-                isLoading = isLoading,
-                swipeRefreshState = swipeRefreshState,
-                onNavigateToCurrencyDetail = { currency ->
-                    onNavigateToCurrencyDetail(currency)
-                }
-            )
+                )
 
-            SettingsDialog(
-                showSettingsDialog = showSettingsDialog,
-                onDismissRequest = {
-                    showSettingsDialog = false
-                    viewModel.getAskToRemoveItemParameter()
-                }
-            )
+                SettingsDialog(
+                    showSettingsDialog = showSettingsDialog,
+                    onDismissRequest = {
+                        showSettingsDialog = false
+                        viewModel.getAskToRemoveItemParameter()
+                    }
+                )
 
-            AddToWatchlistDialog(
-                showCreateWatchlistItemDialog = showAddToWatchlistDialog,
-                onDismissRequest = { showAddToWatchlistDialog = false },
-                onPositiveButtonClick = { baseCurrency, targetCurrency ->
-                    viewModel.createCurrencyWatchlisttem(
-                        baseCurrencyCode = baseCurrency,
-                        targetCurrencyCode = targetCurrency
-                    )
-                },
-                currencyList = state.symbols
-            )
+                AddToWatchlistDialog(
+                    showCreateWatchlistItemDialog = showAddToWatchlistDialog,
+                    onDismissRequest = { showAddToWatchlistDialog = false },
+                    onPositiveButtonClick = { baseCurrency, targetCurrency ->
+                        viewModel.createCurrencyWatchlisttem(
+                            baseCurrencyCode = baseCurrency,
+                            targetCurrencyCode = targetCurrency
+                        )
+                    },
+                    currencyList = state.symbols
+                )
 
-            DeleteWatchlistItemDialog(
-                showDeleteWatchlistItemDialog = showDeleteWatchlistItemDialog,
-                onDismissRequest = {
-                    showDeleteWatchlistItemDialog = false
-                },
-                onPositiveButtonClick = {
-                    viewModel.deleteCurrency(deleteItem.uid)
-                },
-                onNegativeButtonClick = { showDeleteWatchlistItemDialog = false },
-                baseCurrency = deleteItem.baseCurrencyCode ?: "",
-                targetCurrency = deleteItem.targetCurrencyCode ?: ""
-            )
+                DeleteWatchlistItemDialog(
+                    showDeleteWatchlistItemDialog = showDeleteWatchlistItemDialog,
+                    onDismissRequest = {
+                        showDeleteWatchlistItemDialog = false
+                    },
+                    onPositiveButtonClick = {
+                        viewModel.deleteCurrency(deleteItem.uid)
+                    },
+                    onNegativeButtonClick = { showDeleteWatchlistItemDialog = false },
+                    baseCurrency = deleteItem.baseCurrencyCode ?: "",
+                    targetCurrency = deleteItem.targetCurrencyCode ?: ""
+                )
 
-            CurminErrorDialog(
-                showErrorDialog = showErrorDialog,
-                onDismissRequest = {
-                    showErrorDialog = false
-                },
-                onPositiveButtonClick = {
-                    showErrorDialog = false
-                },
-                errorMessage = state.error
+                CurminErrorDialog(
+                    showErrorDialog = showErrorDialog,
+                    onDismissRequest = {
+                        showErrorDialog = false
+                    },
+                    onPositiveButtonClick = {
+                        showErrorDialog = false
+                    },
+                    errorMessage = state.error
+                )
+            }
+        }
+
+        if (state.isLoading == true) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
             )
         }
     }

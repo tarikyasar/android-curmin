@@ -9,9 +9,7 @@ import com.tarikyasar.curmin.common.Navigations
 import com.tarikyasar.curmin.domain.model.Themes
 import com.tarikyasar.curmin.utils.manager.PreferenceManager
 import com.tarikyasar.curmin.utils.manager.ThemeManager
-import com.tarikyasar.curmin.utils.receivers.LoadingReceiver
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -53,12 +51,6 @@ class CurminAppState(
                 _preference = it
             }
         }
-
-        coroutineScope.launch {
-            LoadingReceiver.sharedFlow.collectLatest {
-                _isLoading = it
-            }
-        }
     }
 
     // Theme State
@@ -77,9 +69,4 @@ class CurminAppState(
 
     // Navigation
     val startDestination = Navigations.CurrencyWatchlistNavigation.ROUTE
-
-    // Loading
-    private var _isLoading by mutableStateOf(false)
-    val isLoading: Boolean
-        @Composable get() = _isLoading
 }

@@ -10,7 +10,6 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Box
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -80,8 +79,7 @@ fun CurminApp(
                                     currency.toJson() ?: ""
                                 )
                             )
-                        },
-                        isLoading = appState.isLoading
+                        }
                     )
                 }
 
@@ -94,12 +92,6 @@ fun CurminApp(
                             ?.fromJson(CurrencyWatchlistItemData::class.java)
                     )
                 }
-            }
-
-            if (appState.isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
-                )
             }
         }
     }

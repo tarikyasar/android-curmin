@@ -16,7 +16,6 @@ import com.tarikyasar.curmin.domain.usecase.database.InsertCurrencyWatchlistItem
 import com.tarikyasar.curmin.domain.usecase.database.UpdateCurrencyWatchlistItemUseCase
 import com.tarikyasar.curmin.utils.DateUtils
 import com.tarikyasar.curmin.utils.manager.PreferenceManager
-import com.tarikyasar.curmin.utils.receivers.LoadingReceiver
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -61,20 +60,21 @@ class CurrencyWatchlistViewModel @Inject constructor(
                     } else {
                         _state.value =
                             _state.value.copy(
-                                currencies = (result.data as MutableList<CurrencyWatchlistItemData>)
+                                currencies = (result.data as MutableList<CurrencyWatchlistItemData>),
+                                isLoading = false
                             )
                     }
-
-                    LoadingReceiver.sendLoadingEvents(false)
                 }
                 is Resource.Error -> {
                     _state.value = _state.value.copy(
-                        error = result.message ?: "An unexpected error occurred."
+                        error = result.message ?: "An unexpected error occurred.",
+                        isLoading = false
                     )
-                    LoadingReceiver.sendLoadingEvents(false)
                 }
                 is Resource.Loading -> {
-                    LoadingReceiver.sendLoadingEvents(true)
+                    _state.value = _state.value.copy(
+                        isLoading = true
+                    )
                 }
             }
         }.launchIn(viewModelScope)
@@ -90,18 +90,21 @@ class CurrencyWatchlistViewModel @Inject constructor(
 
                     _state.value = _state.value.copy(
                         currencies = _state.value.currencies,
+                        isLoading = false
                     )
 
-                    LoadingReceiver.sendLoadingEvents(false)
                 }
                 is Resource.Error -> {
                     _state.value = _state.value.copy(
-                        error = result.message ?: "An unexpected error occurred."
+                        error = result.message ?: "An unexpected error occurred.",
+                        isLoading = false
                     )
-                    LoadingReceiver.sendLoadingEvents(false)
                 }
-                is Resource.Loading -> LoadingReceiver.sendLoadingEvents(true)
-
+                is Resource.Loading -> {
+                    _state.value = _state.value.copy(
+                        isLoading = true
+                    )
+                }
             }
         }.launchIn(viewModelScope)
     }
@@ -131,11 +134,15 @@ class CurrencyWatchlistViewModel @Inject constructor(
                 }
                 is Resource.Error -> {
                     _state.value = _state.value.copy(
-                        error = result.message ?: "An unexpected error occurred."
+                        error = result.message ?: "An unexpected error occurred.",
+                        isLoading = false
                     )
-                    LoadingReceiver.sendLoadingEvents(false)
                 }
-                is Resource.Loading -> LoadingReceiver.sendLoadingEvents(true)
+                is Resource.Loading -> {
+                    _state.value = _state.value.copy(
+                        isLoading = true
+                    )
+                }
             }
         }.launchIn(viewModelScope)
     }
@@ -151,18 +158,21 @@ class CurrencyWatchlistViewModel @Inject constructor(
             when (result) {
                 is Resource.Success -> {
                     _state.value = _state.value.copy(
-                        symbols = result.data ?: emptyList()
+                        symbols = result.data ?: emptyList(),
+                        isLoading = false
                     )
-                    LoadingReceiver.sendLoadingEvents(false)
                 }
                 is Resource.Error -> {
                     _state.value = _state.value.copy(
-                        error = result.message ?: "An unexpected error occurred."
+                        error = result.message ?: "An unexpected error occurred.",
+                        isLoading = false
                     )
-                    LoadingReceiver.sendLoadingEvents(false)
                 }
-                is Resource.Loading -> LoadingReceiver.sendLoadingEvents(true)
-
+                is Resource.Loading -> {
+                    _state.value = _state.value.copy(
+                        isLoading = true
+                    )
+                }
             }
         }.launchIn(viewModelScope)
     }
@@ -189,11 +199,15 @@ class CurrencyWatchlistViewModel @Inject constructor(
                 }
                 is Resource.Error -> {
                     _state.value = _state.value.copy(
-                        error = result.message ?: "An unexpected error occurred."
+                        error = result.message ?: "An unexpected error occurred.",
+                        isLoading = false
                     )
-                    LoadingReceiver.sendLoadingEvents(false)
                 }
-                is Resource.Loading -> LoadingReceiver.sendLoadingEvents(true)
+                is Resource.Loading -> {
+                    _state.value = _state.value.copy(
+                        isLoading = true
+                    )
+                }
             }
         }.launchIn(viewModelScope)
     }
@@ -203,18 +217,20 @@ class CurrencyWatchlistViewModel @Inject constructor(
             when (result) {
                 is Resource.Success -> {
                     _state.value = _state.value.copy(
-                        currencies = (_state.value.currencies + currencyWatchlistItem) as MutableList<CurrencyWatchlistItemData>
+                        currencies = (_state.value.currencies + currencyWatchlistItem) as MutableList<CurrencyWatchlistItemData>,
+                        isLoading = false
                     )
-                    LoadingReceiver.sendLoadingEvents(false)
                 }
                 is Resource.Error -> {
                     _state.value = _state.value.copy(
-                        error = result.message ?: "An unexpected error occurred."
+                        error = result.message ?: "An unexpected error occurred.",
+                        isLoading = false
                     )
-                    LoadingReceiver.sendLoadingEvents(false)
                 }
                 is Resource.Loading -> {
-                    LoadingReceiver.sendLoadingEvents(true)
+                    _state.value = _state.value.copy(
+                        isLoading = true
+                    )
                 }
             }
         }.launchIn(viewModelScope)
@@ -232,11 +248,15 @@ class CurrencyWatchlistViewModel @Inject constructor(
                 }
                 is Resource.Error -> {
                     _state.value = _state.value.copy(
-                        error = result.message ?: "An unexpected error occurred."
+                        error = result.message ?: "An unexpected error occurred.",
+                        isLoading = false
                     )
-                    LoadingReceiver.sendLoadingEvents(false)
                 }
-                is Resource.Loading -> LoadingReceiver.sendLoadingEvents(true)
+                is Resource.Loading -> {
+                    _state.value = _state.value.copy(
+                        isLoading = true
+                    )
+                }
             }
         }.launchIn(viewModelScope)
     }
