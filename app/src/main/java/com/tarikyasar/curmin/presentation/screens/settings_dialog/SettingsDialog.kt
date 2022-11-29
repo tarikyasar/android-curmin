@@ -21,12 +21,12 @@ import com.tarikyasar.curmin.presentation.composable.CurminDropdown
 @Composable
 fun SettingsDialog(
     viewModel: SettingsDialogViewModel = hiltViewModel(),
-    openSettingsDialog: Boolean,
+    showSettingsDialog: Boolean,
     onDismissRequest: () -> Unit,
 ) {
     val state = viewModel.state.value
 
-    if (openSettingsDialog) {
+    if (showSettingsDialog) {
         CurminDialog(
             onDismissRequest = {
                 viewModel.getTheme()
@@ -35,9 +35,9 @@ fun SettingsDialog(
             }
         ) {
             Surface(
+                shape = RoundedCornerShape(10.dp),
                 modifier = Modifier
-                    .padding(vertical = 80.dp),
-                shape = RoundedCornerShape(10.dp)
+                    .padding(vertical = 80.dp)
             ) {
                 Scaffold(
                     topBar = {

@@ -103,7 +103,7 @@ fun CurrencyWatchlist(
             )
 
             SettingsDialog(
-                openSettingsDialog = showSettingsDialog,
+                showSettingsDialog = showSettingsDialog,
                 onDismissRequest = {
                     showSettingsDialog = false
                     viewModel.getAskToRemoveItemParameter()

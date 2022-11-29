@@ -134,6 +134,7 @@ fun CurrencySearchViewTopBar(
             tint = MaterialTheme.colors.onBackground,
             modifier = Modifier
                 .size(32.dp)
+                .clip(CircleShape)
                 .clickable {
                     onSearchButtonClick()
                 }
