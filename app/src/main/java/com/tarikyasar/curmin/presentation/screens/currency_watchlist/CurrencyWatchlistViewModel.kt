@@ -50,7 +50,6 @@ class CurrencyWatchlistViewModel @Inject constructor(
         getCurrencyWatchlistItems().onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    LoadingReceiver.sendLoadingEvents(false)
                     if (refreshList) {
                         _state.value.currencies.forEach { currencyWatchlistItemData ->
                             convertCurrency(
@@ -65,6 +64,8 @@ class CurrencyWatchlistViewModel @Inject constructor(
                                 currencies = (result.data as MutableList<CurrencyWatchlistItemData>)
                             )
                     }
+
+                    LoadingReceiver.sendLoadingEvents(false)
                 }
                 is Resource.Error -> {
                     _state.value = _state.value.copy(
@@ -90,8 +91,8 @@ class CurrencyWatchlistViewModel @Inject constructor(
                     _state.value = _state.value.copy(
                         currencies = _state.value.currencies,
                     )
-                    LoadingReceiver.sendLoadingEvents(false)
 
+                    LoadingReceiver.sendLoadingEvents(false)
                 }
                 is Resource.Error -> {
                     _state.value = _state.value.copy(

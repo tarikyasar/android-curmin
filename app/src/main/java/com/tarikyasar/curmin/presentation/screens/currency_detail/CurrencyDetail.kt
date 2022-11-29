@@ -14,8 +14,6 @@ import androidx.compose.ui.unit.dp
 import com.tarikyasar.curmin.presentation.screens.currency_detail.composable.CurrencyConversionSection
 import com.tarikyasar.curmin.presentation.screens.currency_detail.composable.CurrencyDetailTopBar
 import com.tarikyasar.curmin.presentation.screens.currency_detail.composable.RefreshInformationSection
-import com.tarikyasar.curmin.utils.DateUtils
-import java.time.LocalDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -23,6 +21,7 @@ fun CurrencyDetail(
     onNavigateBack: () -> Unit,
     baseCurrency: String?,
     targetCurrency: String?,
+    date: String?,
     rate: String?
 ) {
     Scaffold(
@@ -37,6 +36,7 @@ fun CurrencyDetail(
         CurrencyDetailContent(
             baseCurrency = baseCurrency,
             targetCurrency = targetCurrency,
+            date = date,
             rate = rate
         )
     }
@@ -47,6 +47,7 @@ fun CurrencyDetail(
 fun CurrencyDetailContent(
     baseCurrency: String?,
     targetCurrency: String?,
+    date: String?,
     rate: String?
 ) {
     Column(
@@ -56,7 +57,7 @@ fun CurrencyDetailContent(
     ) {
         Divider()
 
-        RefreshInformationSection(time = DateUtils.formatTime(LocalDateTime.now()))
+        RefreshInformationSection(time = date ?: "")
 
         Divider()
 

@@ -33,8 +33,6 @@ import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.
 import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.dialog.add.AddToWatchlistDialog
 import com.tarikyasar.curmin.presentation.screens.settings_dialog.SettingsDialog
 import com.tarikyasar.curmin.presentation.ui.theme.CurrencyDownColor
-import com.tarikyasar.curmin.utils.DateUtils
-import java.time.LocalDateTime
 import kotlin.math.roundToInt
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -42,7 +40,7 @@ import kotlin.math.roundToInt
 @Composable
 fun CurrencyWatchlist(
     viewModel: CurrencyWatchlistViewModel = hiltViewModel(),
-    onNavigateToCurrencyDetail: (baseCurrency: String, targetCurrency: String, rate: String) -> Unit,
+    onNavigateToCurrencyDetail: (baseCurrency: String, targetCurrency: String, date: String, rate: String) -> Unit,
     isLoading: Boolean
 ) {
     val state = viewModel.state.value
@@ -93,10 +91,11 @@ fun CurrencyWatchlist(
                 },
                 isLoading = isLoading,
                 swipeRefreshState = swipeRefreshState,
-                onNavigateToCurrencyDetail = { baseCurrency, targetCurrency, rate ->
+                onNavigateToCurrencyDetail = { baseCurrency, targetCurrency, date, rate ->
                     onNavigateToCurrencyDetail(
                         baseCurrency,
                         targetCurrency,
+                        date,
                         rate.toString()
                     )
                 }
@@ -157,7 +156,7 @@ fun CurrencyWatchlistContent(
     onDelete: (currency: CurrencyWatchlistItemData) -> Unit,
     isLoading: Boolean,
     swipeRefreshState: SwipeRefreshState,
-    onNavigateToCurrencyDetail: (baseCurrency: String, targetCurrency: String, rate: Double) -> Unit
+    onNavigateToCurrencyDetail: (baseCurrency: String, targetCurrency: String, date: String, rate: Double) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.Top,
@@ -186,11 +185,12 @@ fun CurrencyWatchlistContent(
                             value = ((currency.rate
                                 ?: 0.0) * 100.0).roundToInt() / 100.0,
                             change = (0.1 * 100.0).roundToInt() / 100.0,
-                            date = DateUtils.formatTime(LocalDateTime.now()),
+                            date = currency.date ?: "",
                             onItemClick = {
                                 onNavigateToCurrencyDetail(
                                     currency.baseCurrencyCode ?: "",
                                     currency.targetCurrencyCode ?: "",
+                                    currency.date ?: "",
                                     currency.rate ?: 0.0
                                 )
                             },
