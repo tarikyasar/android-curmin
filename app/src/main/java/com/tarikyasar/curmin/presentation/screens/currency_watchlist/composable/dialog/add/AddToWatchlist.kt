@@ -230,11 +230,12 @@ fun CurrencyItem(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
+                .clip(RoundedCornerShape(4.dp))
                 .background(MaterialTheme.colors.surface)
-                .padding(8.dp)
                 .clickable {
                     onClick()
                 }
+                .padding(8.dp)
         ) {
             Text(text = currencyCode)
 

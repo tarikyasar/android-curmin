@@ -2,6 +2,7 @@ package com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -52,6 +53,7 @@ fun CurrencySearch(
                     },
                     onSearchButtonClick = {
                         isSearchViewVisible = isSearchViewVisible.not()
+                        searchText = searchText.copy("")
                     }
                 )
             }
@@ -62,6 +64,15 @@ fun CurrencySearch(
                 modifier = Modifier
                     .fillMaxHeight()
             ) {
+                AnimatedVisibility(visible = isSearchViewVisible.not()) {
+                    Box(
+                        modifier = Modifier
+                            .background(MaterialTheme.colors.surface)
+                            .fillMaxWidth()
+                            .height(2.dp)
+                    )
+                }
+
                 AnimatedVisibility(visible = isSearchViewVisible) {
                     SearchView(
                         searchText = searchText.text,
@@ -152,7 +163,7 @@ fun SearchView(
         onValueChange = { value ->
             onTextChanged(value)
         },
-        textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
+        textStyle = TextStyle(color = MaterialTheme.colors.onSurface, fontSize = 18.sp),
         trailingIcon = {
             if (searchText != "") {
                 Icon(
@@ -161,6 +172,7 @@ fun SearchView(
                     modifier = Modifier
                         .padding(15.dp)
                         .size(24.dp)
+                        .clip(CircleShape)
                         .clickable {
                             onTextChanged("")
                         }
@@ -193,10 +205,10 @@ fun CurrencySearchItem(
         horizontalArrangement = Arrangement.Start,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 16.dp)
             .clickable {
                 onClick(currency.code)
-            },
+            }
+            .padding(vertical = 16.dp, horizontal = 4.dp)
     ) {
         Text(
             text = "${currency.code}: ${currency.name}",
