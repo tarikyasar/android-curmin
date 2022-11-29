@@ -18,12 +18,15 @@ import androidx.compose.ui.unit.IntOffset
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.tarikyasar.curmin.common.Navigations
+import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
 import com.tarikyasar.curmin.domain.model.Themes
 import com.tarikyasar.curmin.presentation.screens.currency_detail.CurrencyDetail
 import com.tarikyasar.curmin.presentation.screens.currency_watchlist.CurrencyWatchlist
 import com.tarikyasar.curmin.presentation.ui.theme.CurminTheme
+import com.tarikyasar.curmin.utils.fromJson
 import com.tarikyasar.curmin.utils.manager.PreferenceManager
 import com.tarikyasar.curmin.utils.manager.ThemeManager
+import com.tarikyasar.curmin.utils.toJson
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalAnimationApi::class)
@@ -71,13 +74,10 @@ fun CurminApp(
                     arguments = Navigations.CurrencyDetailNavigation.arguments
                 ) {
                     CurrencyWatchlist(
-                        onNavigateToCurrencyDetail = { baseCurrency, targetCurrency, date, rate ->
+                        onNavigateToCurrencyDetail = { currency ->
                             appState.navController.navigate(
                                 Navigations.CurrencyDetailNavigation.currencyDetailDestination(
-                                    baseCurrency = baseCurrency,
-                                    targetCurrency = targetCurrency,
-                                    date = date,
-                                    rate = rate
+                                    currency.toJson() ?: ""
                                 )
                             )
                         },
@@ -90,10 +90,8 @@ fun CurminApp(
                         onNavigateBack = {
                             appState.navController.popBackStack()
                         },
-                        baseCurrency = backStackEntry.arguments?.getString(Navigations.CurrencyDetailNavigation.ARG_BASE_CURRENCY),
-                        targetCurrency = backStackEntry.arguments?.getString(Navigations.CurrencyDetailNavigation.ARG_TARGET_CURRENCY),
-                        date = backStackEntry.arguments?.getString(Navigations.CurrencyDetailNavigation.ARG_CURRENCY_DATE),
-                        rate = backStackEntry.arguments?.getString(Navigations.CurrencyDetailNavigation.ARG_CURRENCY_RATE)
+                        currency = backStackEntry.arguments?.getString(Navigations.CurrencyDetailNavigation.ARG_CURRENCY)
+                            ?.fromJson(CurrencyWatchlistItemData::class.java)
                     )
                 }
             }

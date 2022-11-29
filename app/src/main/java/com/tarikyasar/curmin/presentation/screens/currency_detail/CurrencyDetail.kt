@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
 import com.tarikyasar.curmin.presentation.screens.currency_detail.composable.CurrencyConversionSection
 import com.tarikyasar.curmin.presentation.screens.currency_detail.composable.CurrencyDetailTopBar
 import com.tarikyasar.curmin.presentation.screens.currency_detail.composable.RefreshInformationSection
@@ -19,25 +20,22 @@ import com.tarikyasar.curmin.presentation.screens.currency_detail.composable.Ref
 @Composable
 fun CurrencyDetail(
     onNavigateBack: () -> Unit,
-    baseCurrency: String?,
-    targetCurrency: String?,
-    date: String?,
-    rate: String?
+    currency: CurrencyWatchlistItemData?,
 ) {
     Scaffold(
         topBar = {
             CurrencyDetailTopBar(
-                baseCurrency = baseCurrency,
-                targetCurrency = targetCurrency,
+                baseCurrency = currency?.baseCurrencyCode,
+                targetCurrency = currency?.targetCurrencyCode,
                 onBackButtonClick = onNavigateBack
             )
         }
     ) {
         CurrencyDetailContent(
-            baseCurrency = baseCurrency,
-            targetCurrency = targetCurrency,
-            date = date,
-            rate = rate
+            baseCurrency = currency?.baseCurrencyCode,
+            targetCurrency = currency?.targetCurrencyCode,
+            date = currency?.date,
+            rate = currency?.rate?.toString()
         )
     }
 }

@@ -56,7 +56,6 @@ class CurminAppState(
 
         coroutineScope.launch {
             LoadingReceiver.sharedFlow.collectLatest {
-                println(it)
                 _isLoading = it
             }
         }

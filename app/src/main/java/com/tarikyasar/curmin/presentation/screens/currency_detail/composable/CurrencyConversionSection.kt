@@ -12,6 +12,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tarikyasar.curmin.R
+import com.tarikyasar.curmin.domain.SymbolListManager
 import com.tarikyasar.curmin.utils.CurrencyUtils
 
 @Composable
@@ -39,6 +40,10 @@ fun CurrencyConversionSection(
         )
     }
 
+    println(SymbolListManager.symbols)
+    println(SymbolListManager.symbols.find { it.code == baseCurrency }?.name)
+    println(SymbolListManager.symbols.find { it.code == targetCurrency }?.name)
+
     Column {
         Text(
             text = stringResource(id = R.string.currency_conversion),
@@ -50,7 +55,7 @@ fun CurrencyConversionSection(
 
         Column {
             CurrencyConversionTextField(
-                currencyName = baseCurrency,
+                currencyName = SymbolListManager.symbols.find { it.code == baseCurrency }?.name ?: baseCurrency,
                 currencyText = baseCurrencyText,
                 currencyRate = currencyRate,
                 onConversionCompleted = { base, target ->
@@ -62,7 +67,7 @@ fun CurrencyConversionSection(
             Spacer(Modifier.height(10.dp))
 
             CurrencyConversionTextField(
-                currencyName = targetCurrency,
+                currencyName = SymbolListManager.symbols.find { it.code == targetCurrency }?.name ?: targetCurrency,
                 currencyText = targetCurrencyText,
                 currencyRate = 1 / currencyRate,
                 onConversionCompleted = { base, target ->

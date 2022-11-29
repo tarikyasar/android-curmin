@@ -17,13 +17,12 @@ class GetCurrencySymbolsUseCase @Inject constructor(
     operator fun invoke(): Flow<Resource<List<Symbol>>> = flow {
         try {
             emit(Resource.Loading<List<Symbol>>())
-            var currencySymbols = SymbolListManager.symbols
 
-            if (currencySymbols.isEmpty()) {
-                currencySymbols = repository.getCurrencySymbols().toCurrencySymbol()
+            if (SymbolListManager.symbols.isEmpty()) {
+                SymbolListManager.symbols = repository.getCurrencySymbols().toCurrencySymbol()
             }
 
-            emit(Resource.Success<List<Symbol>>(currencySymbols))
+            emit(Resource.Success<List<Symbol>>(SymbolListManager.symbols))
         } catch (e: HttpException) {
             emit(
                 Resource.Error<List<Symbol>>(

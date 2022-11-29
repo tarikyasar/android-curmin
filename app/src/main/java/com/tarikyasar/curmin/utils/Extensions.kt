@@ -4,6 +4,7 @@ import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
+/* JSON Extensions */
 inline fun <reified T : Any> Gson.fromJson(json: String?): T? {
     return if (json.isNullOrEmpty()) {
         null
@@ -18,7 +19,15 @@ inline fun <reified T : Any> Gson.fromJson(json: String?): T? {
     }
 }
 
-/* String extensions */
+fun <A> A.toJson(): String? {
+    return Gson().toJson(this)
+}
+
+fun <A> String.fromJson(type: Class<A>): A {
+    return Gson().fromJson(this, type)
+}
+
+/* String Extensions */
 fun String.insert(index: Int, char: Char): String {
     return toMutableList().apply { add(index, char) }.joinToString("")
 }
