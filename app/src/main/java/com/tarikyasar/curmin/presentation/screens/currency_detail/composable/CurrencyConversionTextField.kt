@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.tarikyasar.curmin.common.Constants
+import com.tarikyasar.curmin.domain.SymbolListManager
 import com.tarikyasar.curmin.presentation.ui.theme.CurrencyTextColor
 import com.tarikyasar.curmin.utils.CurrencyUtils
 import com.tarikyasar.curmin.utils.insert
@@ -30,12 +32,14 @@ fun CurrencyConversionTextField(
         OutlinedTextField(
             value = currencyText,
             onValueChange = {
-                val (base, target) = updateCurrencyAmount(
-                    amount = it,
-                    currencyRate = currencyRate
-                )
+                if (it.text.length <= Constants.CURRENCY_CONVERSION_MAX_LENGTH) {
+                    val (base, target) = updateCurrencyAmount(
+                        amount = it,
+                        currencyRate = currencyRate
+                    )
 
-                onConversionCompleted(base, target)
+                    onConversionCompleted(base, target)
+                }
             },
             modifier = Modifier
                 .background(MaterialTheme.colors.surface)
@@ -54,11 +58,22 @@ fun CurrencyConversionTextField(
             )
 
             Text(
-                text = currencyName,
+                text = getCurrencyName(currencyName, currencyText.text.length),
                 color = CurrencyTextColor,
                 modifier = Modifier.padding(horizontal = 10.dp)
             )
         }
+    }
+}
+
+private fun getCurrencyName(
+    currencyCode: String,
+    inputLength: Int
+): String {
+    return if (inputLength >= Constants.CURRENCY_CONVERSION_LENGTH) {
+        currencyCode
+    } else {
+        SymbolListManager.symbols.find { it.code == currencyCode }?.name ?: currencyCode
     }
 }
 
