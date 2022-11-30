@@ -86,7 +86,7 @@ fun CurrencySearch(
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
-                        .padding(10.dp)
+                        .padding(horizontal = 10.dp)
                         .fillMaxHeight()
                         .animateContentSize()
                 ) {
