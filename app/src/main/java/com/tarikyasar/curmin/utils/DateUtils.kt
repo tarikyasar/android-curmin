@@ -18,4 +18,9 @@ object DateUtils {
         val formatter = SimpleDateFormat("yyyy-MM-dd")
         return formatter.format(timeInMs)
     }
+
+    fun formatTimeWithDay(timeInMs: Long): String {
+        val formatter = SimpleDateFormat("dd MMM")
+        return formatter.format(timeInMs)
+    }
 }

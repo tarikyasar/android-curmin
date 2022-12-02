@@ -1,4 +1,4 @@
-package com.tarikyasar.curmin.presentation.screens.currency_detail.composable
+package com.tarikyasar.curmin.presentation.screens.currency_detail.composable.conversion
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

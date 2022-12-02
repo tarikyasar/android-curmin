@@ -1,7 +1,7 @@
 package com.tarikyasar.curmin.domain.usecase.api
 
 import com.tarikyasar.curmin.common.Resource
-import com.tarikyasar.curmin.data.repository.currency.mapper.toCurrency
+import com.tarikyasar.curmin.data.repository.currency.mapper.toLineData
 import com.tarikyasar.curmin.domain.model.LatestData
 import com.tarikyasar.curmin.domain.repository.CurrencyRepository
 import kotlinx.coroutines.flow.Flow
@@ -20,8 +20,6 @@ class GetLatestCurrencyDataUseCase @Inject constructor(
         targetCurrencyCode: String
     ): Flow<Resource<LatestData>> = flow {
         try {
-            var currencyString = ""
-
             emit(Resource.Loading<LatestData>())
             val convertedCurrency = repository.getLatestCurrency(
                 startDate = startDate,
@@ -29,7 +27,7 @@ class GetLatestCurrencyDataUseCase @Inject constructor(
                 baseCurrencyCode = baseCurrencyCode,
                 targetCurrencyCode = targetCurrencyCode
             )
-            emit(Resource.Success<LatestData>(convertedCurrency.toCurrency()))
+            emit(Resource.Success<LatestData>(convertedCurrency.toLineData()))
         } catch (e: HttpException) {
             emit(
                 Resource.Error<LatestData>(

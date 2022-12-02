@@ -1,31 +1,27 @@
 package com.tarikyasar.curmin.presentation.screens.currency_detail
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.MaterialDatePicker
+import com.himanshoe.charty.line.model.LineData
 import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
-import com.tarikyasar.curmin.presentation.screens.currency_detail.composable.CurrencyConversionSection
 import com.tarikyasar.curmin.presentation.screens.currency_detail.composable.CurrencyDetailTopBar
 import com.tarikyasar.curmin.presentation.screens.currency_detail.composable.RefreshInformationSection
-import com.tarikyasar.curmin.utils.DateUtils
-import java.text.SimpleDateFormat
-import java.util.*
+import com.tarikyasar.curmin.presentation.screens.currency_detail.composable.chart.CurrencyRateChart
+import com.tarikyasar.curmin.presentation.screens.currency_detail.composable.conversion.CurrencyConversionSection
+import com.tarikyasar.curmin.presentation.screens.currency_detail.composable.date.CurrencyDateDropdown
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CurrencyDetail(
@@ -33,29 +29,41 @@ fun CurrencyDetail(
     currency: CurrencyWatchlistItemData?,
     viewModel: CurrencyDetailViewModel = hiltViewModel()
 ) {
-    Scaffold(
-        topBar = {
-            CurrencyDetailTopBar(
+    val state = viewModel.state.value
+
+    Box {
+        Scaffold(
+            topBar = {
+                CurrencyDetailTopBar(
+                    baseCurrency = currency?.baseCurrencyCode,
+                    targetCurrency = currency?.targetCurrencyCode,
+                    onBackButtonClick = onNavigateBack
+                )
+            },
+            modifier = Modifier.blur(if (state.isLoading) 50.dp else 0.dp),
+        ) {
+            CurrencyDetailContent(
                 baseCurrency = currency?.baseCurrencyCode,
                 targetCurrency = currency?.targetCurrencyCode,
-                onBackButtonClick = onNavigateBack
+                date = currency?.date,
+                rate = currency?.rate?.toString(),
+                rates = state.currencyRates,
+                onDateSelect = { startDate, endDate ->
+                    viewModel.getLatestData(
+                        startDate = startDate,
+                        endDate = endDate,
+                        baseCurrencyCode = currency?.baseCurrencyCode ?: "USD",
+                        targetCurrencyCode = currency?.targetCurrencyCode ?: "TRY"
+                    )
+                }
             )
         }
-    ) {
-        CurrencyDetailContent(
-            baseCurrency = currency?.baseCurrencyCode,
-            targetCurrency = currency?.targetCurrencyCode,
-            date = currency?.date,
-            rate = currency?.rate?.toString(),
-            onDateSelect = { startDate, endDate ->
-                viewModel.getLatestData(
-                    startDate = startDate,
-                    endDate = endDate,
-                    baseCurrencyCode = currency?.baseCurrencyCode ?: "USD",
-                    targetCurrencyCode = currency?.targetCurrencyCode ?: "TRY"
-                )
-            }
-        )
+
+        if (state.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
     }
 }
 
@@ -66,19 +74,9 @@ fun CurrencyDetailContent(
     targetCurrency: String?,
     date: String?,
     rate: String?,
+    rates: List<LineData>,
     onDateSelect: (startDate: String, endDate: String) -> Unit
 ) {
-    val context = LocalContext.current as AppCompatActivity
-    val datePicker = MaterialDatePicker
-        .Builder
-        .dateRangePicker()
-        .setCalendarConstraints(getDatePickerConstraints())
-        .setTheme(com.tarikyasar.curmin.R.style.DatePickerDialogTheme)
-        .build()
-
-    var dateRangeStart by remember { mutableStateOf("") }
-    var dateRangeEnd by remember { mutableStateOf("") }
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
@@ -90,20 +88,17 @@ fun CurrencyDetailContent(
 
         Divider()
 
-        Button(onClick = {
-            datePicker.addOnPositiveButtonClickListener {
-                dateRangeStart = DateUtils.formatTime(it.first)
-                dateRangeEnd = DateUtils.formatTime(it.second)
-                onDateSelect(dateRangeStart, dateRangeEnd)
-            }
-            datePicker.show(context.supportFragmentManager, "")
-        }) {
-            Text("Open calendar")
-        }
+        Spacer(Modifier.height(16.dp))
 
-        if (dateRangeStart.isNotEmpty() && dateRangeEnd.isNotEmpty()) {
-            Text(text = "Selected Date Range: $dateRangeStart - $dateRangeEnd")
-        }
+        CurrencyDateDropdown(
+            onDateSelect = { startDate, endDate ->
+                onDateSelect(startDate, endDate)
+            }
+        )
+
+        Spacer(Modifier.height(16.dp))
+
+        CurrencyRateChart(rates)
 
         CurrencyConversionSection(
             baseCurrency = baseCurrency ?: "",
@@ -111,18 +106,4 @@ fun CurrencyDetailContent(
             currencyRate = rate?.toDouble() ?: 0.0
         )
     }
-}
-
-private fun getDatePickerConstraints(): CalendarConstraints {
-    val today = MaterialDatePicker.todayInUtcMilliseconds()
-    val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
-
-    calendar.timeInMillis = today
-    calendar[Calendar.YEAR] = SimpleDateFormat("yyyy").format(today).toInt() - 1
-    val startDate = calendar.timeInMillis
-
-    return CalendarConstraints.Builder()
-        .setStart(startDate)
-        .setEnd(today)
-        .build()
 }

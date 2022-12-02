@@ -1,18 +1,19 @@
 package com.tarikyasar.curmin.data.repository.currency.mapper
 
+import com.himanshoe.charty.line.model.LineData
 import com.tarikyasar.curmin.data.remote.dto.latest.LatestDataDto
 import com.tarikyasar.curmin.domain.model.LatestData
 
-fun LatestDataDto.toCurrency(): LatestData {
-    val rates = mutableListOf<Double>()
+fun LatestDataDto.toLineData(): LatestData {
+    val rates = mutableListOf<LineData>()
 
     this.rates
         .toString()
         .split(", ")
-        .forEach {
-            val rate = it.split("=").lastOrNull()?.replace("}", "")?.toDouble()
+        .forEachIndexed { i, string ->
+            val rate = string.split("=").lastOrNull()?.replace("}", "")?.toDouble()
             rates.add(
-                rate ?: 0.0
+                LineData(i, (rate ?: 0.0).toFloat())
             )
         }
 

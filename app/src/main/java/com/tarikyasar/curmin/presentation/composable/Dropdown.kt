@@ -21,7 +21,85 @@ import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.tarikyasar.curmin.R
+
+@Composable
+fun CurminDateDropdown(
+    expanded: Boolean,
+    onExpandedChangeRequest: (Boolean) -> Unit,
+    selectedItemText: String,
+    extraText: String = "",
+    content: @Composable ColumnScope.() -> Unit
+) {
+    val rotationState by animateFloatAsState(targetValue = if (expanded) 180f else 360f)
+    val alpha = animateFloatAsState(
+        targetValue = if (expanded) 1f else 0f,
+        animationSpec = tween(
+            durationMillis = 300
+        )
+    )
+    val rotateX = animateFloatAsState(
+        targetValue = if (expanded) 0f else -90f,
+        animationSpec = tween(
+            durationMillis = 300
+        )
+    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(56.dp)
+            .clip(RoundedCornerShape(4.dp))
+            .clickable(onClick = { onExpandedChangeRequest(true) })
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .background(
+                    color = MaterialTheme.colors.surface,
+                    shape = RoundedCornerShape(4.dp)
+                )
+                .padding(8.dp)
+        ) {
+            Text(
+                selectedItemText,
+                color = MaterialTheme.colors.onSurface
+            )
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = extraText, fontSize = 14.sp)
+
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_arrow_dropdown),
+                    contentDescription = null,
+                    tint = MaterialTheme.colors.primary,
+                    modifier = Modifier.rotate(rotationState)
+                )
+            }
+        }
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { onExpandedChangeRequest(false) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .graphicsLayer {
+                    transformOrigin = TransformOrigin(2f, 0f)
+                    rotationX = rotateX.value
+                }
+                .alpha(alpha.value)
+                .heightIn(0.dp, 300.dp)
+        ) {
+            content()
+        }
+    }
+}
 
 @Composable
 fun CurminDropdown(
