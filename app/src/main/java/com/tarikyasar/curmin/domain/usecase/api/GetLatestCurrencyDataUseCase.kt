@@ -10,23 +10,24 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
-class GetLatestCurrencyData @Inject constructor(
+class GetLatestCurrencyDataUseCase @Inject constructor(
     private val repository: CurrencyRepository
 ) {
     operator fun invoke(
-        base: String,
-        currencies: List<String>,
+        startDate: String,
+        endDate: String,
+        baseCurrencyCode: String,
+        targetCurrencyCode: String
     ): Flow<Resource<LatestData>> = flow {
         try {
             var currencyString = ""
 
-            currencies.forEach {
-                currencyString += "$it,"
-            }
             emit(Resource.Loading<LatestData>())
             val convertedCurrency = repository.getLatestCurrency(
-                base = base,
-                currencies = currencyString.dropLast(1)
+                startDate = startDate,
+                endDate = endDate,
+                baseCurrencyCode = baseCurrencyCode,
+                targetCurrencyCode = targetCurrencyCode
             )
             emit(Resource.Success<LatestData>(convertedCurrency.toCurrency()))
         } catch (e: HttpException) {

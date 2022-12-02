@@ -18,9 +18,12 @@ interface CurrencyApi {
         @Query("amount") amount: Double,
     ): CurrencyConversionDto
 
-    @GET("/exchangerates_data/latest")
+    @GET("/exchangerates_data/timeseries")
     suspend fun getLatestData(
-        @Query("base") baseCurrency: String,
-        @Query("symbols") symbols: String
+        @Query("start_date") startDate: String,
+        @Query("end_date") endDate: String,
+        @Query("base") baseCurrencyCode: String,
+        @Query("symbols") targetCurrencyCode: String,
     ): LatestDataDto
+
 }

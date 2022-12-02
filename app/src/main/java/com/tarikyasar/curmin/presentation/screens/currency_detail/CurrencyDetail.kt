@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
@@ -30,6 +31,7 @@ import java.util.*
 fun CurrencyDetail(
     onNavigateBack: () -> Unit,
     currency: CurrencyWatchlistItemData?,
+    viewModel: CurrencyDetailViewModel = hiltViewModel()
 ) {
     Scaffold(
         topBar = {
@@ -44,7 +46,15 @@ fun CurrencyDetail(
             baseCurrency = currency?.baseCurrencyCode,
             targetCurrency = currency?.targetCurrencyCode,
             date = currency?.date,
-            rate = currency?.rate?.toString()
+            rate = currency?.rate?.toString(),
+            onDateSelect = { startDate, endDate ->
+                viewModel.getLatestData(
+                    startDate = startDate,
+                    endDate = endDate,
+                    baseCurrencyCode = currency?.baseCurrencyCode ?: "USD",
+                    targetCurrencyCode = currency?.targetCurrencyCode ?: "TRY"
+                )
+            }
         )
     }
 }
@@ -55,7 +65,8 @@ fun CurrencyDetailContent(
     baseCurrency: String?,
     targetCurrency: String?,
     date: String?,
-    rate: String?
+    rate: String?,
+    onDateSelect: (startDate: String, endDate: String) -> Unit
 ) {
     val context = LocalContext.current as AppCompatActivity
     val datePicker = MaterialDatePicker
@@ -83,6 +94,7 @@ fun CurrencyDetailContent(
             datePicker.addOnPositiveButtonClickListener {
                 dateRangeStart = DateUtils.formatTime(it.first)
                 dateRangeEnd = DateUtils.formatTime(it.second)
+                onDateSelect(dateRangeStart, dateRangeEnd)
             }
             datePicker.show(context.supportFragmentManager, "")
         }) {

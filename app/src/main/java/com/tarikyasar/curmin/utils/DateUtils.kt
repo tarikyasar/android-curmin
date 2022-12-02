@@ -15,7 +15,7 @@ object DateUtils {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun formatTime(timeInMs: Long): String {
-        val formatter = SimpleDateFormat("MM-dd-yyyy")
+        val formatter = SimpleDateFormat("yyyy-MM-dd")
         return formatter.format(timeInMs)
     }
 }

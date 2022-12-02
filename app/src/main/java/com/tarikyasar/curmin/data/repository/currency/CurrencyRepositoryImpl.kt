@@ -28,13 +28,16 @@ class CurrencyRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getLatestCurrency(
-        base: String,
-        currencies: String
+        startDate: String,
+        endDate: String,
+        baseCurrencyCode: String,
+        targetCurrencyCode: String
     ): LatestDataDto {
         return api.getLatestData(
-            baseCurrency = base,
-            symbols = currencies
+            startDate = startDate,
+            endDate = endDate,
+            baseCurrencyCode = baseCurrencyCode,
+            targetCurrencyCode = targetCurrencyCode
         )
     }
-
 }

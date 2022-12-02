@@ -15,7 +15,9 @@ interface CurrencyRepository {
     ): CurrencyConversionDto
 
     suspend fun getLatestCurrency(
-        base: String,
-        currencies: String
+        startDate: String,
+        endDate: String,
+        baseCurrencyCode: String,
+        targetCurrencyCode: String
     ): LatestDataDto
 }
