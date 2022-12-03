@@ -1,6 +1,7 @@
 package com.tarikyasar.curmin.data.remote
 
 import com.tarikyasar.curmin.data.remote.dto.currency.CurrencyConversionDto
+import com.tarikyasar.curmin.data.remote.dto.fluctuation.CurrencyFluctuationDto
 import com.tarikyasar.curmin.data.remote.dto.symbol.CurrencySymbolsDto
 import com.tarikyasar.curmin.data.remote.dto.timeseries.CurrencyTimeseriesDto
 import retrofit2.http.GET
@@ -26,4 +27,11 @@ interface CurrencyApi {
         @Query("symbols") targetCurrencyCode: String,
     ): CurrencyTimeseriesDto
 
+    @GET("/exchangerates_data/fluctuation")
+    suspend fun getCurrencyFluctuation(
+        @Query("start_date") startDate: String,
+        @Query("end_date") endDate: String,
+        @Query("base") baseCurrencyCode: String,
+        @Query("symbols") targetCurrencyCode: String,
+    ): CurrencyFluctuationDto
 }

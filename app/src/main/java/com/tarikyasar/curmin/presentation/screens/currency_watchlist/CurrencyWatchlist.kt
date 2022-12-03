@@ -33,7 +33,7 @@ import com.tarikyasar.curmin.presentation.ui.theme.CurrencyDownColor
 import kotlin.math.roundToInt
 
 @RequiresApi(Build.VERSION_CODES.O)
-@SuppressLint("UnrememberedMutableState")
+@SuppressLint("UnrememberedMutableState", "UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun CurrencyWatchlist(
     viewModel: CurrencyWatchlistViewModel = hiltViewModel(),
@@ -74,6 +74,16 @@ fun CurrencyWatchlist(
                 modifier = Modifier.fillMaxHeight(),
                 contentAlignment = Alignment.TopCenter
             ) {
+                Button(onClick = {
+                    viewModel.getCurrencyFluctuation(
+                        startDate = "2022-11-02",
+                        endDate = "2022-11-03",
+                        baseCurrencyCode = "USD",
+                        targetCurrencyCode = "TRY"
+                    )
+                }) {
+                    Text("Click click")
+                }
                 CurrencyWatchlistContent(
                     currencies = state.currencies,
                     getCurrencies = { viewModel.getCurrencies(true) },

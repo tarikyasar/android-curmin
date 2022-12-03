@@ -2,6 +2,7 @@ package com.tarikyasar.curmin.data.repository.currency
 
 import com.tarikyasar.curmin.data.remote.CurrencyApi
 import com.tarikyasar.curmin.data.remote.dto.currency.CurrencyConversionDto
+import com.tarikyasar.curmin.data.remote.dto.fluctuation.CurrencyFluctuationDto
 import com.tarikyasar.curmin.data.remote.dto.symbol.CurrencySymbolsDto
 import com.tarikyasar.curmin.data.remote.dto.timeseries.CurrencyTimeseriesDto
 import com.tarikyasar.curmin.domain.repository.CurrencyRepository
@@ -34,6 +35,20 @@ class CurrencyRepositoryImpl @Inject constructor(
         targetCurrencyCode: String
     ): CurrencyTimeseriesDto {
         return api.getCurrencyTimeseries(
+            startDate = startDate,
+            endDate = endDate,
+            baseCurrencyCode = baseCurrencyCode,
+            targetCurrencyCode = targetCurrencyCode
+        )
+    }
+
+    override suspend fun getCurrencyFluctuation(
+        startDate: String,
+        endDate: String,
+        baseCurrencyCode: String,
+        targetCurrencyCode: String
+    ): CurrencyFluctuationDto {
+        return api.getCurrencyFluctuation(
             startDate = startDate,
             endDate = endDate,
             baseCurrencyCode = baseCurrencyCode,
