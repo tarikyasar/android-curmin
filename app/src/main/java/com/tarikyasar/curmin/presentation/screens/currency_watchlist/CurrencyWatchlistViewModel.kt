@@ -6,9 +6,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tarikyasar.curmin.common.DatesInMs
 import com.tarikyasar.curmin.common.Resource
 import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
-import com.tarikyasar.curmin.domain.usecase.api.ConvertCurrencyUseCase
 import com.tarikyasar.curmin.domain.usecase.api.GetCurrencyFluctuationUseCase
 import com.tarikyasar.curmin.domain.usecase.api.GetCurrencySymbolsUseCase
 import com.tarikyasar.curmin.domain.usecase.database.DeleteCurrencyWatchlistItemUseCase
@@ -33,7 +33,6 @@ class CurrencyWatchlistViewModel @Inject constructor(
     private val deleteCurrencyWatchlistItemUseCase: DeleteCurrencyWatchlistItemUseCase,
     private val updateCurrencyWatchlistItemUseCase: UpdateCurrencyWatchlistItemUseCase,
     private val getCurrencySymbolsUseCase: GetCurrencySymbolsUseCase,
-    private val convertCurrencyUseCase: ConvertCurrencyUseCase,
     private val getCurrencyFluctuationUseCase: GetCurrencyFluctuationUseCase
 ) : ViewModel() {
 
@@ -53,10 +52,16 @@ class CurrencyWatchlistViewModel @Inject constructor(
                 is Resource.Success -> {
                     if (refreshList) {
                         _state.value.currencies.forEach { currencyWatchlistItemData ->
-                            convertCurrency(
-                                currencyWatchlistItemData = currencyWatchlistItemData,
-                                base = currencyWatchlistItemData.baseCurrencyCode ?: "USD",
-                                target = currencyWatchlistItemData.targetCurrencyCode ?: "TRY",
+                            val todayInMs = System.currentTimeMillis()
+
+                            getCurrencyFluctuation(
+                                startDate = DateUtils.formatTime(todayInMs - DatesInMs.DAY.value),
+                                endDate = DateUtils.formatTime(todayInMs),
+                                baseCurrencyCode = currencyWatchlistItemData.baseCurrencyCode
+                                    ?: "USD",
+                                targetCurrencyCode = currencyWatchlistItemData.targetCurrencyCode
+                                    ?: "TRY",
+                                currencyWatchlistItemData = currencyWatchlistItemData
                             )
                         }
                     } else {
@@ -116,11 +121,13 @@ class CurrencyWatchlistViewModel @Inject constructor(
         targetCurrencyCode: String
     ) {
         var newCurrencyWatchlistItem: CurrencyWatchlistItemData? = null
+        val todayInMs = System.currentTimeMillis()
 
-        convertCurrencyUseCase(
-            fromCurrencySymbol = baseCurrencyCode,
-            toCurrencySymbol = targetCurrencyCode,
-            amount = 1.0
+        getCurrencyFluctuationUseCase(
+            startDate = DateUtils.formatTime(todayInMs - DatesInMs.DAY.value),
+            endDate = DateUtils.formatTime(todayInMs),
+            baseCurrencyCode = baseCurrencyCode,
+            targetCurrencyCode = targetCurrencyCode
         ).onEach { result ->
             when (result) {
                 is Resource.Success -> {
@@ -128,8 +135,9 @@ class CurrencyWatchlistViewModel @Inject constructor(
                         uid = UUID.randomUUID().toString(),
                         baseCurrencyCode = baseCurrencyCode,
                         targetCurrencyCode = targetCurrencyCode,
-                        rate = result.data?.rate ?: 0.0,
-                        date = DateUtils.formatTime(LocalDateTime.now())
+                        rate = result.data?.endRate ?: 0.0,
+                        date = DateUtils.formatTime(LocalDateTime.now()),
+                        change = result.data?.change
                     )
 
                     insertCurrency(newCurrencyWatchlistItem!!)
@@ -155,11 +163,12 @@ class CurrencyWatchlistViewModel @Inject constructor(
         )
     }
 
-    fun getCurrencyFluctuation(
+    private fun getCurrencyFluctuation(
         startDate: String,
         endDate: String,
         baseCurrencyCode: String,
-        targetCurrencyCode: String
+        targetCurrencyCode: String,
+        currencyWatchlistItemData: CurrencyWatchlistItemData,
     ) {
         getCurrencyFluctuationUseCase(
             startDate = startDate,
@@ -169,6 +178,13 @@ class CurrencyWatchlistViewModel @Inject constructor(
         ).onEach { result ->
             when (result) {
                 is Resource.Success -> {
+                    updateCurrencyWatchlistItemData(
+                        currencyWatchlistItemData.copy(
+                            rate = result.data?.endRate ?: 0.0,
+                            date = DateUtils.formatTime(LocalDateTime.now()),
+                            change = result.data?.change
+                        )
+                    )
                     _state.value = _state.value.copy(
                         isLoading = false
                     )
@@ -195,41 +211,6 @@ class CurrencyWatchlistViewModel @Inject constructor(
                     _state.value = _state.value.copy(
                         symbols = result.data ?: emptyList(),
                         isLoading = false
-                    )
-                }
-                is Resource.Error -> {
-                    _state.value = _state.value.copy(
-                        error = result.message ?: "An unexpected error occurred.",
-                        isLoading = false
-                    )
-                }
-                is Resource.Loading -> {
-                    _state.value = _state.value.copy(
-                        isLoading = true
-                    )
-                }
-            }
-        }.launchIn(viewModelScope)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun convertCurrency(
-        currencyWatchlistItemData: CurrencyWatchlistItemData,
-        base: String,
-        target: String,
-    ) {
-        convertCurrencyUseCase(
-            fromCurrencySymbol = base,
-            toCurrencySymbol = target,
-            amount = 1.0
-        ).onEach { result ->
-            when (result) {
-                is Resource.Success -> {
-                    updateCurrencyWatchlistItemData(
-                        currencyWatchlistItemData.copy(
-                            rate = result.data?.rate ?: 0.0,
-                            date = DateUtils.formatTime(LocalDateTime.now())
-                        )
                     )
                 }
                 is Resource.Error -> {

@@ -37,3 +37,9 @@ fun String.formatDate(): Pair<String, String> {
 
     return Pair(splittedString.first(), splittedString.last())
 }
+
+/* Double Extensions */
+
+fun Double.formatDouble(): String {
+    return String.format("%.4f", this)
+}

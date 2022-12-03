@@ -11,4 +11,5 @@ data class CurrencyWatchlistItemData(
     @ColumnInfo(name = "target_currency_code") val targetCurrencyCode: String?,
     @ColumnInfo(name = "rate") val rate: Double?,
     @ColumnInfo(name = "date") val date: String?,
+    @ColumnInfo(name = "change") val change: Double?
 )

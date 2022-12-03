@@ -30,7 +30,6 @@ import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.
 import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.dialog.add.AddToWatchlistDialog
 import com.tarikyasar.curmin.presentation.screens.settings_dialog.SettingsDialog
 import com.tarikyasar.curmin.presentation.ui.theme.CurrencyDownColor
-import kotlin.math.roundToInt
 
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnrememberedMutableState", "UnusedMaterialScaffoldPaddingParameter")
@@ -49,6 +48,7 @@ fun CurrencyWatchlist(
         mutableStateOf(
             CurrencyWatchlistItemData(
                 "",
+                null,
                 null,
                 null,
                 null,
@@ -74,16 +74,6 @@ fun CurrencyWatchlist(
                 modifier = Modifier.fillMaxHeight(),
                 contentAlignment = Alignment.TopCenter
             ) {
-                Button(onClick = {
-                    viewModel.getCurrencyFluctuation(
-                        startDate = "2022-11-02",
-                        endDate = "2022-11-03",
-                        baseCurrencyCode = "USD",
-                        targetCurrencyCode = "TRY"
-                    )
-                }) {
-                    Text("Click click")
-                }
                 CurrencyWatchlistContent(
                     currencies = state.currencies,
                     getCurrencies = { viewModel.getCurrencies(true) },
@@ -191,9 +181,8 @@ fun CurrencyWatchlistContent(
                         SwipeableCurrencyWatchlistItem(
                             base = currency.baseCurrencyCode ?: "",
                             target = currency.targetCurrencyCode ?: "",
-                            value = ((currency.rate
-                                ?: 0.0) * 100.0).roundToInt() / 100.0,
-                            change = (0.1 * 100.0).roundToInt() / 100.0,
+                            value = currency.rate ?: 0.0,
+                            change = currency.change ?: 0.0,
                             date = currency.date ?: "",
                             onItemClick = {
                                 onNavigateToCurrencyDetail(currency)

@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import com.tarikyasar.curmin.R
 import com.tarikyasar.curmin.presentation.ui.theme.*
 import com.tarikyasar.curmin.utils.formatDate
+import com.tarikyasar.curmin.utils.formatDouble
 import kotlin.math.roundToInt
 
 @Composable
@@ -171,7 +172,7 @@ fun CurrencyWatchlistItem(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = value.toString(),
+                    text = value.formatDouble(),
                     color = MaterialTheme.colors.onSurface,
                     fontSize = 16.sp
                 )
@@ -191,7 +192,7 @@ fun CurrencyWatchlistItem(
                     )
 
                     Text(
-                        text = change.toString(),
+                        text = change.formatDouble(),
                         color = SurfaceColorDark,
                         fontSize = 12.sp,
                         modifier = Modifier.padding(4.dp)
