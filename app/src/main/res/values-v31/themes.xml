@@ -2,7 +2,7 @@
 <resources>
 
     <style name="Theme.Curmin" parent="Theme.MaterialComponents.NoActionBar">
-        <item name="android:statusBarColor">@color/background_color</item>
+        <item name="android:statusBarColor">#FF303030</item>
         <item name="android:navigationBarColor">@color/background_color</item>
         <item name="android:splashScreenTheme">@style/SplashScreenTheme</item>
 
