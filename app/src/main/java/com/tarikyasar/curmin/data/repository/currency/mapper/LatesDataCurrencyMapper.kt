@@ -1,10 +1,10 @@
 package com.tarikyasar.curmin.data.repository.currency.mapper
 
 import com.himanshoe.charty.line.model.LineData
-import com.tarikyasar.curmin.data.remote.dto.latest.LatestDataDto
-import com.tarikyasar.curmin.domain.model.LatestData
+import com.tarikyasar.curmin.data.remote.dto.timeseries.CurrencyTimeseriesDto
+import com.tarikyasar.curmin.domain.model.CurrencyTimeseries
 
-fun LatestDataDto.toLineData(): LatestData {
+fun CurrencyTimeseriesDto.toLineData(): CurrencyTimeseries {
     val rates = mutableListOf<LineData>()
 
     this.rates
@@ -17,7 +17,7 @@ fun LatestDataDto.toLineData(): LatestData {
             )
         }
 
-    return LatestData(
+    return CurrencyTimeseries(
         rates = rates
     )
 }

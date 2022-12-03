@@ -1,8 +1,8 @@
 package com.tarikyasar.curmin.domain.repository
 
 import com.tarikyasar.curmin.data.remote.dto.currency.CurrencyConversionDto
-import com.tarikyasar.curmin.data.remote.dto.latest.LatestDataDto
 import com.tarikyasar.curmin.data.remote.dto.symbol.CurrencySymbolsDto
+import com.tarikyasar.curmin.data.remote.dto.timeseries.CurrencyTimeseriesDto
 
 interface CurrencyRepository {
 
@@ -14,10 +14,10 @@ interface CurrencyRepository {
         amount: Double,
     ): CurrencyConversionDto
 
-    suspend fun getLatestCurrency(
+    suspend fun getCurrencyTimeseriesData(
         startDate: String,
         endDate: String,
         baseCurrencyCode: String,
         targetCurrencyCode: String
-    ): LatestDataDto
+    ): CurrencyTimeseriesDto
 }

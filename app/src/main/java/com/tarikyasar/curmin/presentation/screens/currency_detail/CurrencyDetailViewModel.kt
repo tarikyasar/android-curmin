@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tarikyasar.curmin.common.Resource
-import com.tarikyasar.curmin.domain.usecase.api.GetLatestCurrencyDataUseCase
+import com.tarikyasar.curmin.domain.usecase.api.GetCurrencyTimeseriesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -13,19 +13,19 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CurrencyDetailViewModel @Inject constructor(
-    private val getLatestCurrencyDataUseCase: GetLatestCurrencyDataUseCase
+    private val getCurrencyTimeseriesUseCase: GetCurrencyTimeseriesUseCase
 ): ViewModel() {
 
     private val _state = mutableStateOf(CurrencyDetailState())
     val state: State<CurrencyDetailState> = _state
 
-    fun getLatestData(
+    fun getCurrencyTimeseries(
         startDate: String,
         endDate: String,
         baseCurrencyCode: String,
         targetCurrencyCode: String
     ) {
-        getLatestCurrencyDataUseCase(
+        getCurrencyTimeseriesUseCase(
             startDate = startDate,
             endDate = endDate,
             baseCurrencyCode = baseCurrencyCode,

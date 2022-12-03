@@ -49,7 +49,7 @@ fun CurrencyDetail(
                 rate = currency?.rate?.toString(),
                 rates = state.currencyRates,
                 onDateSelect = { startDate, endDate ->
-                    viewModel.getLatestData(
+                    viewModel.getCurrencyTimeseries(
                         startDate = startDate,
                         endDate = endDate,
                         baseCurrencyCode = currency?.baseCurrencyCode ?: "USD",

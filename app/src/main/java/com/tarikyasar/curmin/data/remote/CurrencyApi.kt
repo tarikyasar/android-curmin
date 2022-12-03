@@ -1,8 +1,8 @@
 package com.tarikyasar.curmin.data.remote
 
 import com.tarikyasar.curmin.data.remote.dto.currency.CurrencyConversionDto
-import com.tarikyasar.curmin.data.remote.dto.latest.LatestDataDto
 import com.tarikyasar.curmin.data.remote.dto.symbol.CurrencySymbolsDto
+import com.tarikyasar.curmin.data.remote.dto.timeseries.CurrencyTimeseriesDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -19,11 +19,11 @@ interface CurrencyApi {
     ): CurrencyConversionDto
 
     @GET("/exchangerates_data/timeseries")
-    suspend fun getLatestData(
+    suspend fun getCurrencyTimeseries(
         @Query("start_date") startDate: String,
         @Query("end_date") endDate: String,
         @Query("base") baseCurrencyCode: String,
         @Query("symbols") targetCurrencyCode: String,
-    ): LatestDataDto
+    ): CurrencyTimeseriesDto
 
 }
