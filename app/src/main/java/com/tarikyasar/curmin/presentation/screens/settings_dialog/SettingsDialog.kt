@@ -1,5 +1,6 @@
 package com.tarikyasar.curmin.presentation.screens.settings_dialog
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,14 +11,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.tarikyasar.curmin.BuildConfig
 import com.tarikyasar.curmin.R
 import com.tarikyasar.curmin.domain.model.Themes
 import com.tarikyasar.curmin.presentation.composable.CurminDialog
 import com.tarikyasar.curmin.presentation.composable.CurminDropdown
+import com.tarikyasar.curmin.presentation.ui.theme.CurrencyTextColor
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SettingsDialog(
     viewModel: SettingsDialogViewModel = hiltViewModel(),
@@ -70,7 +75,9 @@ fun SettingsDialog(
                         }
                     }
                 ) {
-                    Box {
+                    Box(
+                        modifier = Modifier.fillMaxHeight()
+                    ) {
                         Column {
                             ThemeSetting(
                                 themes = state.themes,
@@ -89,6 +96,16 @@ fun SettingsDialog(
 
                             Divider()
                         }
+
+                        Text(
+                            text = "Curmin - ${BuildConfig.VERSION_NAME}",
+                            textAlign = TextAlign.Center,
+                            color = CurrencyTextColor,
+                            fontSize = 18.sp,
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(bottom = 16.dp)
+                        )
                     }
                 }
             }
