@@ -74,7 +74,7 @@ class CurrencyWatchlistViewModel @Inject constructor(
                 }
                 is Resource.Error -> {
                     _state.value = _state.value.copy(
-                        error = result.message ?: "An unexpected error occurred.",
+                        error = result.message,
                         isLoading = false
                     )
                 }
@@ -103,7 +103,7 @@ class CurrencyWatchlistViewModel @Inject constructor(
                 }
                 is Resource.Error -> {
                     _state.value = _state.value.copy(
-                        error = result.message ?: "An unexpected error occurred.",
+                        error = result.message,
                         isLoading = false
                     )
                 }
@@ -144,7 +144,7 @@ class CurrencyWatchlistViewModel @Inject constructor(
                 }
                 is Resource.Error -> {
                     _state.value = _state.value.copy(
-                        error = result.message ?: "An unexpected error occurred.",
+                        error = result.message,
                         isLoading = false
                     )
                 }
@@ -191,7 +191,7 @@ class CurrencyWatchlistViewModel @Inject constructor(
                 }
                 is Resource.Error -> {
                     _state.value = _state.value.copy(
-                        error = result.message ?: "An unexpected error occurred.",
+                        error = result.message,
                         isLoading = false
                     )
                 }
@@ -215,7 +215,7 @@ class CurrencyWatchlistViewModel @Inject constructor(
                 }
                 is Resource.Error -> {
                     _state.value = _state.value.copy(
-                        error = result.message ?: "An unexpected error occurred.",
+                        error = result.message,
                         isLoading = false
                     )
                 }
@@ -239,7 +239,7 @@ class CurrencyWatchlistViewModel @Inject constructor(
                 }
                 is Resource.Error -> {
                     _state.value = _state.value.copy(
-                        error = result.message ?: "An unexpected error occurred.",
+                        error = result.message,
                         isLoading = false
                     )
                 }
@@ -264,7 +264,7 @@ class CurrencyWatchlistViewModel @Inject constructor(
                 }
                 is Resource.Error -> {
                     _state.value = _state.value.copy(
-                        error = result.message ?: "An unexpected error occurred.",
+                        error = result.message,
                         isLoading = false
                     )
                 }

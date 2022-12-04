@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Curmin</string>
+    <string name="error">Hata</string>
+    <string name="yes">Evet</string>
+    <string name="no">Hayır</string>
+    <string name="okay">Tamam</string>
+
+    <string name="currency_conversion">Kur Hesaplama</string>
+    <string name="refresh_time">Yenilenme Zamanı: %s</string>
+
+    <!-- Watchlist Screen -->
+    <string name="watchlist_item_deletion_warning">%s-%s kurlarını içeren liste elemanı silinecek.\nEmin misiniz?</string>
+    <string name="add_to_watchlist">Ekle</string>
+    <string name="base_currency">Baz Kur</string>
+    <string name="target_currency">Hedef Kur</string>
+    <string name="empty_watchlist">Listede bir kur yok. Sol üstteki ekle butonuyla ekleyebilirsiniz.</string>
+
+    <!-- Dialog -->
+    <string name="search_currency">Kur ara</string>
+    <string name="error_message_unexpected_error">Beklenmeyen bir hata oluştu.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings">Ayarlar</string>
+    <string name="theme">Tema</string>
+    <string name="theme_light">Açık</string>
+    <string name="theme_dark">Koyu</string>
+    <string name="theme_system">Sistem Teması</string>
+    <string name="ask_to_remove_item">Liste elemanını silmek için sor</string>
+
+    <!-- Chart -->
+    <string name="no_chart_data">Gösterilebilecek bir veri yok.</string>
+</resources>

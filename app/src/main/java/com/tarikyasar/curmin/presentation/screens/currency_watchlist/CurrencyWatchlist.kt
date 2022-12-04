@@ -42,7 +42,7 @@ fun CurrencyWatchlist(
     var showDeleteWatchlistItemDialog by remember { mutableStateOf(false) }
     var showAddToWatchlistDialog by remember { mutableStateOf(false) }
     var showSettingsDialog by remember { mutableStateOf(false) }
-    var showErrorDialog by remember { mutableStateOf(state.error.isEmpty().not()) }
+    var showErrorDialog by remember { mutableStateOf(true) }
     val swipeRefreshState by remember { mutableStateOf(SwipeRefreshState(false)) }
     var deleteItem by remember {
         mutableStateOf(
@@ -68,7 +68,7 @@ fun CurrencyWatchlist(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colors.background)
-                .blur(if (state.isLoading) 50.dp else 0.dp)
+                .blur(if (state.isLoading && state.symbols.isEmpty()) 50.dp else 0.dp)
         ) {
             Box(
                 modifier = Modifier.fillMaxHeight(),
@@ -127,19 +127,19 @@ fun CurrencyWatchlist(
                 )
 
                 CurminErrorDialog(
-                    showErrorDialog = showErrorDialog,
+                    showErrorDialog = state.error.isNullOrEmpty().not() && showErrorDialog,
                     onDismissRequest = {
                         showErrorDialog = false
                     },
                     onPositiveButtonClick = {
                         showErrorDialog = false
                     },
-                    errorMessage = state.error
+                    errorMessage = state.error ?: stringResource(id = R.string.error_message_unexpected_error)
                 )
             }
         }
 
-        if (state.isLoading) {
+        if (state.isLoading && state.symbols.isEmpty()) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center)
             )
