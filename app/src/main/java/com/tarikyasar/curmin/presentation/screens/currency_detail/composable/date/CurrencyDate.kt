@@ -1,8 +1,8 @@
 package com.tarikyasar.curmin.presentation.screens.currency_detail.composable.date
 
 import android.os.Build
+import androidx.activity.ComponentActivity
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
+import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.tarikyasar.curmin.presentation.composable.CurminDateDropdown
@@ -25,7 +26,7 @@ import java.util.*
 fun CurrencyDateDropdown(
     onDateSelect: (startDate: String, endDate: String) -> Unit
 ) {
-    val context = LocalContext.current as AppCompatActivity
+    val context = LocalContext.current as ComponentActivity
     val datePicker = MaterialDatePicker
         .Builder
         .dateRangePicker()
@@ -52,7 +53,11 @@ fun CurrencyDateDropdown(
                     if (dateState == DateSelection.CUSTOM_DATE) {
                         datePicker.addOnPositiveButtonClickListener {
                             extraText =
-                                "${DateUtils.formatTimeWithDay(it.first)} - ${DateUtils.formatTimeWithDay(it.second)}"
+                                "${DateUtils.formatTimeWithDay(it.first)} - ${
+                                    DateUtils.formatTimeWithDay(
+                                        it.second
+                                    )
+                                }"
 
                             onDateSelect(
                                 DateUtils.formatTime(it.first),
@@ -60,7 +65,7 @@ fun CurrencyDateDropdown(
                             )
                         }
 
-                        datePicker.show(context.supportFragmentManager, "")
+                        datePicker.show(context.fragmentManager as FragmentManager, "")
                     } else {
                         extraText = dateState.getDateNames()
 
