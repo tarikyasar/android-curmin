@@ -68,7 +68,7 @@ fun CurrencyWatchlist(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colors.background)
-                .blur(if (state.isLoading && state.symbols.isEmpty()) 50.dp else 0.dp)
+                .blur(if (state.isLoading) 50.dp else 0.dp)
         ) {
             Box(
                 modifier = Modifier.fillMaxHeight(),
@@ -139,7 +139,7 @@ fun CurrencyWatchlist(
             }
         }
 
-        if (state.isLoading && state.symbols.isEmpty()) {
+        if (state.isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center)
             )
