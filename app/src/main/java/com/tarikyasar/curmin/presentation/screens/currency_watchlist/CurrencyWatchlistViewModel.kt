@@ -10,7 +10,6 @@ import com.tarikyasar.curmin.common.DatesInMs
 import com.tarikyasar.curmin.common.Resource
 import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
 import com.tarikyasar.curmin.domain.usecase.api.GetCurrencyFluctuationUseCase
-import com.tarikyasar.curmin.domain.usecase.api.GetCurrencySymbolsUseCase
 import com.tarikyasar.curmin.domain.usecase.database.DeleteCurrencyWatchlistItemUseCase
 import com.tarikyasar.curmin.domain.usecase.database.GetCurrencyWatchlistItemsUseCase
 import com.tarikyasar.curmin.domain.usecase.database.InsertCurrencyWatchlistItemUseCase
@@ -32,7 +31,6 @@ class CurrencyWatchlistViewModel @Inject constructor(
     private val insertCurrencyWatchlistItemUseCase: InsertCurrencyWatchlistItemUseCase,
     private val deleteCurrencyWatchlistItemUseCase: DeleteCurrencyWatchlistItemUseCase,
     private val updateCurrencyWatchlistItemUseCase: UpdateCurrencyWatchlistItemUseCase,
-    private val getCurrencySymbolsUseCase: GetCurrencySymbolsUseCase,
     private val getCurrencyFluctuationUseCase: GetCurrencyFluctuationUseCase
 ) : ViewModel() {
 
@@ -40,7 +38,6 @@ class CurrencyWatchlistViewModel @Inject constructor(
     val state: State<CurrencyWatchlistState> = _state
 
     init {
-        getSymbols()
         getCurrencies(refreshList = false)
         getAskToRemoveItemParameter()
     }
@@ -186,30 +183,6 @@ class CurrencyWatchlistViewModel @Inject constructor(
                         )
                     )
                     _state.value = _state.value.copy(
-                        isLoading = false
-                    )
-                }
-                is Resource.Error -> {
-                    _state.value = _state.value.copy(
-                        error = result.message,
-                        isLoading = false
-                    )
-                }
-                is Resource.Loading -> {
-                    _state.value = _state.value.copy(
-                        isLoading = true
-                    )
-                }
-            }
-        }.launchIn(viewModelScope)
-    }
-
-    private fun getSymbols() {
-        getCurrencySymbolsUseCase().onEach { result ->
-            when (result) {
-                is Resource.Success -> {
-                    _state.value = _state.value.copy(
-                        symbols = result.data ?: emptyList(),
                         isLoading = false
                     )
                 }

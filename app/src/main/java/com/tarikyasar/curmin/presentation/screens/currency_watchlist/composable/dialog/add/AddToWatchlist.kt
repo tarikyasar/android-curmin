@@ -1,5 +1,6 @@
 package com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.dialog.add
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,8 +31,8 @@ fun AddToWatchlistDialog(
     onPositiveButtonClick: (baseCurrency: String, targetCurrency: String) -> Unit,
     currencyList: List<Symbol>
 ) {
-    var baseCurrencyState by remember { mutableStateOf("AED") }
-    var targetCurrencyState by remember { mutableStateOf("AED") }
+    var baseCurrencyState by remember { mutableStateOf(currencyList[0].code) }
+    var targetCurrencyState by remember { mutableStateOf(currencyList[0].code) }
     var dialogState by remember { mutableStateOf(WatchlistDialogState.ADD_TO_WATCHLIST_SCREEN) }
     var currencyState by remember { mutableStateOf(CurrencyState.BASE_CURRENCY) }
 
@@ -94,6 +95,7 @@ fun AddToWatchlistDialog(
     }
 }
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AddToWatchlistContent(
     baseCurrencyState: String,
