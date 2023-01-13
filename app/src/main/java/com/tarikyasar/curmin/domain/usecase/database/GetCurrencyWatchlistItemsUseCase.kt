@@ -3,6 +3,8 @@ package com.tarikyasar.curmin.domain.usecase.database
 import com.tarikyasar.curmin.common.Resource
 import com.tarikyasar.curmin.data.database.AppDatabase
 import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
+import com.tarikyasar.curmin.domain.model.CurminError
+import com.tarikyasar.curmin.domain.model.CurminErrorType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.IOException
@@ -17,7 +19,15 @@ class GetCurrencyWatchlistItemsUseCase @Inject constructor(
             val currencyWatchlistItems = database.currencyDao().getAll()
             emit(Resource.Success<List<CurrencyWatchlistItemData>>(currencyWatchlistItems))
         } catch (e: IOException) {
-            emit(Resource.Error<List<CurrencyWatchlistItemData>>("Couldn't reach database."))
+            emit(
+                Resource.Error<List<CurrencyWatchlistItemData>>(
+                    CurminError(
+                        null,
+                        null,
+                        CurminErrorType.DATABASE_ERROR
+                    )
+                )
+            )
         }
     }
 }

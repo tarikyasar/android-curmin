@@ -14,12 +14,12 @@ import javax.inject.Inject
 @HiltViewModel
 class CurrencyDetailViewModel @Inject constructor(
     private val getCurrencyTimeseriesUseCase: GetCurrencyTimeseriesUseCase
-): ViewModel() {
+) : ViewModel() {
 
     private val _state = mutableStateOf(CurrencyDetailState())
     val state: State<CurrencyDetailState> = _state
 
-    fun getCurrencyTimeseries(
+    fun getCurrencyTimeSeries(
         startDate: String,
         endDate: String,
         baseCurrencyCode: String,
@@ -31,7 +31,7 @@ class CurrencyDetailViewModel @Inject constructor(
             baseCurrencyCode = baseCurrencyCode,
             targetCurrencyCode = targetCurrencyCode
         ).onEach { result ->
-            when(result) {
+            when (result) {
                 is Resource.Success -> {
                     _state.value = _state.value.copy(
                         isLoading = false,
@@ -40,7 +40,7 @@ class CurrencyDetailViewModel @Inject constructor(
                 }
                 is Resource.Error -> {
                     _state.value = _state.value.copy(
-                        error = result.message ?: "An unexpected error occured.",
+                        error = result.error,
                         isLoading = false
                     )
                 }
@@ -49,5 +49,11 @@ class CurrencyDetailViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    fun resetError() {
+        _state.value = _state.value.copy(
+            error = null
+        )
     }
 }

@@ -41,7 +41,6 @@ class CurrencyWatchlistViewModel @Inject constructor(
 
     init {
         getSymbols()
-        getCurrencies(refreshList = false)
         getAskToRemoveItemParameter()
     }
 
@@ -74,7 +73,7 @@ class CurrencyWatchlistViewModel @Inject constructor(
                 }
                 is Resource.Error -> {
                     _state.value = _state.value.copy(
-                        error = result.message,
+                        error = result.error,
                         isLoading = false
                     )
                 }
@@ -103,7 +102,7 @@ class CurrencyWatchlistViewModel @Inject constructor(
                 }
                 is Resource.Error -> {
                     _state.value = _state.value.copy(
-                        error = result.message,
+                        error = result.error,
                         isLoading = false
                     )
                 }
@@ -116,7 +115,7 @@ class CurrencyWatchlistViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun createCurrencyWatchlisttem(
+    fun createCurrencyWatchlistItem(
         baseCurrencyCode: String,
         targetCurrencyCode: String
     ) {
@@ -144,7 +143,7 @@ class CurrencyWatchlistViewModel @Inject constructor(
                 }
                 is Resource.Error -> {
                     _state.value = _state.value.copy(
-                        error = result.message,
+                        error = result.error,
                         isLoading = false
                     )
                 }
@@ -191,7 +190,7 @@ class CurrencyWatchlistViewModel @Inject constructor(
                 }
                 is Resource.Error -> {
                     _state.value = _state.value.copy(
-                        error = result.message,
+                        error = result.error,
                         isLoading = false
                     )
                 }
@@ -212,10 +211,12 @@ class CurrencyWatchlistViewModel @Inject constructor(
                         symbols = result.data ?: emptyList(),
                         isLoading = false
                     )
+
+                    getCurrencies(refreshList = false)
                 }
                 is Resource.Error -> {
                     _state.value = _state.value.copy(
-                        error = result.message,
+                        error = result.error,
                         isLoading = false
                     )
                 }
@@ -239,7 +240,7 @@ class CurrencyWatchlistViewModel @Inject constructor(
                 }
                 is Resource.Error -> {
                     _state.value = _state.value.copy(
-                        error = result.message,
+                        error = result.error,
                         isLoading = false
                     )
                 }
@@ -264,7 +265,7 @@ class CurrencyWatchlistViewModel @Inject constructor(
                 }
                 is Resource.Error -> {
                     _state.value = _state.value.copy(
-                        error = result.message,
+                        error = result.error,
                         isLoading = false
                     )
                 }
@@ -275,5 +276,11 @@ class CurrencyWatchlistViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    fun resetError() {
+        _state.value = _state.value.copy(
+            error = null
+        )
     }
 }

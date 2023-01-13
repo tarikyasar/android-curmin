@@ -27,9 +27,25 @@
     <string name="theme_system">System Theme</string>
     <string name="ask_to_remove_item">Ask To Remove Item</string>
 
-
     <!-- Chart -->
     <string name="no_chart_data">There is no presentable data.</string>
 
+    <!-- Dates -->
+    <string name="last_week">Last Week</string>
+    <string name="last_month">Last Month</string>
+    <string name="last_three_months">Last Three Months</string>
+    <string name="last_six_months">Last Six Months</string>
+    <string name="last_year">Last Year</string>
+
+    <!-- API Error Messages -->
+    <string name="unexpected_error">An unexpected error occured.</string>
+    <string name="api_error_400">The request was unacceptable.</string>
+    <string name="api_error_401">No valid API key provided.</string>
+    <string name="api_error_404">The requested resource doesn\'t exist.</string>
+    <string name="api_error_429">API request limit exceeded.</string>
+
+    <!-- Error -->
+    <string name="network_error">Couldn\'t reach server. Check your internet connection.</string>
+    <string name="database_error">Couldn\'t reach database.</string>
 
 </resources>

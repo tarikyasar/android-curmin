@@ -2,6 +2,8 @@ package com.tarikyasar.curmin.domain.usecase.database
 
 import com.tarikyasar.curmin.common.Resource
 import com.tarikyasar.curmin.data.database.AppDatabase
+import com.tarikyasar.curmin.domain.model.CurminError
+import com.tarikyasar.curmin.domain.model.CurminErrorType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.IOException
@@ -16,7 +18,7 @@ class DeleteCurrencyWatchlistItemUseCase @Inject constructor(
             database.currencyDao().delete(currencyWatchlistItemUid)
             emit(Resource.Success<String>(currencyWatchlistItemUid))
         } catch (e: IOException) {
-            emit(Resource.Error<String>("Couldn't reach database."))
+            emit(Resource.Error<String>(CurminError(null, null, CurminErrorType.DATABASE_ERROR)))
         }
     }
 }

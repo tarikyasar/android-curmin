@@ -1,9 +1,9 @@
 package com.tarikyasar.curmin.presentation.screens.currency_detail
 
-import com.himanshoe.charty.line.model.LineData
+import com.tarikyasar.curmin.domain.model.CurminError
 
 data class CurrencyDetailState(
-    val error: String = "",
+    val error: CurminError? = null,
     val isLoading: Boolean = false,
-    val currencyRates: List<LineData> = emptyList()
+    val currencyRates: List<Pair<Int, Double>>? = emptyList()
 )

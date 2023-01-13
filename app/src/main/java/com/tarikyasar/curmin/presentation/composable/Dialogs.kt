@@ -1,5 +1,6 @@
 package com.tarikyasar.curmin.presentation.composable
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -59,6 +60,7 @@ fun CurminDialog(
     }
 }
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun CurminWarningDialog(
     showWarningDialog: Boolean,
@@ -169,6 +171,7 @@ fun CurminWarningDialog(
     }
 }
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun CurminErrorDialog(
     showErrorDialog: Boolean,
@@ -214,6 +217,7 @@ fun CurminErrorDialog(
                         verticalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier
                             .fillMaxHeight()
+                            .fillMaxWidth()
                             .padding(20.dp)
                     ) {
                         Text(
@@ -221,7 +225,9 @@ fun CurminErrorDialog(
                             fontSize = 18.sp,
                             color = MaterialTheme.colors.onSurface,
                             textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(bottom = 20.dp)
+                            modifier = Modifier
+                                .padding(bottom = 20.dp)
+                                .align(CenterHorizontally)
                         )
 
                         Row(

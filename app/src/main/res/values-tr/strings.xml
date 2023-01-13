@@ -30,4 +30,22 @@
 
     <!-- Chart -->
     <string name="no_chart_data">Gösterilebilecek bir veri yok.</string>
+
+    <!-- Dates -->
+    <string name="last_week">Geçen Hafta</string>
+    <string name="last_month">Geçen Ay</string>
+    <string name="last_three_months">Son Üç Ay</string>
+    <string name="last_six_months">Son Altı Ay</string>
+    <string name="last_year">Geçen Yıl</string>
+
+    <!-- API Error Messages -->
+    <string name="unexpected_error">Beklenmeyen bir hata oluştu.</string>
+    <string name="api_error_400">İstek yanlış gönderilmiş.</string>
+    <string name="api_error_401">API key hatalı.</string>
+    <string name="api_error_404">Gönderilen istek mevcut değil.</string>
+    <string name="api_error_429">API istek limiti aşıldı.</string>
+
+    <!-- Error -->
+    <string name="network_error">Sunucuya erişilemedi. İnternet bağlantınızı kontrol ediniz.</string>
+    <string name="database_error">Veritabanına erişilemedi.</string>
 </resources>

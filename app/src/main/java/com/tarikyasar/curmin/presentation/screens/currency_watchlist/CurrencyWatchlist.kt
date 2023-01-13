@@ -8,22 +8,23 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.tarikyasar.curmin.R
 import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
 import com.tarikyasar.curmin.presentation.composable.CurminErrorDialog
+import com.tarikyasar.curmin.presentation.composable.EmptyComposable
 import com.tarikyasar.curmin.presentation.composable.SwipeableCurrencyWatchlistItem
 import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.CurrencyWatchlistTopBar
 import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.DeleteWatchlistItemDialog
@@ -90,7 +91,8 @@ fun CurrencyWatchlist(
                     swipeRefreshState = swipeRefreshState,
                     onNavigateToCurrencyDetail = { currency ->
                         onNavigateToCurrencyDetail(currency)
-                    }
+                    },
+                    onAddItemClick = { showAddToWatchlistDialog = true }
                 )
 
                 SettingsDialog(
@@ -105,7 +107,7 @@ fun CurrencyWatchlist(
                     showCreateWatchlistItemDialog = showAddToWatchlistDialog,
                     onDismissRequest = { showAddToWatchlistDialog = false },
                     onPositiveButtonClick = { baseCurrency, targetCurrency ->
-                        viewModel.createCurrencyWatchlisttem(
+                        viewModel.createCurrencyWatchlistItem(
                             baseCurrencyCode = baseCurrency,
                             targetCurrencyCode = targetCurrency
                         )
@@ -127,14 +129,14 @@ fun CurrencyWatchlist(
                 )
 
                 CurminErrorDialog(
-                    showErrorDialog = state.error.isNullOrEmpty().not() && showErrorDialog,
+                    showErrorDialog = state.error != null,
                     onDismissRequest = {
-                        showErrorDialog = false
+                        viewModel.resetError()
                     },
                     onPositiveButtonClick = {
-                        showErrorDialog = false
+                        viewModel.resetError()
                     },
-                    errorMessage = state.error ?: stringResource(id = R.string.error_message_unexpected_error)
+                    errorMessage = state.error?.getErrorMessage() ?: ""
                 )
             }
         }
@@ -155,7 +157,8 @@ fun CurrencyWatchlistContent(
     onDelete: (currency: CurrencyWatchlistItemData) -> Unit,
     isLoading: Boolean,
     swipeRefreshState: SwipeRefreshState,
-    onNavigateToCurrencyDetail: (currency: CurrencyWatchlistItemData) -> Unit
+    onNavigateToCurrencyDetail: (currency: CurrencyWatchlistItemData) -> Unit,
+    onAddItemClick: () -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.Top,
@@ -199,27 +202,14 @@ fun CurrencyWatchlistContent(
                 }
             }
         } else if (isLoading.not()) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxHeight()
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_empty),
-                    contentDescription = null,
-                    tint = MaterialTheme.colors.secondary,
-                    modifier = Modifier
-                        .size(70.dp)
-                )
-
-                Text(
-                    text = stringResource(id = R.string.empty_watchlist),
-                    fontSize = 20.sp,
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colors.secondary,
-                    modifier = Modifier.padding(10.dp)
-                )
-            }
+            EmptyComposable(
+                text = stringResource(id = R.string.empty_watchlist),
+                iconPainter = painterResource(id = R.drawable.ic_empty),
+                buttonText = stringResource(id = R.string.add_to_watchlist),
+                onButtonClick = {
+                    onAddItemClick()
+                }
+            )
         }
     }
 }

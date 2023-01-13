@@ -1,11 +1,10 @@
 package com.tarikyasar.curmin.data.repository.currency.mapper
 
-import com.himanshoe.charty.line.model.LineData
 import com.tarikyasar.curmin.data.remote.dto.timeseries.CurrencyTimeseriesDto
-import com.tarikyasar.curmin.domain.model.CurrencyTimeseries
+import com.tarikyasar.curmin.domain.model.CurrencyTimeSeries
 
-fun CurrencyTimeseriesDto.toLineData(): CurrencyTimeseries {
-    val rates = mutableListOf<LineData>()
+fun CurrencyTimeseriesDto.toLineData(): CurrencyTimeSeries {
+    val rates = mutableListOf<Pair<Int, Double>>()
 
     this.rates
         .toString()
@@ -13,11 +12,11 @@ fun CurrencyTimeseriesDto.toLineData(): CurrencyTimeseries {
         .forEachIndexed { i, string ->
             val rate = string.split("=").lastOrNull()?.replace("}", "")?.toDouble()
             rates.add(
-                LineData(i, (rate ?: 0.0).toFloat())
+                Pair(i + 1, (rate ?: 0.0))
             )
         }
 
-    return CurrencyTimeseries(
+    return CurrencyTimeSeries(
         rates = rates
     )
 }

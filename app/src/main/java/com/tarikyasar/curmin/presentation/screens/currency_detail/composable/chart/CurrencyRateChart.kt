@@ -10,22 +10,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.himanshoe.charty.common.axis.AxisConfig
-import com.himanshoe.charty.line.LineChart
-import com.himanshoe.charty.line.config.LineConfig
-import com.himanshoe.charty.line.model.LineData
 import com.tarikyasar.curmin.R
-import com.tarikyasar.curmin.presentation.ui.theme.CurrencyTextColor
 
 @Composable
 fun CurrencyRateChart(
-    rates: List<LineData>
+    rates: List<Pair<Int, Double>>? = emptyList()
 ) {
     Box(
         contentAlignment = Alignment.Center,
@@ -36,38 +30,14 @@ fun CurrencyRateChart(
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .height(200.dp)
     ) {
-        if (rates.isNotEmpty()) {
-            RatesLineChart(rates = rates)
+        if (rates.isNullOrEmpty().not()) {
+            LineChart(
+                rates!!
+            )
         } else {
             EmptyChart()
         }
     }
-}
-
-@Composable
-fun RatesLineChart(
-    rates: List<LineData>
-) {
-    LineChart(
-        lineData = rates,
-        color = MaterialTheme.colors.primary,
-        axisConfig = AxisConfig(
-            showAxis = true,
-            isAxisDashed = true,
-            showUnitLabels = true,
-            showXLabels = true,
-            xAxisColor = CurrencyTextColor,
-            yAxisColor = Color.Red,
-            textColor = MaterialTheme.colors.onSurface
-        ),
-        lineConfig = LineConfig(
-            hasDotMarker = false
-        ),
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(200.dp)
-            .padding(vertical = 24.dp, horizontal = 16.dp)
-    )
 }
 
 @Composable
