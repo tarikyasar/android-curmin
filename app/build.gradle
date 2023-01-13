@@ -112,6 +112,6 @@ dependencies {
     implementation "androidx.compose.material:material:$compose_version"
     implementation "com.google.android.material:material:1.5.0"
 
-    // Chart
-    implementation("com.himanshoe:charty:1.0.1")
+    // Lottie
+    implementation "com.airbnb.android:lottie-compose:$lottie"
 }

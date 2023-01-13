@@ -8,7 +8,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
@@ -25,9 +24,10 @@ import com.tarikyasar.curmin.R
 import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
 import com.tarikyasar.curmin.presentation.composable.CurminErrorDialog
 import com.tarikyasar.curmin.presentation.composable.EmptyComposable
+import com.tarikyasar.curmin.presentation.composable.LoadingAnimation
 import com.tarikyasar.curmin.presentation.composable.SwipeableCurrencyWatchlistItem
 import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.CurrencyWatchlistTopBar
-import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.DeleteWatchlistItemDialog
+import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.dialog.DeleteWatchlistItemDialog
 import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.dialog.add.AddToWatchlistDialog
 import com.tarikyasar.curmin.presentation.screens.settings_dialog.SettingsDialog
 import com.tarikyasar.curmin.presentation.ui.theme.CurrencyDownColor
@@ -142,7 +142,7 @@ fun CurrencyWatchlist(
         }
 
         if (state.isLoading) {
-            CircularProgressIndicator(
+            LoadingAnimation(
                 modifier = Modifier.align(Alignment.Center)
             )
         }

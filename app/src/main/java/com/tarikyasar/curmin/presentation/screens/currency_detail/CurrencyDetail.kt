@@ -7,7 +7,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.rememberUpdatedState
@@ -26,6 +29,7 @@ import com.tarikyasar.curmin.common.DatesInMs
 import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
 import com.tarikyasar.curmin.presentation.composable.CurminErrorDialog
 import com.tarikyasar.curmin.presentation.composable.CurminTopBar
+import com.tarikyasar.curmin.presentation.composable.LoadingAnimation
 import com.tarikyasar.curmin.presentation.screens.currency_detail.composable.RefreshInformationSection
 import com.tarikyasar.curmin.presentation.screens.currency_detail.composable.chart.LineChart
 import com.tarikyasar.curmin.presentation.screens.currency_detail.composable.conversion.CurrencyConversionSection
@@ -120,7 +124,7 @@ fun CurrencyDetail(
         }
 
         if (state.isLoading) {
-            CircularProgressIndicator(
+            LoadingAnimation(
                 modifier = Modifier.align(Alignment.Center)
             )
         }

@@ -8,10 +8,10 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -19,8 +19,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.tarikyasar.curmin.R
-import com.tarikyasar.curmin.presentation.ui.theme.DialogErrorColor
-import com.tarikyasar.curmin.presentation.ui.theme.DialogWarningColor
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -82,18 +80,15 @@ fun CurminWarningDialog(
             ) {
                 Scaffold(
                     topBar = {
-                        Column(
+                        Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 10.dp)
                         ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_warning),
-                                contentDescription = "Dialog icon warning",
-                                tint = DialogWarningColor,
+                            WarningAnimation(
                                 modifier = Modifier
                                     .size(120.dp)
-                                    .align(CenterHorizontally)
+                                    .align(TopCenter)
                             )
                         }
                     },
@@ -193,18 +188,15 @@ fun CurminErrorDialog(
             ) {
                 Scaffold(
                     topBar = {
-                        Column(
+                        Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 10.dp)
                         ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_error),
-                                contentDescription = "Dialog icon error",
-                                tint = DialogErrorColor,
+                            ErrorAnimation(
                                 modifier = Modifier
                                     .size(120.dp)
-                                    .align(CenterHorizontally),
+                                    .align(TopCenter)
                             )
                         }
                     },
