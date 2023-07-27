@@ -2,7 +2,7 @@ package com.tarikyasar.curmin.di
 
 import android.content.Context
 import androidx.room.Room
-import com.tarikyasar.curmin.common.Constants
+import com.tarikyasar.curmin.utils.Constants
 import com.tarikyasar.curmin.data.database.AppDatabase
 import com.tarikyasar.curmin.data.remote.CurrencyApi
 import com.tarikyasar.curmin.data.repository.currency.CurrencyRepositoryImpl

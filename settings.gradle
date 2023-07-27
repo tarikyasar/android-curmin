@@ -14,3 +14,7 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Curmin"
 include ':app'
+include ':data'
+include ':domain'
+include ':presentation'
+include ':utils'

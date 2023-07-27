@@ -1,14 +1,34 @@
 buildscript {
     ext {
-        compose_version = '1.0.1'
-        preference_version = '1.1.1'
-        appcompat_version = '1.3.0'
-        room_version = "2.4.3"
-        swiperefresh_version = "0.23.0"
-        navigation_version = "2.5.2"
-        nav_animation_version = "0.24.4-alpha"
+        compose = '1.4.3'
+
+        preference = '1.2.0'
+
+        appcompat = '1.3.0'
+
+        room = "2.5.2"
+
+        swipeRefresh = "0.30.0"
+
+        navigation = "2.6.0"
+
+        nav_animation = "0.24.4-alpha"
+
         lottie = "5.2.0"
+
+        retrofit = "2.9.0"
+
+        reflect = "1.7.21"
+
+        dagger = "2.45"
+
+        splashScreen = "1.0.1"
+
+        material = "1.9.0"
+
+        ktx = "1.10.1"
     }
+
     repositories {
         google()
         mavenCentral()
@@ -16,7 +36,7 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:7.2.2"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.0"
-        classpath "com.google.dagger:hilt-android-gradle-plugin:2.38.1"
+        classpath "com.google.dagger:hilt-android-gradle-plugin:2.45"
         classpath 'com.google.gms:google-services:4.3.13'
     }
 }
