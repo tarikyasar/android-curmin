@@ -14,17 +14,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.tarikyasar.curmin.domain.model.Themes
 import com.tarikyasar.curmin.presentation.R
 import com.tarikyasar.curmin.presentation.composable.CurminDialog
 import com.tarikyasar.curmin.presentation.composable.CurminDropdown
+import com.tarikyasar.curmin.presentation.ui.base.curminViewModel
 import com.tarikyasar.curmin.presentation.ui.theme.CurrencyTextColor
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SettingsDialog(
-    viewModel: SettingsDialogViewModel = hiltViewModel(),
+    viewModel: SettingsDialogViewModel = curminViewModel(),
     showSettingsDialog: Boolean,
     onDismissRequest: () -> Unit,
 ) {

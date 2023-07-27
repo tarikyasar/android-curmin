@@ -13,17 +13,21 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
 import com.tarikyasar.curmin.domain.model.Themes
-import com.tarikyasar.curmin.presentation.manager.PreferenceManager
-import com.tarikyasar.curmin.presentation.manager.ThemeManager
+import com.tarikyasar.curmin.presentation.composable.LoadingAnimation
 import com.tarikyasar.curmin.presentation.ui.navigation.Navigations
-import com.tarikyasar.curmin.presentation.ui.screens.currency_detail.CurrencyDetail
-import com.tarikyasar.curmin.presentation.ui.screens.currency_watchlist.CurrencyWatchlist
+import com.tarikyasar.curmin.presentation.ui.screens.currency.detail.CurrencyDetail
+import com.tarikyasar.curmin.presentation.ui.screens.currency.watchlist.CurrencyWatchlist
 import com.tarikyasar.curmin.presentation.ui.theme.CurminTheme
+import com.tarikyasar.curmin.presentation.ui.utils.LoadingManager
+import com.tarikyasar.curmin.presentation.ui.utils.PreferenceManager
+import com.tarikyasar.curmin.presentation.ui.utils.ThemeManager
 import com.tarikyasar.curmin.utils.fromJson
 import com.tarikyasar.curmin.utils.toJson
 
@@ -32,10 +36,12 @@ import com.tarikyasar.curmin.utils.toJson
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun CurminApp(
+    loadingManager: LoadingManager,
     themeManager: ThemeManager,
     preferenceManager: PreferenceManager
 ) {
     val appState = rememberCurminAppState(
+        loadingManager = loadingManager,
         themeManager = themeManager,
         preferenceManager = preferenceManager
     )
@@ -66,7 +72,9 @@ fun CurminApp(
                 popExitTransition = {
                     slideOutHorizontally(targetOffsetX = { offSetX }, animationSpec = springSpec)
                 },
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .blur(radius = if (appState.showLoading) 50.dp else 0.dp)
             ) {
                 composable(
                     Navigations.CurrencyWatchlistNavigation.ROUTE,
@@ -92,6 +100,12 @@ fun CurminApp(
                             ?.fromJson(CurrencyWatchlistItemData::class.java)
                     )
                 }
+            }
+
+            if (appState.showLoading) {
+                LoadingAnimation(
+                    modifier = Modifier.align(Alignment.Center)
+                )
             }
         }
     }

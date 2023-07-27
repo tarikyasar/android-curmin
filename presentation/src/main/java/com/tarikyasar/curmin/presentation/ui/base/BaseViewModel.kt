@@ -2,8 +2,10 @@ package com.tarikyasar.curmin.presentation.ui.base
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tarikyasar.curmin.presentation.ui.utils.LoadingManager
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -12,14 +14,22 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+
+@Composable
+inline fun <reified VM : BaseViewModel<*, *, *>> curminViewModel(
+    initByDefault: Boolean = true
+): VM = hiltViewModel<VM>().also {
+    if (initByDefault) it.initialize()
+}
 
 abstract class BaseViewModel<UiState, Intent, Event>(initState: UiState) : ViewModel(),
     CoroutinesUseCaseRunner {
 
-//    @Inject
-//    lateinit var loadingManager: LoadingManager
-//
+    @Inject
+    lateinit var loadingManager: LoadingManager
+
 //    @Inject
 //    lateinit var errorManager: ErrorManager
 
@@ -52,7 +62,7 @@ abstract class BaseViewModel<UiState, Intent, Event>(initState: UiState) : ViewM
 
     private var loadingCount: Int = 0
         set(value) {
-//            loadingManager.setLoading(value > 0)
+            loadingManager.setLoading(value > 0)
             field = value
         }
 
