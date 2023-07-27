@@ -1,6 +1,5 @@
 package com.tarikyasar.curmin.presentation.ui.screens.settings_dialog
 
-import com.tarikyasar.curmin.domain.model.Themes
 import com.tarikyasar.curmin.presentation.ui.base.BaseViewModel
 import com.tarikyasar.curmin.presentation.ui.screens.settings_dialog.SettingsDialogContract.Event
 import com.tarikyasar.curmin.presentation.ui.screens.settings_dialog.SettingsDialogContract.Intent
@@ -14,32 +13,12 @@ import javax.inject.Inject
 class SettingsDialogViewModel @Inject constructor(
     private val themeManager: ThemeManager,
     private val preferenceManager: PreferenceManager
-) : BaseViewModel<UiState, Intent, Event>(UiState()) {
-
-    override fun onFirstLaunch() {
-        super.onFirstLaunch()
-
-        getTheme()
-        getAskToRemoveItemParameter()
-    }
-
-    fun setTheme(themes: Themes) {
-        themeManager.setTheme(themes)
-    }
-
-    fun getTheme() {
-        updateUiState {
-            copy(themes = themeManager.getTheme())
-        }
-    }
-
-    fun getAskToRemoveItemParameter() {
-        updateUiState {
-            copy(
-                askToRemoveItemParameter = preferenceManager.getPreference()
-            )
-        }
-    }
+) : BaseViewModel<UiState, Intent, Event>(
+    UiState(
+        themes = themeManager.getTheme(),
+        askToRemoveItemParameter = preferenceManager.getPreference()
+    )
+) {
 
     fun setAskToRemoveItemParameter(askToRemoveItemParameter: Boolean) {
         preferenceManager.setPreference(askToRemoveItemParameter = askToRemoveItemParameter)
@@ -51,5 +30,26 @@ class SettingsDialogViewModel @Inject constructor(
     }
 
     override fun onIntent(intent: Intent) {
+        when (intent) {
+            Intent.GetTheme -> {
+                updateUiState {
+                    copy(themes = themeManager.getTheme())
+                }
+            }
+
+            Intent.GetAskToRemoveItemParameter -> {
+                updateUiState {
+                    copy(askToRemoveItemParameter = preferenceManager.getPreference())
+                }
+            }
+
+            is Intent.SetTheme -> {
+                themeManager.setTheme(intent.themes)
+            }
+
+            is Intent.SetAskToRemoveItemParameter -> {
+                preferenceManager.setPreference(intent.value)
+            }
+        }
     }
 }

@@ -13,7 +13,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +27,7 @@ import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
 import com.tarikyasar.curmin.presentation.composable.CurminErrorDialog
 import com.tarikyasar.curmin.presentation.composable.CurminTopBar
 import com.tarikyasar.curmin.presentation.ui.base.curminViewModel
+import com.tarikyasar.curmin.presentation.ui.screens.currency.detail.CurrencyDetailContract.*
 import com.tarikyasar.curmin.presentation.ui.screens.currency.detail.composable.RefreshInformationSection
 import com.tarikyasar.curmin.presentation.ui.screens.currency.detail.composable.chart.LineChart
 import com.tarikyasar.curmin.presentation.ui.screens.currency.detail.composable.conversion.CurrencyConversionSection
@@ -43,18 +43,20 @@ fun CurrencyDetail(
     currency: CurrencyWatchlistItemData?,
     viewModel: CurrencyDetailViewModel = curminViewModel()
 ) {
-    val uiState = viewModel.uiState.collectAsState().value
+    val (uiState, onIntent, _) = viewModel
 
     OnLifecycleEvent { _, event ->
         when (event) {
             Lifecycle.Event.ON_RESUME -> {
                 val today = System.currentTimeMillis()
 
-                viewModel.getCurrencyTimeSeries(
-                    startDate = DateUtils.formatTime(today.minus(DatesInMs.WEEK.value)),
-                    endDate = DateUtils.formatTime(today),
-                    baseCurrencyCode = currency?.baseCurrencyCode.orEmpty(),
-                    targetCurrencyCode = currency?.targetCurrencyCode.orEmpty()
+                onIntent(
+                    Intent.GetCurrencyTimeSeries(
+                        startDate = DateUtils.formatTime(today.minus(DatesInMs.WEEK.value)),
+                        endDate = DateUtils.formatTime(today),
+                        baseCurrencyCode = currency?.baseCurrencyCode.orEmpty(),
+                        targetCurrencyCode = currency?.targetCurrencyCode.orEmpty()
+                    )
                 )
             }
             else -> Unit
@@ -87,26 +89,15 @@ fun CurrencyDetail(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colors.background)
-//                .blur(if (uiState.isLoading) 50.dp else 0.dp),
         ) {
             Box(
                 modifier = Modifier.fillMaxHeight(),
                 contentAlignment = Alignment.TopCenter
             ) {
                 CurrencyDetailContent(
-                    baseCurrency = currency?.baseCurrencyCode,
-                    targetCurrency = currency?.targetCurrencyCode,
-                    date = currency?.date,
-                    rate = currency?.rate?.toString(),
-                    rates = uiState.currencyRates?.rates.orEmpty(),
-                    onDateSelect = { startDate, endDate ->
-                        viewModel.getCurrencyTimeSeries(
-                            startDate = startDate,
-                            endDate = endDate,
-                            baseCurrencyCode = currency?.baseCurrencyCode ?: "USD",
-                            targetCurrencyCode = currency?.targetCurrencyCode ?: "TRY"
-                        )
-                    }
+                    currency = currency,
+                    uiState = uiState,
+                    onIntent = onIntent
                 )
 
                 CurminErrorDialog(
@@ -127,12 +118,9 @@ fun CurrencyDetail(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CurrencyDetailContent(
-    baseCurrency: String?,
-    targetCurrency: String?,
-    date: String?,
-    rate: String?,
-    rates: List<Pair<Int, Double>>,
-    onDateSelect: (startDate: String, endDate: String) -> Unit
+    currency: CurrencyWatchlistItemData?,
+    uiState: UiState,
+    onIntent: (Intent) -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -142,7 +130,7 @@ fun CurrencyDetailContent(
     ) {
         Divider()
 
-        RefreshInformationSection(time = date ?: "")
+        RefreshInformationSection(time = currency?.date.orEmpty())
 
         Divider()
 
@@ -150,13 +138,20 @@ fun CurrencyDetailContent(
 
         CurrencyDateDropdown(
             onDateSelect = { startDate, endDate ->
-                onDateSelect(startDate, endDate)
+                onIntent(
+                    Intent.GetCurrencyTimeSeries(
+                        startDate = startDate,
+                        endDate = endDate,
+                        baseCurrencyCode = currency?.baseCurrencyCode.orEmpty(),
+                        targetCurrencyCode = currency?.targetCurrencyCode.orEmpty()
+                    )
+                )
             }
         )
 
         Spacer(Modifier.height(16.dp))
 
-        if (rates.isNotEmpty()) {
+        uiState.currencyRates?.rates?.let { rates ->
             LineChart(
                 data = rates,
                 modifier = Modifier
@@ -168,9 +163,9 @@ fun CurrencyDetailContent(
         Spacer(Modifier.height(16.dp))
 
         CurrencyConversionSection(
-            baseCurrency = baseCurrency ?: "",
-            targetCurrency = targetCurrency ?: "",
-            currencyRate = rate?.toDouble() ?: 0.0
+            baseCurrency = currency?.baseCurrencyCode.orEmpty(),
+            targetCurrency = currency?.targetCurrencyCode.orEmpty(),
+            currencyRate = currency?.rate ?: 0.0
         )
     }
 }

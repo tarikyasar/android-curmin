@@ -19,6 +19,7 @@ import com.tarikyasar.curmin.presentation.R
 import com.tarikyasar.curmin.presentation.composable.CurminDialog
 import com.tarikyasar.curmin.presentation.composable.CurminDropdown
 import com.tarikyasar.curmin.presentation.ui.base.curminViewModel
+import com.tarikyasar.curmin.presentation.ui.screens.settings_dialog.SettingsDialogContract.*
 import com.tarikyasar.curmin.presentation.ui.theme.CurrencyTextColor
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -28,13 +29,13 @@ fun SettingsDialog(
     showSettingsDialog: Boolean,
     onDismissRequest: () -> Unit,
 ) {
-    val uiState = viewModel.uiState.collectAsState().value
+    val (uiState, onIntent, _) = viewModel
 
     if (showSettingsDialog) {
         CurminDialog(
             onDismissRequest = {
-                viewModel.getTheme()
-                viewModel.getAskToRemoveItemParameter()
+                onIntent(Intent.GetTheme)
+                onIntent(Intent.GetAskToRemoveItemParameter)
                 onDismissRequest()
             }
         ) {
@@ -67,8 +68,6 @@ fun SettingsDialog(
                                     .size(30.dp)
                                     .clickable {
                                         onDismissRequest()
-                                        viewModel.getTheme()
-                                        viewModel.getAskToRemoveItemParameter()
                                     }
                             )
                         }
@@ -79,10 +78,9 @@ fun SettingsDialog(
                     ) {
                         Column {
                             ThemeSetting(
-                                themes = uiState.themes,
-                                onSelectTheme = { themes ->
-                                    viewModel.setTheme(themes)
-                                })
+                                uiState = uiState,
+                                onIntent = onIntent
+                            )
 
                             Divider()
 
@@ -97,7 +95,7 @@ fun SettingsDialog(
                         }
 
                         Text(
-                            text = "Curmin",
+                            text = stringResource(id = R.string.app_name),
                             textAlign = TextAlign.Center,
                             color = CurrencyTextColor,
                             fontSize = 18.sp,
@@ -114,11 +112,10 @@ fun SettingsDialog(
 
 @Composable
 fun ThemeSetting(
-    themes: Themes?,
-    onSelectTheme: (Themes) -> Unit
+    uiState: UiState,
+    onIntent: (Intent) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var themeState by remember { mutableStateOf(themes) }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -132,13 +129,12 @@ fun ThemeSetting(
         CurminDropdown(
             expanded = expanded,
             onExpandedChangeRequest = { expanded = it },
-            selectedItemText = themeState?.getThemeName() ?: Themes.SYSTEM_THEME.getThemeName()
+            selectedItemText = uiState.themes?.getThemeName() ?: Themes.SYSTEM_THEME.getThemeName()
         ) {
             Themes.values().forEach { theme ->
                 DropdownMenuItem(onClick = {
-                    themeState = theme
                     expanded = false
-                    onSelectTheme(theme)
+                    onIntent(Intent.SetTheme(theme))
                 }) {
                     Text(text = theme.getThemeName())
                 }

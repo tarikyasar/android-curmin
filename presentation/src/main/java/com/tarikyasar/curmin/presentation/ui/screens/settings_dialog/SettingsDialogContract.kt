@@ -13,7 +13,15 @@ interface SettingsDialogContract {
         val askToRemoveItemParameter: Boolean? = null
     )
 
-    sealed class Intent
+    sealed class Intent {
+        object GetTheme : Intent()
+
+        object GetAskToRemoveItemParameter : Intent()
+
+        data class SetTheme(val themes: Themes) : Intent()
+
+        data class SetAskToRemoveItemParameter(val value: Boolean) : Intent()
+    }
 
     sealed class Event
 }

@@ -24,6 +24,7 @@ import com.tarikyasar.curmin.presentation.composable.CurminErrorDialog
 import com.tarikyasar.curmin.presentation.composable.EmptyComposable
 import com.tarikyasar.curmin.presentation.composable.SwipeableCurrencyWatchlistItem
 import com.tarikyasar.curmin.presentation.ui.base.curminViewModel
+import com.tarikyasar.curmin.presentation.ui.screens.currency.watchlist.CurrencyWatchlistContract.*
 import com.tarikyasar.curmin.presentation.ui.screens.currency.watchlist.composable.CurrencyWatchlistTopBar
 import com.tarikyasar.curmin.presentation.ui.screens.currency.watchlist.composable.dialog.DeleteWatchlistItemDialog
 import com.tarikyasar.curmin.presentation.ui.screens.currency.watchlist.composable.dialog.add.AddToWatchlistDialog
@@ -37,7 +38,7 @@ fun CurrencyWatchlist(
     viewModel: CurrencyWatchlistViewModel = curminViewModel(),
     onNavigateToCurrencyDetail: (currency: CurrencyWatchlistItemData) -> Unit
 ) {
-    val uiState = viewModel.uiState.collectAsState().value
+    val (uiState, onIntent, _) = viewModel
     var showDeleteWatchlistItemDialog by remember { mutableStateOf(false) }
     var showAddToWatchlistDialog by remember { mutableStateOf(false) }
     var showSettingsDialog by remember { mutableStateOf(false) }
@@ -72,15 +73,15 @@ fun CurrencyWatchlist(
                 contentAlignment = Alignment.TopCenter
             ) {
                 CurrencyWatchlistContent(
-                    currencies = uiState.currencies,
-                    getCurrencies = { viewModel.getCurrencies(true) },
+                    uiState = uiState,
+                    onIntent = onIntent,
                     onDelete = {
                         deleteItem = it
 
                         if (uiState.askToRemoveItemParameter == true) {
                             showDeleteWatchlistItemDialog = true
                         } else {
-                            viewModel.deleteCurrency(deleteItem.uid)
+                            onIntent(Intent.DeleteCurrencyWatchlistItem(deleteItem.uid))
                         }
                     },
                     swipeRefreshState = swipeRefreshState,
@@ -94,7 +95,7 @@ fun CurrencyWatchlist(
                     showSettingsDialog = showSettingsDialog,
                     onDismissRequest = {
                         showSettingsDialog = false
-                        viewModel.getAskToRemoveItemParameter()
+                        onIntent(Intent.GetAskToRemoveItemParameter)
                     }
                 )
 
@@ -102,9 +103,11 @@ fun CurrencyWatchlist(
                     showCreateWatchlistItemDialog = showAddToWatchlistDialog,
                     onDismissRequest = { showAddToWatchlistDialog = false },
                     onPositiveButtonClick = { baseCurrency, targetCurrency ->
-                        viewModel.createCurrencyWatchlistItem(
-                            baseCurrencyCode = baseCurrency,
-                            targetCurrencyCode = targetCurrency
+                        onIntent(
+                            Intent.CreateCurrencyWatchlistItem(
+                                baseCurrencyCode = baseCurrency,
+                                targetCurrencyCode = targetCurrency
+                            )
                         )
                     },
                     currencyList = uiState.symbols
@@ -116,7 +119,7 @@ fun CurrencyWatchlist(
                         showDeleteWatchlistItemDialog = false
                     },
                     onPositiveButtonClick = {
-                        viewModel.deleteCurrency(deleteItem.uid)
+                        onIntent(Intent.DeleteCurrencyWatchlistItem(deleteItem.uid))
                     },
                     onNegativeButtonClick = { showDeleteWatchlistItemDialog = false },
                     baseCurrency = deleteItem.baseCurrencyCode ?: "",
@@ -141,8 +144,8 @@ fun CurrencyWatchlist(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CurrencyWatchlistContent(
-    currencies: List<CurrencyWatchlistItemData>,
-    getCurrencies: () -> Unit,
+    uiState: UiState,
+    onIntent: (Intent) -> Unit,
     onDelete: (currency: CurrencyWatchlistItemData) -> Unit,
     swipeRefreshState: SwipeRefreshState,
     onNavigateToCurrencyDetail: (currency: CurrencyWatchlistItemData) -> Unit,
@@ -153,11 +156,11 @@ fun CurrencyWatchlistContent(
         modifier = Modifier
             .fillMaxHeight()
     ) {
-        if (currencies.isNotEmpty()) {
+        if (uiState.currencies.isNotEmpty()) {
             SwipeRefresh(
                 state = swipeRefreshState,
                 onRefresh = {
-                    getCurrencies()
+                    onIntent(Intent.GetCurrencies(true))
                 }
             ) {
                 LazyColumn(
@@ -168,7 +171,7 @@ fun CurrencyWatchlistContent(
                         .fillMaxHeight()
                         .animateContentSize()
                 ) {
-                    items(currencies) { currency ->
+                    items(uiState.currencies) { currency ->
                         SwipeableCurrencyWatchlistItem(
                             base = currency.baseCurrencyCode ?: "",
                             target = currency.targetCurrencyCode ?: "",

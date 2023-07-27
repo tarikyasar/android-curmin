@@ -13,29 +13,24 @@ class CurrencyDetailViewModel @Inject constructor(
     private val getCurrencyTimeSeriesUseCase: GetCurrencyTimeSeriesUseCase
 ) : BaseViewModel<UiState, Intent, Event>(UiState()) {
 
-    fun getCurrencyTimeSeries(
-        startDate: String,
-        endDate: String,
-        baseCurrencyCode: String,
-        targetCurrencyCode: String
-    ) {
-        withUseCaseScope {
-            val currencyTimeSeries = getCurrencyTimeSeriesUseCase(
-                startDate = startDate,
-                endDate = endDate,
-                baseCurrencyCode = baseCurrencyCode,
-                targetCurrencyCode = targetCurrencyCode
-            )
+    override fun onIntent(intent: Intent) {
+        when (intent) {
+            is Intent.GetCurrencyTimeSeries -> {
+                withUseCaseScope {
+                    val currencyTimeSeries = getCurrencyTimeSeriesUseCase(
+                        startDate = intent.startDate,
+                        endDate = intent.endDate,
+                        baseCurrencyCode = intent.baseCurrencyCode,
+                        targetCurrencyCode = intent.targetCurrencyCode
+                    )
 
-            updateUiState {
-                copy(
-                    currencyRates = currencyTimeSeries
-                )
+                    updateUiState {
+                        copy(
+                            currencyRates = currencyTimeSeries
+                        )
+                    }
+                }
             }
         }
-    }
-
-    override fun onIntent(intent: Intent) {
-        TODO("Not yet implemented")
     }
 }

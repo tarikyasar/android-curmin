@@ -7,12 +7,39 @@ import com.tarikyasar.curmin.domain.model.Symbol
 interface CurrencyWatchlistContract {
     data class UiState(
         val error: CurminError? = null,
-        val currencies: MutableList<CurrencyWatchlistItemData> = mutableListOf(),
+        val currencies: List<CurrencyWatchlistItemData> = mutableListOf(),
         val symbols: List<Symbol> = emptyList(),
         val askToRemoveItemParameter: Boolean? = false
     )
 
-    sealed class Intent
+    sealed class Intent {
+        object GetSymbols : Intent()
+
+        object GetAskToRemoveItemParameter : Intent()
+
+        data class GetCurrencies(val forceRefresh: Boolean) : Intent()
+
+        data class DeleteCurrencyWatchlistItem(val currencyWatchlistItemUid: String) : Intent()
+
+        data class UpdateCurrencyWatchlistItemData(val currencyWatchlistItem: CurrencyWatchlistItemData) :
+            Intent()
+
+        data class InsertCurrencyWatchlistItem(val currencyWatchlistItem: CurrencyWatchlistItemData) :
+            Intent()
+
+        data class GetCurrencyFluctuation(
+            val startDate: String,
+            val endDate: String,
+            val baseCurrencyCode: String,
+            val targetCurrencyCode: String,
+            val currencyWatchlistItemData: CurrencyWatchlistItemData,
+        ) : Intent()
+
+        data class CreateCurrencyWatchlistItem(
+            val baseCurrencyCode: String,
+            val targetCurrencyCode: String
+        ) : Intent()
+    }
 
     sealed class Event
 }

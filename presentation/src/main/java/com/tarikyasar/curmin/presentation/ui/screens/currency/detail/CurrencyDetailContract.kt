@@ -9,7 +9,14 @@ interface CurrencyDetailContract {
         val currencyRates: CurrencyTimeSeries? = null
     )
 
-    sealed class Intent
+    sealed class Intent {
+        data class GetCurrencyTimeSeries(
+            val startDate: String,
+            val endDate: String,
+            val baseCurrencyCode: String,
+            val targetCurrencyCode: String
+        ) : Intent()
+    }
 
     sealed class Event
 }
