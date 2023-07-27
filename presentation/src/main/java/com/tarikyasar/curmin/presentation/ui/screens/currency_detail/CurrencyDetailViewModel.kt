@@ -1,23 +1,17 @@
 package com.tarikyasar.curmin.presentation.ui.screens.currency_detail
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.tarikyasar.curmin.domain.usecase.api.GetCurrencyTimeseriesUseCase
-import com.tarikyasar.curmin.domain.utils.Resource
+import com.tarikyasar.curmin.domain.usecase.api.GetCurrencyTimeSeriesUseCase
+import com.tarikyasar.curmin.presentation.ui.base.BaseViewModel
+import com.tarikyasar.curmin.presentation.ui.screens.currency_detail.CurrencyDetailContract.Event
+import com.tarikyasar.curmin.presentation.ui.screens.currency_detail.CurrencyDetailContract.Intent
+import com.tarikyasar.curmin.presentation.ui.screens.currency_detail.CurrencyDetailContract.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
 class CurrencyDetailViewModel @Inject constructor(
-    private val getCurrencyTimeseriesUseCase: GetCurrencyTimeseriesUseCase
-) : ViewModel() {
-
-    private val _state = mutableStateOf(CurrencyDetailState())
-    val state: State<CurrencyDetailState> = _state
+    private val getCurrencyTimeSeriesUseCase: GetCurrencyTimeSeriesUseCase
+) : BaseViewModel<UiState, Intent, Event>(UiState()) {
 
     fun getCurrencyTimeSeries(
         startDate: String,
@@ -25,35 +19,23 @@ class CurrencyDetailViewModel @Inject constructor(
         baseCurrencyCode: String,
         targetCurrencyCode: String
     ) {
-        getCurrencyTimeseriesUseCase(
-            startDate = startDate,
-            endDate = endDate,
-            baseCurrencyCode = baseCurrencyCode,
-            targetCurrencyCode = targetCurrencyCode
-        ).onEach { result ->
-            when (result) {
-                is Resource.Success -> {
-                    _state.value = _state.value.copy(
-                        isLoading = false,
-                        currencyRates = result.data?.rates ?: emptyList()
-                    )
-                }
-                is Resource.Error -> {
-                    _state.value = _state.value.copy(
-                        error = result.error,
-                        isLoading = false
-                    )
-                }
-                is Resource.Loading -> {
-                    _state.value = _state.value.copy(isLoading = true)
-                }
+        withUseCaseScope {
+            val currencyTimeSeries = getCurrencyTimeSeriesUseCase(
+                startDate = startDate,
+                endDate = endDate,
+                baseCurrencyCode = baseCurrencyCode,
+                targetCurrencyCode = targetCurrencyCode
+            )
+
+            updateUiState {
+                copy(
+                    currencyRates = currencyTimeSeries
+                )
             }
-        }.launchIn(viewModelScope)
+        }
     }
 
-    fun resetError() {
-        _state.value = _state.value.copy(
-            error = null
-        )
+    override fun onIntent(intent: Intent) {
+        TODO("Not yet implemented")
     }
 }

@@ -1,7 +1,6 @@
 package com.tarikyasar.curmin.data.remote.fluctuation
 
 import com.google.gson.annotations.SerializedName
-import com.tarikyasar.curmin.domain.model.fluctuation.CurrencyFluctuationRates
 import java.io.Serializable
 
 data class CurrencyFluctuationResponse(

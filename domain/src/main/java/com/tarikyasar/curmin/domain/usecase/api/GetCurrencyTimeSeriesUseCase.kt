@@ -1,10 +1,10 @@
 package com.tarikyasar.curmin.domain.usecase.api
 
-import com.tarikyasar.curmin.domain.model.timeseries.CurrencyTimeSeries
+import com.tarikyasar.curmin.domain.model.CurrencyTimeSeries
 import com.tarikyasar.curmin.domain.repository.CurrencyRepository
 import javax.inject.Inject
 
-class GetCurrencyTimeseriesUseCase @Inject constructor(
+class GetCurrencyTimeSeriesUseCase @Inject constructor(
     private val repository: CurrencyRepository
 ) {
 

@@ -1,11 +1,12 @@
 package com.tarikyasar.curmin.presentation.ui.screens.settings_dialog
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
 import com.tarikyasar.curmin.domain.model.Themes
-import com.tarikyasar.curmin.utils.manager.PreferenceManager
-import com.tarikyasar.curmin.utils.manager.ThemeManager
+import com.tarikyasar.curmin.presentation.manager.PreferenceManager
+import com.tarikyasar.curmin.presentation.manager.ThemeManager
+import com.tarikyasar.curmin.presentation.ui.base.BaseViewModel
+import com.tarikyasar.curmin.presentation.ui.screens.settings_dialog.SettingsDialogContract.Event
+import com.tarikyasar.curmin.presentation.ui.screens.settings_dialog.SettingsDialogContract.Intent
+import com.tarikyasar.curmin.presentation.ui.screens.settings_dialog.SettingsDialogContract.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -13,10 +14,7 @@ import javax.inject.Inject
 class SettingsDialogViewModel @Inject constructor(
     private val themeManager: ThemeManager,
     private val preferenceManager: PreferenceManager
-) : ViewModel() {
-
-    private var _state = mutableStateOf(SettingsDialogState())
-    val state: State<SettingsDialogState> = _state
+) : BaseViewModel<UiState, Intent, Event>(UiState()) {
 
     init {
         getTheme()
@@ -28,19 +26,28 @@ class SettingsDialogViewModel @Inject constructor(
     }
 
     fun getTheme() {
-        _state.value = _state.value.copy(themes = themeManager.getTheme())
+        updateUiState {
+            copy(themes = themeManager.getTheme())
+        }
     }
 
     fun getAskToRemoveItemParameter() {
-        _state.value = _state.value.copy(
-            askToRemoveItemParameter = preferenceManager.getPreference()
-        )
+        updateUiState {
+            copy(
+                askToRemoveItemParameter = preferenceManager.getPreference()
+            )
+        }
     }
 
     fun setAskToRemoveItemParameter(askToRemoveItemParameter: Boolean) {
         preferenceManager.setPreference(askToRemoveItemParameter = askToRemoveItemParameter)
-        _state.value = _state.value.copy(
-            askToRemoveItemParameter = askToRemoveItemParameter
-        )
+        updateUiState {
+            copy(
+                askToRemoveItemParameter = askToRemoveItemParameter
+            )
+        }
+    }
+
+    override fun onIntent(intent: Intent) {
     }
 }

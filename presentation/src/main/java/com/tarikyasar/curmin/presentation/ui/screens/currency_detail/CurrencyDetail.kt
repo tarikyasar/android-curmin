@@ -13,10 +13,10 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
@@ -44,7 +44,7 @@ fun CurrencyDetail(
     currency: CurrencyWatchlistItemData?,
     viewModel: CurrencyDetailViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state.value
+    val uiState = viewModel.uiState.collectAsState().value
 
     OnLifecycleEvent { _, event ->
         when (event) {
@@ -88,7 +88,7 @@ fun CurrencyDetail(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colors.background)
-                .blur(if (state.isLoading) 50.dp else 0.dp),
+//                .blur(if (uiState.isLoading) 50.dp else 0.dp),
         ) {
             Box(
                 modifier = Modifier.fillMaxHeight(),
@@ -99,7 +99,7 @@ fun CurrencyDetail(
                     targetCurrency = currency?.targetCurrencyCode,
                     date = currency?.date,
                     rate = currency?.rate?.toString(),
-                    rates = state.currencyRates.orEmpty(),
+                    rates = uiState.currencyRates?.rates.orEmpty(),
                     onDateSelect = { startDate, endDate ->
                         viewModel.getCurrencyTimeSeries(
                             startDate = startDate,
@@ -111,19 +111,19 @@ fun CurrencyDetail(
                 )
 
                 CurminErrorDialog(
-                    showErrorDialog = state.error != null,
+                    showErrorDialog = uiState.error != null,
                     onDismissRequest = {
-                        viewModel.resetError()
+//                        viewModel.resetError()
                     },
                     onPositiveButtonClick = {
-                        viewModel.resetError()
+//                        viewModel.resetError()
                     },
-                    errorMessage = state.error?.getErrorMessage() ?: ""
+                    errorMessage = ""
                 )
             }
         }
 
-        if (state.isLoading) {
+        if (uiState.isLoading) {
             LoadingAnimation(
                 modifier = Modifier.align(Alignment.Center)
             )

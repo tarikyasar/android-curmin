@@ -3,9 +3,7 @@ package com.tarikyasar.curmin.data.remote
 import com.tarikyasar.curmin.data.remote.currency.CurrencyConversionResponse
 import com.tarikyasar.curmin.data.remote.fluctuation.CurrencyFluctuationRatesResponse
 import com.tarikyasar.curmin.data.remote.timeseries.CurrencyTimeSeriesResponse
-import com.tarikyasar.curmin.domain.model.fluctuation.CurrencyFluctuationRates
 import com.tarikyasar.curmin.domain.model.symbol.CurrencySymbols
-import com.tarikyasar.curmin.domain.model.timeseries.CurrencyTimeSeries
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -22,7 +20,7 @@ interface CurrencyApi {
     ): CurrencyConversionResponse
 
     @GET("/exchangerates_data/timeseries")
-    suspend fun getCurrencyTimeseries(
+    suspend fun getCurrencyTimeSeries(
         @Query("start_date") startDate: String,
         @Query("end_date") endDate: String,
         @Query("base") baseCurrencyCode: String,

@@ -9,7 +9,6 @@ import javax.inject.Inject
 class GetCurrencySymbolsUseCase @Inject constructor(
     private val repository: CurrencyRepository
 ) {
-
     suspend operator fun invoke(): List<Symbol> {
         return SymbolListManager.symbols.ifEmpty {
             SymbolListManager.symbols = repository.getCurrencySymbols().toCurrencySymbol()

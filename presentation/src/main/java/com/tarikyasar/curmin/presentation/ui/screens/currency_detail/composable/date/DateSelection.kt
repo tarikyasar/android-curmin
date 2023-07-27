@@ -6,8 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.tarikyasar.curmin.presentation.R
-import com.tarikyasar.curmin.common.DatesInMs
 import com.tarikyasar.curmin.utils.DateUtils
+import com.tarikyasar.curmin.utils.DatesInMs
 
 enum class DateSelection {
     LAST_WEEK,

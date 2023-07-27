@@ -1,15 +1,7 @@
 package com.tarikyasar.curmin.domain.usecase.api
 
-import com.tarikyasar.curmin.domain.model.CurminError
-import com.tarikyasar.curmin.domain.model.CurminErrorType
-import com.tarikyasar.curmin.domain.model.currency.CurrencyConversion
-import com.tarikyasar.curmin.domain.model.fluctuation.CurrencyFluctuationRates
+import com.tarikyasar.curmin.domain.model.fluctuation.CurrencyFluctuation
 import com.tarikyasar.curmin.domain.repository.CurrencyRepository
-import com.tarikyasar.curmin.domain.utils.Resource
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import retrofit2.HttpException
-import java.io.IOException
 import javax.inject.Inject
 
 class GetCurrencyFluctuationUseCase @Inject constructor(
@@ -21,7 +13,7 @@ class GetCurrencyFluctuationUseCase @Inject constructor(
         endDate: String,
         baseCurrencyCode: String,
         targetCurrencyCode: String
-    ): CurrencyFluctuationRates {
+    ): CurrencyFluctuation {
         return repository.getCurrencyFluctuation(
             startDate = startDate,
             endDate = endDate,

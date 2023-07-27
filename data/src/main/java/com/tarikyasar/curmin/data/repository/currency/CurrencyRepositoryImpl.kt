@@ -2,12 +2,12 @@ package com.tarikyasar.curmin.data.repository.currency
 
 import com.tarikyasar.curmin.data.remote.CurrencyApi
 import com.tarikyasar.curmin.data.remote.currency.toDomain
-import com.tarikyasar.curmin.data.remote.fluctuation.toDomain
+import com.tarikyasar.curmin.data.remote.fluctuation.toCurrencyFluctuation
 import com.tarikyasar.curmin.data.remote.timeseries.toDomain
+import com.tarikyasar.curmin.domain.model.CurrencyTimeSeries
 import com.tarikyasar.curmin.domain.model.currency.CurrencyConversion
-import com.tarikyasar.curmin.domain.model.fluctuation.CurrencyFluctuationRates
+import com.tarikyasar.curmin.domain.model.fluctuation.CurrencyFluctuation
 import com.tarikyasar.curmin.domain.model.symbol.CurrencySymbols
-import com.tarikyasar.curmin.domain.model.timeseries.CurrencyTimeSeries
 import com.tarikyasar.curmin.domain.repository.CurrencyRepository
 import javax.inject.Inject
 
@@ -36,7 +36,7 @@ class CurrencyRepositoryImpl @Inject constructor(
         baseCurrencyCode: String,
         targetCurrencyCode: String
     ): CurrencyTimeSeries {
-        return api.getCurrencyTimeseries(
+        return api.getCurrencyTimeSeries(
             startDate = startDate,
             endDate = endDate,
             baseCurrencyCode = baseCurrencyCode,
@@ -49,13 +49,13 @@ class CurrencyRepositoryImpl @Inject constructor(
         endDate: String,
         baseCurrencyCode: String,
         targetCurrencyCode: String
-    ): CurrencyFluctuationRates {
+    ): CurrencyFluctuation {
         return api.getCurrencyFluctuation(
             startDate = startDate,
             endDate = endDate,
             baseCurrencyCode = baseCurrencyCode,
             targetCurrencyCode = targetCurrencyCode
-        ).toDomain()
+        ).toCurrencyFluctuation()
     }
 
 }

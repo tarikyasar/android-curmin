@@ -7,6 +7,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
@@ -19,16 +20,16 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshState
-import com.tarikyasar.curmin.presentation.R
 import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
+import com.tarikyasar.curmin.presentation.R
 import com.tarikyasar.curmin.presentation.composable.CurminErrorDialog
 import com.tarikyasar.curmin.presentation.composable.EmptyComposable
 import com.tarikyasar.curmin.presentation.composable.LoadingAnimation
 import com.tarikyasar.curmin.presentation.composable.SwipeableCurrencyWatchlistItem
-import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.CurrencyWatchlistTopBar
-import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.dialog.DeleteWatchlistItemDialog
-import com.tarikyasar.curmin.presentation.screens.currency_watchlist.composable.dialog.add.AddToWatchlistDialog
-import com.tarikyasar.curmin.presentation.screens.settings_dialog.SettingsDialog
+import com.tarikyasar.curmin.presentation.ui.screens.currency_watchlist.composable.CurrencyWatchlistTopBar
+import com.tarikyasar.curmin.presentation.ui.screens.currency_watchlist.composable.dialog.DeleteWatchlistItemDialog
+import com.tarikyasar.curmin.presentation.ui.screens.currency_watchlist.composable.dialog.add.AddToWatchlistDialog
+import com.tarikyasar.curmin.presentation.ui.screens.settings_dialog.SettingsDialog
 import com.tarikyasar.curmin.presentation.ui.theme.CurrencyDownColor
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -38,7 +39,7 @@ fun CurrencyWatchlist(
     viewModel: CurrencyWatchlistViewModel = hiltViewModel(),
     onNavigateToCurrencyDetail: (currency: CurrencyWatchlistItemData) -> Unit
 ) {
-    val state = viewModel.state.value
+    val uiState = viewModel.uiState.collectAsState().value
     var showDeleteWatchlistItemDialog by remember { mutableStateOf(false) }
     var showAddToWatchlistDialog by remember { mutableStateOf(false) }
     var showSettingsDialog by remember { mutableStateOf(false) }
@@ -68,25 +69,25 @@ fun CurrencyWatchlist(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colors.background)
-                .blur(if (state.isLoading) 50.dp else 0.dp)
+                .blur(if (uiState.isLoading) 50.dp else 0.dp)
         ) {
             Box(
                 modifier = Modifier.fillMaxHeight(),
                 contentAlignment = Alignment.TopCenter
             ) {
                 CurrencyWatchlistContent(
-                    currencies = state.currencies,
+                    currencies = uiState.currencies,
                     getCurrencies = { viewModel.getCurrencies(true) },
                     onDelete = {
                         deleteItem = it
 
-                        if (state.askToRemoveItemParameter == true) {
+                        if (uiState.askToRemoveItemParameter == true) {
                             showDeleteWatchlistItemDialog = true
                         } else {
                             viewModel.deleteCurrency(deleteItem.uid)
                         }
                     },
-                    isLoading = state.isLoading,
+                    isLoading = uiState.isLoading,
                     swipeRefreshState = swipeRefreshState,
                     onNavigateToCurrencyDetail = { currency ->
                         onNavigateToCurrencyDetail(currency)
@@ -111,7 +112,7 @@ fun CurrencyWatchlist(
                             targetCurrencyCode = targetCurrency
                         )
                     },
-                    currencyList = state.symbols
+                    currencyList = uiState.symbols
                 )
 
                 DeleteWatchlistItemDialog(
@@ -128,19 +129,19 @@ fun CurrencyWatchlist(
                 )
 
                 CurminErrorDialog(
-                    showErrorDialog = state.error != null,
+                    showErrorDialog = uiState.error != null,
                     onDismissRequest = {
                         viewModel.resetError()
                     },
                     onPositiveButtonClick = {
                         viewModel.resetError()
                     },
-                    errorMessage = state.error?.getErrorMessage() ?: ""
+                    errorMessage = uiState.error?.getErrorMessage() ?: ""
                 )
             }
         }
 
-        if (state.isLoading) {
+        if (uiState.isLoading) {
             LoadingAnimation(
                 modifier = Modifier.align(Alignment.Center)
             )

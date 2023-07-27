@@ -1,9 +1,9 @@
 package com.tarikyasar.curmin.domain.repository
 
+import com.tarikyasar.curmin.domain.model.CurrencyTimeSeries
 import com.tarikyasar.curmin.domain.model.currency.CurrencyConversion
-import com.tarikyasar.curmin.domain.model.fluctuation.CurrencyFluctuationRates
+import com.tarikyasar.curmin.domain.model.fluctuation.CurrencyFluctuation
 import com.tarikyasar.curmin.domain.model.symbol.CurrencySymbols
-import com.tarikyasar.curmin.domain.model.timeseries.CurrencyTimeSeries
 
 interface CurrencyRepository {
 
@@ -27,5 +27,5 @@ interface CurrencyRepository {
         endDate: String,
         baseCurrencyCode: String,
         targetCurrencyCode: String
-    ): CurrencyFluctuationRates
+    ): CurrencyFluctuation
 }

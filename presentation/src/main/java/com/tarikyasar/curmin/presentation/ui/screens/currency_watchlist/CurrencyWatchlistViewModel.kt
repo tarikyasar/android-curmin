@@ -2,12 +2,6 @@ package com.tarikyasar.curmin.presentation.ui.screens.currency_watchlist
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.tarikyasar.curmin.common.DatesInMs
-import com.tarikyasar.curmin.common.Resource
 import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
 import com.tarikyasar.curmin.domain.usecase.api.GetCurrencyFluctuationUseCase
 import com.tarikyasar.curmin.domain.usecase.api.GetCurrencySymbolsUseCase
@@ -15,11 +9,12 @@ import com.tarikyasar.curmin.domain.usecase.database.DeleteCurrencyWatchlistItem
 import com.tarikyasar.curmin.domain.usecase.database.GetCurrencyWatchlistItemsUseCase
 import com.tarikyasar.curmin.domain.usecase.database.InsertCurrencyWatchlistItemUseCase
 import com.tarikyasar.curmin.domain.usecase.database.UpdateCurrencyWatchlistItemUseCase
+import com.tarikyasar.curmin.presentation.manager.PreferenceManager
+import com.tarikyasar.curmin.presentation.ui.base.BaseViewModel
+import com.tarikyasar.curmin.presentation.ui.screens.currency_watchlist.CurrencyWatchlistContract.*
 import com.tarikyasar.curmin.utils.DateUtils
-import com.tarikyasar.curmin.utils.manager.PreferenceManager
+import com.tarikyasar.curmin.utils.DatesInMs
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
@@ -34,10 +29,7 @@ class CurrencyWatchlistViewModel @Inject constructor(
     private val updateCurrencyWatchlistItemUseCase: UpdateCurrencyWatchlistItemUseCase,
     private val getCurrencySymbolsUseCase: GetCurrencySymbolsUseCase,
     private val getCurrencyFluctuationUseCase: GetCurrencyFluctuationUseCase
-) : ViewModel() {
-
-    private val _state = mutableStateOf(CurrencyWatchlistState())
-    val state: State<CurrencyWatchlistState> = _state
+) : BaseViewModel<UiState, Intent, Event>(UiState()) {
 
     init {
         getSymbols()
@@ -46,120 +38,81 @@ class CurrencyWatchlistViewModel @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun getCurrencies(refreshList: Boolean) {
-        getCurrencyWatchlistItems().onEach { result ->
-            when (result) {
-                is Resource.Success -> {
-                    if (refreshList) {
-                        _state.value.currencies.forEach { currencyWatchlistItemData ->
-                            val todayInMs = System.currentTimeMillis()
+        withUseCaseScope {
+            val currenciesWatchlistItems = getCurrencyWatchlistItems()
 
-                            getCurrencyFluctuation(
-                                startDate = DateUtils.formatTime(todayInMs - DatesInMs.DAY.value),
-                                endDate = DateUtils.formatTime(todayInMs),
-                                baseCurrencyCode = currencyWatchlistItemData.baseCurrencyCode
-                                    ?: "USD",
-                                targetCurrencyCode = currencyWatchlistItemData.targetCurrencyCode
-                                    ?: "TRY",
-                                currencyWatchlistItemData = currencyWatchlistItemData
-                            )
-                        }
-                    } else {
-                        _state.value =
-                            _state.value.copy(
-                                currencies = (result.data as MutableList<CurrencyWatchlistItemData>),
-                                isLoading = false
-                            )
-                    }
-                }
-                is Resource.Error -> {
-                    _state.value = _state.value.copy(
-                        error = result.error,
-                        isLoading = false
+            if (refreshList) {
+                currentUiState.currencies.forEach { currencyWatchlistItemData ->
+                    val todayInMs = System.currentTimeMillis()
+
+                    getCurrencyFluctuation(
+                        startDate = DateUtils.formatTime(todayInMs - DatesInMs.DAY.value),
+                        endDate = DateUtils.formatTime(todayInMs),
+                        baseCurrencyCode = currencyWatchlistItemData.baseCurrencyCode
+                            ?: "USD",
+                        targetCurrencyCode = currencyWatchlistItemData.targetCurrencyCode
+                            ?: "TRY",
+                        currencyWatchlistItemData = currencyWatchlistItemData
                     )
                 }
-                is Resource.Loading -> {
-                    _state.value = _state.value.copy(
-                        isLoading = true
-                    )
+            } else {
+                updateUiState {
+                    copy(currencies = currenciesWatchlistItems as MutableList<CurrencyWatchlistItemData>)
                 }
             }
-        }.launchIn(viewModelScope)
+        }
     }
 
     fun deleteCurrency(currencyWatchlistItemUid: String) {
-        deleteCurrencyWatchlistItemUseCase(currencyWatchlistItemUid).onEach { result ->
-            when (result) {
-                is Resource.Success -> {
-                    _state.value.currencies.remove(_state.value.currencies.find {
-                        it.uid == currencyWatchlistItemUid
-                    })
+        withUseCaseScope {
+            deleteCurrencyWatchlistItemUseCase(currencyWatchlistItemUid)
 
-                    _state.value = _state.value.copy(
-                        currencies = _state.value.currencies,
-                        isLoading = false
-                    )
+            currentUiState.currencies.remove(currentUiState.currencies.find {
+                it.uid == currencyWatchlistItemUid
+            })
 
-                }
-                is Resource.Error -> {
-                    _state.value = _state.value.copy(
-                        error = result.error,
-                        isLoading = false
-                    )
-                }
-                is Resource.Loading -> {
-                    _state.value = _state.value.copy(
-                        isLoading = true
-                    )
-                }
+            updateUiState {
+                copy(
+                    currencies = currentUiState.currencies,
+                    isLoading = false
+                )
             }
-        }.launchIn(viewModelScope)
+        }
     }
 
     fun createCurrencyWatchlistItem(
         baseCurrencyCode: String,
         targetCurrencyCode: String
     ) {
-        var newCurrencyWatchlistItem: CurrencyWatchlistItemData? = null
-        val todayInMs = System.currentTimeMillis()
+        withUseCaseScope {
+            val todayInMs = System.currentTimeMillis()
 
-        getCurrencyFluctuationUseCase(
-            startDate = DateUtils.formatTime(todayInMs - DatesInMs.DAY.value),
-            endDate = DateUtils.formatTime(todayInMs),
-            baseCurrencyCode = baseCurrencyCode,
-            targetCurrencyCode = targetCurrencyCode
-        ).onEach { result ->
-            when (result) {
-                is Resource.Success -> {
-                    newCurrencyWatchlistItem = CurrencyWatchlistItemData(
-                        uid = UUID.randomUUID().toString(),
-                        baseCurrencyCode = baseCurrencyCode,
-                        targetCurrencyCode = targetCurrencyCode,
-                        rate = result.data?.endRate ?: 0.0,
-                        date = DateUtils.formatTime(LocalDateTime.now()),
-                        change = result.data?.change
-                    )
+            val currencyFluctuation = getCurrencyFluctuationUseCase(
+                startDate = DateUtils.formatTime(todayInMs - DatesInMs.DAY.value),
+                endDate = DateUtils.formatTime(todayInMs),
+                baseCurrencyCode = baseCurrencyCode,
+                targetCurrencyCode = targetCurrencyCode
+            )
 
-                    insertCurrency(newCurrencyWatchlistItem!!)
-                }
-                is Resource.Error -> {
-                    _state.value = _state.value.copy(
-                        error = result.error,
-                        isLoading = false
-                    )
-                }
-                is Resource.Loading -> {
-                    _state.value = _state.value.copy(
-                        isLoading = true
-                    )
-                }
-            }
-        }.launchIn(viewModelScope)
+            insertCurrency(
+                CurrencyWatchlistItemData(
+                    uid = UUID.randomUUID().toString(),
+                    baseCurrencyCode = baseCurrencyCode,
+                    targetCurrencyCode = targetCurrencyCode,
+                    rate = currencyFluctuation?.endRate ?: 0.0,
+                    date = DateUtils.formatTime(LocalDateTime.now()),
+                    change = currencyFluctuation?.change
+                )
+            )
+        }
     }
 
     fun getAskToRemoveItemParameter() {
-        _state.value = _state.value.copy(
-            askToRemoveItemParameter = preferenceManager.getPreference()
-        )
+        updateUiState {
+            copy(
+                askToRemoveItemParameter = preferenceManager.getPreference()
+            )
+        }
     }
 
     private fun getCurrencyFluctuation(
@@ -169,118 +122,68 @@ class CurrencyWatchlistViewModel @Inject constructor(
         targetCurrencyCode: String,
         currencyWatchlistItemData: CurrencyWatchlistItemData,
     ) {
-        getCurrencyFluctuationUseCase(
-            startDate = startDate,
-            endDate = endDate,
-            baseCurrencyCode = baseCurrencyCode,
-            targetCurrencyCode = targetCurrencyCode
-        ).onEach { result ->
-            when (result) {
-                is Resource.Success -> {
-                    updateCurrencyWatchlistItemData(
-                        currencyWatchlistItemData.copy(
-                            rate = result.data?.endRate ?: 0.0,
-                            date = DateUtils.formatTime(LocalDateTime.now()),
-                            change = result.data?.change
-                        )
-                    )
-                    _state.value = _state.value.copy(
-                        isLoading = false
-                    )
-                }
-                is Resource.Error -> {
-                    _state.value = _state.value.copy(
-                        error = result.error,
-                        isLoading = false
-                    )
-                }
-                is Resource.Loading -> {
-                    _state.value = _state.value.copy(
-                        isLoading = true
-                    )
-                }
-            }
-        }.launchIn(viewModelScope)
+        withUseCaseScope {
+            val currencyFluctuations = getCurrencyFluctuationUseCase(
+                startDate = startDate,
+                endDate = endDate,
+                baseCurrencyCode = baseCurrencyCode,
+                targetCurrencyCode = targetCurrencyCode
+            )
+
+            updateCurrencyWatchlistItemData(
+                currencyWatchlistItemData.copy(
+                    rate = currencyFluctuations?.endRate ?: 0.0,
+                    date = DateUtils.formatTime(LocalDateTime.now()),
+                    change = currencyFluctuations?.change
+                )
+            )
+        }
     }
 
     private fun getSymbols() {
-        getCurrencySymbolsUseCase().onEach { result ->
-            when (result) {
-                is Resource.Success -> {
-                    _state.value = _state.value.copy(
-                        symbols = result.data ?: emptyList(),
-                        isLoading = false
-                    )
+        withUseCaseScope {
+            val symbols = getCurrencySymbolsUseCase()
 
-                    getCurrencies(refreshList = false)
-                }
-                is Resource.Error -> {
-                    _state.value = _state.value.copy(
-                        error = result.error,
-                        isLoading = false
-                    )
-                }
-                is Resource.Loading -> {
-                    _state.value = _state.value.copy(
-                        isLoading = true
-                    )
-                }
+            updateUiState {
+                copy(
+                    symbols = symbols
+                )
             }
-        }.launchIn(viewModelScope)
+
+            getCurrencies(refreshList = false)
+        }
     }
 
     private fun insertCurrency(currencyWatchlistItem: CurrencyWatchlistItemData) {
-        insertCurrencyWatchlistItemUseCase(currencyWatchlistItem).onEach { result ->
-            when (result) {
-                is Resource.Success -> {
-                    _state.value = _state.value.copy(
-                        currencies = (_state.value.currencies + currencyWatchlistItem) as MutableList<CurrencyWatchlistItemData>,
-                        isLoading = false
-                    )
-                }
-                is Resource.Error -> {
-                    _state.value = _state.value.copy(
-                        error = result.error,
-                        isLoading = false
-                    )
-                }
-                is Resource.Loading -> {
-                    _state.value = _state.value.copy(
-                        isLoading = true
-                    )
-                }
+        withUseCaseScope {
+            insertCurrencyWatchlistItemUseCase(currencyWatchlistItem)
+
+            updateUiState {
+                copy(
+                    currencies = (currentUiState.currencies + currencyWatchlistItem) as MutableList<CurrencyWatchlistItemData>,
+                    isLoading = false
+                )
             }
-        }.launchIn(viewModelScope)
+        }
     }
 
     private fun updateCurrencyWatchlistItemData(
         currencyWatchlistItem: CurrencyWatchlistItemData
     ) {
-        updateCurrencyWatchlistItemUseCase(
-            currencyWatchlistItem
-        ).onEach { result ->
-            when (result) {
-                is Resource.Success -> {
-                    getCurrencies(false)
-                }
-                is Resource.Error -> {
-                    _state.value = _state.value.copy(
-                        error = result.error,
-                        isLoading = false
-                    )
-                }
-                is Resource.Loading -> {
-                    _state.value = _state.value.copy(
-                        isLoading = true
-                    )
-                }
-            }
-        }.launchIn(viewModelScope)
+        withUseCaseScope {
+            updateCurrencyWatchlistItemUseCase(currencyWatchlistItem)
+
+            getCurrencies(false)
+        }
     }
 
     fun resetError() {
-        _state.value = _state.value.copy(
-            error = null
-        )
+        updateUiState {
+            copy(error = null)
+        }
+    }
+
+    override fun onIntent(intent: Intent) {
+        TODO("Not yet implemented")
     }
 }

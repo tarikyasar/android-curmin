@@ -15,9 +15,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.tarikyasar.curmin.BuildConfig
-import com.tarikyasar.curmin.presentation.R
 import com.tarikyasar.curmin.domain.model.Themes
+import com.tarikyasar.curmin.presentation.R
 import com.tarikyasar.curmin.presentation.composable.CurminDialog
 import com.tarikyasar.curmin.presentation.composable.CurminDropdown
 import com.tarikyasar.curmin.presentation.ui.theme.CurrencyTextColor
@@ -29,7 +28,7 @@ fun SettingsDialog(
     showSettingsDialog: Boolean,
     onDismissRequest: () -> Unit,
 ) {
-    val state = viewModel.state.value
+    val uiState = viewModel.uiState.collectAsState().value
 
     if (showSettingsDialog) {
         CurminDialog(
@@ -80,7 +79,7 @@ fun SettingsDialog(
                     ) {
                         Column {
                             ThemeSetting(
-                                themes = state.themes,
+                                themes = uiState.themes,
                                 onSelectTheme = { themes ->
                                     viewModel.setTheme(themes)
                                 })
@@ -88,7 +87,7 @@ fun SettingsDialog(
                             Divider()
 
                             AskToRemoveItemParameterSetting(
-                                askToRemoveItemParameter = state.askToRemoveItemParameter,
+                                askToRemoveItemParameter = uiState.askToRemoveItemParameter,
                                 onCheckboxChange = {
                                     viewModel.setAskToRemoveItemParameter(askToRemoveItemParameter = it)
                                 }
@@ -98,7 +97,7 @@ fun SettingsDialog(
                         }
 
                         Text(
-                            text = "Curmin - ${BuildConfig.VERSION_NAME}",
+                            text = "Curmin",
                             textAlign = TextAlign.Center,
                             color = CurrencyTextColor,
                             fontSize = 18.sp,

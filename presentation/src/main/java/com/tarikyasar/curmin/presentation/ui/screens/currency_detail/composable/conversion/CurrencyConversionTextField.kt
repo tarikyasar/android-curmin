@@ -1,7 +1,12 @@
 package com.tarikyasar.curmin.presentation.ui.screens.currency_detail.composable.conversion
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
@@ -12,9 +17,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import com.tarikyasar.curmin.common.Constants
 import com.tarikyasar.curmin.domain.SymbolListManager
 import com.tarikyasar.curmin.presentation.ui.theme.CurrencyTextColor
+import com.tarikyasar.curmin.utils.Constants
 import com.tarikyasar.curmin.utils.CurrencyUtils
 import com.tarikyasar.curmin.utils.insert
 
