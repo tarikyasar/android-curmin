@@ -93,7 +93,7 @@ class CurrencyWatchlistViewModel @Inject constructor(
                         }
                     } else {
                         updateUiState {
-                            copy(currencies = currenciesWatchlistItems as MutableList<CurrencyWatchlistItemData>)
+                            copy(currencies = currenciesWatchlistItems)
                         }
                     }
                 }

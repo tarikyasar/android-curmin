@@ -3,6 +3,7 @@ package com.tarikyasar.curmin.data.repository.currency
 import com.tarikyasar.curmin.data.remote.CurrencyApi
 import com.tarikyasar.curmin.data.remote.currency.toDomain
 import com.tarikyasar.curmin.data.remote.fluctuation.toCurrencyFluctuation
+import com.tarikyasar.curmin.data.remote.fluctuation.toDomain
 import com.tarikyasar.curmin.data.remote.timeseries.toDomain
 import com.tarikyasar.curmin.domain.model.CurrencyTimeSeries
 import com.tarikyasar.curmin.domain.model.currency.CurrencyConversion
@@ -55,7 +56,7 @@ class CurrencyRepositoryImpl @Inject constructor(
             endDate = endDate,
             baseCurrencyCode = baseCurrencyCode,
             targetCurrencyCode = targetCurrencyCode
-        ).toCurrencyFluctuation()
+        ).toCurrencyFluctuation().toDomain()
     }
 
 }
