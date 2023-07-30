@@ -18,12 +18,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshState
-import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.tarikyasar.curmin.domain.database.model.CurrencyWatchlistItemData
 import com.tarikyasar.curmin.presentation.R
 import com.tarikyasar.curmin.presentation.composable.CurminErrorDialog
 import com.tarikyasar.curmin.presentation.composable.EmptyComposable
 import com.tarikyasar.curmin.presentation.composable.SwipeableCurrencyWatchlistItem
 import com.tarikyasar.curmin.presentation.ui.base.curminViewModel
+import com.tarikyasar.curmin.presentation.ui.screens.currency.destinations.CurrencyDetailDestination
 import com.tarikyasar.curmin.presentation.ui.screens.currency.watchlist.CurrencyWatchlistContract.*
 import com.tarikyasar.curmin.presentation.ui.screens.currency.watchlist.composable.CurrencyWatchlistTopBar
 import com.tarikyasar.curmin.presentation.ui.screens.currency.watchlist.composable.dialog.DeleteWatchlistItemDialog
@@ -31,12 +35,14 @@ import com.tarikyasar.curmin.presentation.ui.screens.currency.watchlist.composab
 import com.tarikyasar.curmin.presentation.ui.screens.settings_dialog.SettingsDialog
 import com.tarikyasar.curmin.presentation.ui.theme.CurrencyDownColor
 
+@RootNavGraph(start = true) // sets this as the start destination of the default nav graph
+@Destination
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnrememberedMutableState", "UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun CurrencyWatchlist(
-    viewModel: CurrencyWatchlistViewModel = curminViewModel(),
-    onNavigateToCurrencyDetail: (currency: CurrencyWatchlistItemData) -> Unit
+    destinationsNavigator: DestinationsNavigator,
+    viewModel: CurrencyWatchlistViewModel = curminViewModel()
 ) {
     val (uiState, onIntent, _) = viewModel
     var showDeleteWatchlistItemDialog by remember { mutableStateOf(false) }
@@ -86,7 +92,7 @@ fun CurrencyWatchlist(
                     },
                     swipeRefreshState = swipeRefreshState,
                     onNavigateToCurrencyDetail = { currency ->
-                        onNavigateToCurrencyDetail(currency)
+                        destinationsNavigator.navigate(CurrencyDetailDestination.invoke(currency))
                     },
                     onAddItemClick = { showAddToWatchlistDialog = true }
                 )

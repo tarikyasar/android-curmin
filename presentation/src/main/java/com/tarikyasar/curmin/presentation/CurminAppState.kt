@@ -1,34 +1,32 @@
 package com.tarikyasar.curmin.presentation
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.runtime.*
-import androidx.navigation.NavHostController
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import com.tarikyasar.curmin.domain.model.Themes
-import com.tarikyasar.curmin.presentation.ui.navigation.Navigations
 import com.tarikyasar.curmin.presentation.ui.utils.LoadingManager
 import com.tarikyasar.curmin.presentation.ui.utils.PreferenceManager
 import com.tarikyasar.curmin.presentation.ui.utils.ThemeManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun rememberCurminAppState(
-    navController: NavHostController = rememberAnimatedNavController(),
     loadingManager: LoadingManager,
     themeManager: ThemeManager,
     preferenceManager: PreferenceManager,
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) = remember(
-    navController,
     loadingManager,
     themeManager,
     preferenceManager
 ) {
     CurminAppState(
-        navController = navController,
         loadingManager = loadingManager,
         themeManager = themeManager,
         preferenceManager = preferenceManager,
@@ -38,7 +36,6 @@ fun rememberCurminAppState(
 
 @Stable
 class CurminAppState(
-    val navController: NavHostController,
     val loadingManager: LoadingManager,
     val themeManager: ThemeManager,
     val preferenceManager: PreferenceManager,
@@ -80,7 +77,4 @@ class CurminAppState(
     private var _preference by mutableStateOf(true)
     val askToRemoveItemParameter: Boolean
         @Composable get() = _preference
-
-    // Navigation
-    val startDestination = Navigations.CurrencyWatchlistNavigation.ROUTE
 }

@@ -23,7 +23,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
-import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.tarikyasar.curmin.domain.database.model.CurrencyWatchlistItemData
 import com.tarikyasar.curmin.presentation.composable.CurminErrorDialog
 import com.tarikyasar.curmin.presentation.composable.CurminTopBar
 import com.tarikyasar.curmin.presentation.ui.base.curminViewModel
@@ -35,11 +37,12 @@ import com.tarikyasar.curmin.presentation.ui.screens.currency.detail.composable.
 import com.tarikyasar.curmin.utils.DateUtils
 import com.tarikyasar.curmin.utils.DatesInMs
 
+@Destination
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CurrencyDetail(
-    onNavigateBack: () -> Unit,
+    destinationsNavigator: DestinationsNavigator,
     currency: CurrencyWatchlistItemData?,
     viewModel: CurrencyDetailViewModel = curminViewModel()
 ) {
@@ -59,6 +62,7 @@ fun CurrencyDetail(
                     )
                 )
             }
+
             else -> Unit
         }
     }
@@ -76,7 +80,7 @@ fun CurrencyDetail(
                                 .size(32.dp)
                                 .clip(CircleShape)
                                 .clickable {
-                                    onNavigateBack()
+                                    destinationsNavigator.navigateUp()
                                 }
                         )
                     },

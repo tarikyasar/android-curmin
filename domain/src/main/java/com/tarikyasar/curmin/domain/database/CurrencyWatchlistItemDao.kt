@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
+import com.tarikyasar.curmin.domain.database.model.CurrencyWatchlistItemData
 
 @Dao
 interface CurrencyWatchlistItemDao {

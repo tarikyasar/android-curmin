@@ -2,7 +2,7 @@ package com.tarikyasar.curmin.domain.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
+import com.tarikyasar.curmin.domain.database.model.CurrencyWatchlistItemData
 
 @Database(entities = [CurrencyWatchlistItemData::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {

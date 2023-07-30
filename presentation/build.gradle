@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'com.google.devtools.ksp' version '1.8.10-1.0.9'
 }
 
 android {
@@ -31,7 +32,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion "1.2.0"
+        kotlinCompilerExtensionVersion "1.4.4"
     }
     kotlinOptions {
         jvmTarget = '1.8'
@@ -61,9 +62,6 @@ dependencies {
     // Lottie
     implementation "com.airbnb.android:lottie-compose:$lottie"
 
-    // Navigation
-    implementation "com.google.accompanist:accompanist-navigation-animation:$nav_animation"
-
     //Dagger - Hilt
     implementation "com.google.dagger:hilt-android:$dagger"
     kapt "com.google.dagger:hilt-android-compiler:$dagger"
@@ -72,4 +70,8 @@ dependencies {
 
     // Splash screen Api
     implementation "androidx.core:core-splashscreen:$splashScreen"
+
+    // Navigation
+    implementation "io.github.raamcosta.compose-destinations:core:$composeDestinations"
+    ksp "io.github.raamcosta.compose-destinations:ksp:$composeDestinations"
 }

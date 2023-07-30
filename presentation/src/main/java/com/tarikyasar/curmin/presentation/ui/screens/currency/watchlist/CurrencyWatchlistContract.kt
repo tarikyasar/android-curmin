@@ -1,6 +1,6 @@
 package com.tarikyasar.curmin.presentation.ui.screens.currency.watchlist
 
-import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
+import com.tarikyasar.curmin.domain.database.model.CurrencyWatchlistItemData
 import com.tarikyasar.curmin.domain.model.CurminError
 import com.tarikyasar.curmin.domain.model.Symbol
 

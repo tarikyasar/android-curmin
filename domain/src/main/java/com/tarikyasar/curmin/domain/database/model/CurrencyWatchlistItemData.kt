@@ -1,8 +1,9 @@
-package com.tarikyasar.curmin.data.database.model
+package com.tarikyasar.curmin.domain.database.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity
 data class CurrencyWatchlistItemData(
@@ -12,4 +13,4 @@ data class CurrencyWatchlistItemData(
     @ColumnInfo(name = "rate") val rate: Double?,
     @ColumnInfo(name = "date") val date: String?,
     @ColumnInfo(name = "change") val change: Double?
-)
+) : Serializable

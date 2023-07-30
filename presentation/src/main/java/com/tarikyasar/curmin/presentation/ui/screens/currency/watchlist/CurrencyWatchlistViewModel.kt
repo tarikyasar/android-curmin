@@ -2,7 +2,7 @@ package com.tarikyasar.curmin.presentation.ui.screens.currency.watchlist
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.tarikyasar.curmin.data.database.model.CurrencyWatchlistItemData
+import com.tarikyasar.curmin.domain.database.model.CurrencyWatchlistItemData
 import com.tarikyasar.curmin.domain.usecase.api.GetCurrencyFluctuationUseCase
 import com.tarikyasar.curmin.domain.usecase.api.GetCurrencySymbolsUseCase
 import com.tarikyasar.curmin.domain.usecase.database.DeleteCurrencyWatchlistItemUseCase
