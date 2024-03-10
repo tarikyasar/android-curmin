@@ -10,13 +10,15 @@ import com.tarikyasar.curmin.domain.usecase.database.GetCurrencyWatchlistItemsUs
 import com.tarikyasar.curmin.domain.usecase.database.InsertCurrencyWatchlistItemUseCase
 import com.tarikyasar.curmin.domain.usecase.database.UpdateCurrencyWatchlistItemUseCase
 import com.tarikyasar.curmin.presentation.ui.base.BaseViewModel
-import com.tarikyasar.curmin.presentation.ui.screens.currency.watchlist.CurrencyWatchlistContract.*
+import com.tarikyasar.curmin.presentation.ui.screens.currency.watchlist.CurrencyWatchlistContract.Event
+import com.tarikyasar.curmin.presentation.ui.screens.currency.watchlist.CurrencyWatchlistContract.Intent
+import com.tarikyasar.curmin.presentation.ui.screens.currency.watchlist.CurrencyWatchlistContract.UiState
 import com.tarikyasar.curmin.presentation.ui.utils.PreferenceManager
 import com.tarikyasar.curmin.utils.DateUtils
 import com.tarikyasar.curmin.utils.DatesInMs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDateTime
-import java.util.*
+import java.util.UUID
 import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -38,7 +40,9 @@ class CurrencyWatchlistViewModel @Inject constructor(
     override fun onFirstLaunch() {
         super.onFirstLaunch()
 
-        onIntent(Intent.GetSymbols)
+        withUseCaseScope {
+            getCurrencySymbols()
+        }
     }
 
     fun resetError() {
@@ -49,20 +53,6 @@ class CurrencyWatchlistViewModel @Inject constructor(
 
     override fun onIntent(intent: Intent) {
         when (intent) {
-            Intent.GetSymbols -> {
-                withUseCaseScope {
-                    val symbols = getCurrencySymbolsUseCase()
-
-                    updateUiState {
-                        copy(
-                            symbols = symbols
-                        )
-                    }
-
-                    onIntent(Intent.GetCurrencies(false))
-                }
-            }
-
             Intent.GetAskToRemoveItemParameter -> {
                 updateUiState {
                     copy(
@@ -73,29 +63,7 @@ class CurrencyWatchlistViewModel @Inject constructor(
 
             is Intent.GetCurrencies -> {
                 withUseCaseScope {
-                    val currenciesWatchlistItems = getCurrencyWatchlistItems()
-
-                    if (intent.forceRefresh) {
-                        currentUiState.currencies.forEach { currencyWatchlistItemData ->
-                            val todayInMs = System.currentTimeMillis()
-
-                            onIntent(
-                                Intent.GetCurrencyFluctuation(
-                                    startDate = DateUtils.formatTime(todayInMs - DatesInMs.DAY.value),
-                                    endDate = DateUtils.formatTime(todayInMs),
-                                    baseCurrencyCode = currencyWatchlistItemData.baseCurrencyCode
-                                        ?: "USD",
-                                    targetCurrencyCode = currencyWatchlistItemData.targetCurrencyCode
-                                        ?: "TRY",
-                                    currencyWatchlistItemData = currencyWatchlistItemData
-                                )
-                            )
-                        }
-                    } else {
-                        updateUiState {
-                            copy(currencies = currenciesWatchlistItems)
-                        }
-                    }
+                    getCurrencies(intent.forceRefresh)
                 }
             }
 
@@ -115,41 +83,24 @@ class CurrencyWatchlistViewModel @Inject constructor(
 
             is Intent.UpdateCurrencyWatchlistItemData -> {
                 withUseCaseScope {
-                    updateCurrencyWatchlistItemUseCase(intent.currencyWatchlistItem)
-
-                    onIntent(Intent.GetCurrencies(false))
+                    updateCurrencyListItem(intent.currencyWatchlistItem)
                 }
             }
 
             is Intent.InsertCurrencyWatchlistItem -> {
                 withUseCaseScope {
-                    insertCurrencyWatchlistItemUseCase(intent.currencyWatchlistItem)
-
-                    updateUiState {
-                        copy(
-                            currencies = currentUiState.currencies + intent.currencyWatchlistItem
-                        )
-                    }
+                    insertCurrencyListItem(intent.currencyWatchlistItem)
                 }
             }
 
             is Intent.GetCurrencyFluctuation -> {
                 withUseCaseScope {
-                    val currencyFluctuations = getCurrencyFluctuationUseCase(
+                    getCurrencyFluctuation(
                         startDate = intent.startDate,
                         endDate = intent.endDate,
                         baseCurrencyCode = intent.baseCurrencyCode,
-                        targetCurrencyCode = intent.targetCurrencyCode
-                    )
-
-                    onIntent(
-                        Intent.UpdateCurrencyWatchlistItemData(
-                            intent.currencyWatchlistItemData.copy(
-                                rate = currencyFluctuations.endRate,
-                                date = DateUtils.formatTime(LocalDateTime.now()),
-                                change = currencyFluctuations.change
-                            )
-                        )
+                        targetCurrencyCode = intent.targetCurrencyCode,
+                        currencyWatchlistItemData = intent.currencyWatchlistItemData
                     )
                 }
             }
@@ -165,20 +116,97 @@ class CurrencyWatchlistViewModel @Inject constructor(
                         targetCurrencyCode = intent.targetCurrencyCode
                     )
 
-                    onIntent(
-                        Intent.InsertCurrencyWatchlistItem(
-                            CurrencyWatchlistItemData(
-                                uid = UUID.randomUUID().toString(),
-                                baseCurrencyCode = intent.baseCurrencyCode,
-                                targetCurrencyCode = intent.targetCurrencyCode,
-                                rate = currencyFluctuation.endRate,
-                                date = DateUtils.formatTime(LocalDateTime.now()),
-                                change = currencyFluctuation.change
-                            )
+                    insertCurrencyListItem(
+                        CurrencyWatchlistItemData(
+                            uid = UUID.randomUUID().toString(),
+                            baseCurrencyCode = intent.baseCurrencyCode,
+                            targetCurrencyCode = intent.targetCurrencyCode,
+                            rate = currencyFluctuation.endRate,
+                            date = DateUtils.formatTime(LocalDateTime.now()),
+                            change = currencyFluctuation.change
                         )
                     )
                 }
             }
         }
+    }
+
+    private suspend fun getCurrencies(forceRefresh: Boolean = false) {
+        val currenciesWatchlistItems = getCurrencyWatchlistItems()
+
+        if (forceRefresh) {
+            currentUiState.currencies.forEach { currencyWatchlistItemData ->
+                val todayInMs = System.currentTimeMillis()
+
+                getCurrencyFluctuation(
+                    startDate = DateUtils.formatTime(todayInMs - DatesInMs.DAY.value),
+                    endDate = DateUtils.formatTime(todayInMs),
+                    baseCurrencyCode = currencyWatchlistItemData.baseCurrencyCode
+                        ?: "USD",
+                    targetCurrencyCode = currencyWatchlistItemData.targetCurrencyCode
+                        ?: "TRY",
+                    currencyWatchlistItemData = currencyWatchlistItemData
+                )
+            }
+        } else {
+            updateUiState {
+                copy(currencies = currenciesWatchlistItems)
+            }
+        }
+    }
+
+    private suspend fun getCurrencySymbols() {
+        val symbols = getCurrencySymbolsUseCase()
+
+        updateUiState {
+            copy(
+                symbols = symbols
+            )
+        }
+
+        getCurrencies(false)
+    }
+
+    private suspend fun updateCurrencyListItem(
+        item: CurrencyWatchlistItemData
+    ) {
+        updateCurrencyWatchlistItemUseCase(item)
+
+        getCurrencies()
+    }
+
+    private suspend fun insertCurrencyListItem(
+        item: CurrencyWatchlistItemData
+    ) {
+        insertCurrencyWatchlistItemUseCase(item)
+
+        updateUiState {
+            copy(
+                currencies = currentUiState.currencies + item
+            )
+        }
+    }
+
+    private suspend fun getCurrencyFluctuation(
+        startDate: String,
+        endDate: String,
+        baseCurrencyCode: String,
+        targetCurrencyCode: String,
+        currencyWatchlistItemData: CurrencyWatchlistItemData
+    ) {
+        val currencyFluctuations = getCurrencyFluctuationUseCase(
+            startDate = startDate,
+            endDate = endDate,
+            baseCurrencyCode = baseCurrencyCode,
+            targetCurrencyCode = targetCurrencyCode
+        )
+
+        updateCurrencyListItem(
+            currencyWatchlistItemData.copy(
+                rate = currencyFluctuations.endRate,
+                date = DateUtils.formatTime(LocalDateTime.now()),
+                change = currencyFluctuations.change
+            )
+        )
     }
 }

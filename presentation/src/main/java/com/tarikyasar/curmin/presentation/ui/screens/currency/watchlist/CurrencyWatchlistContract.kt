@@ -13,8 +13,6 @@ interface CurrencyWatchlistContract {
     )
 
     sealed class Intent {
-        object GetSymbols : Intent()
-
         object GetAskToRemoveItemParameter : Intent()
 
         data class GetCurrencies(val forceRefresh: Boolean) : Intent()
@@ -32,7 +30,7 @@ interface CurrencyWatchlistContract {
             val endDate: String,
             val baseCurrencyCode: String,
             val targetCurrencyCode: String,
-            val currencyWatchlistItemData: CurrencyWatchlistItemData,
+            val currencyWatchlistItemData: CurrencyWatchlistItemData
         ) : Intent()
 
         data class CreateCurrencyWatchlistItem(
